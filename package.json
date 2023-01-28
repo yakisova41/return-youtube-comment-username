@@ -1,0 +1,55 @@
+{
+    "name": "userscript-esbuild-ts",
+    "type": "commonjs",
+    "devDependencies": {
+        "@swc/core": "^1.3.25",
+        "@types/greasemonkey": "^4.0.4",
+        "@types/node": "^18.11.18",
+        "@typescript-eslint/eslint-plugin": "^5.48.0",
+        "@typescript-eslint/parser": "^5.48.0",
+        "bun-types": "^0.1.0",
+        "esbuild": "^0.15.12",
+        "esbuild-plugin-eslint": "^0.1.1",
+        "esbuild-ssr-css-modules-plugin": "^0.1.6",
+        "eslint": "^8.31.0",
+        "eslint-config-prettier": "^8.6.0",
+        "eslint-plugin-react": "^7.31.11",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.4"
+    },
+    "dependencies": {},
+    "scripts": {
+        "buildUserScript": "node build/dist/ mode=build",
+        "buildUserScriptDev": "node build/dist/ mode=dev",
+        "buildExtension": "node build/dist/ mode=ext",
+        "startHotReloadServer": "node build/dist/sockserver.js",
+        "startExpressServer": "node build/dist/server.js",
+        "check": "npm --prefix=build/ run buildCheck",
+        "build:u": "npm run check && npm run buildUserScript",
+        "build:e": "npm run check && npm run buildExtension",
+        "build:builder": "npm run check && npm --prefix=build/ run build",
+        "prebuild": "npm run check",
+        "build": "npm run buildUserScript & npm run buildExtension",
+        "predev": "npm run check",
+        "dev": "npm run startHotReloadServer & npm run startExpressServer & npm run buildUserScriptDev"
+    },
+    "userScript": {
+        "@name": "userscript-esbuild-ts",
+        "@version": "0.0.1",
+        "@author": "yakisova41",
+        "@description": "yeah",
+        "@match": "https://www.google.com/",
+        "devServer": {
+            "port": 56024,
+            "host": "localhost",
+            "websocket": 30305,
+            "hot": true
+        },
+        "esbuild": {
+            "entryPoints": [
+                "src/index.ts"
+            ]
+        }
+    }
+}

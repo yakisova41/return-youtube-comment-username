@@ -1,0 +1,19 @@
+{
+    "name": "__MSG_Name__",
+    "short_name": "name",
+    "version": "0.0.1",
+    "manifest_version": 3,
+    "description": "__MSG_Description__",
+    "content_scripts": [
+        {
+            "matches": ["https://example.com/*"],
+            "js": ["contentScript.js"]
+        }
+    ],
+    "default_locale": "en",
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
