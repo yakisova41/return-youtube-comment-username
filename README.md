@@ -1,15 +1,10 @@
-# userscript-esbuild-ts
+# Returns YouTube handle to username
 
-To install dependencies:
+YouTube のコメント欄がハンドル(@user-xxxx)になってしまった場合に、(ある程度)元のユーザー名に上書きする UserScript です。
 
-```bash
-bun install
-```
+# 注意点
 
-To run:
+コメント欄の全コメントに対してチャンネルページの読み込みを行っているため
+トラフィックが非常に大きくなります。
 
-```build
-bun run build
-```
-
-This project was created using `bun init` in bun v0.1.13. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+また場合によっては Recaptcha が表示されたり、日本においては電子計算機損壊等業務妨害罪とみなされる可能性もあるため、使用は自己責任でお願いします。

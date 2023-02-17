@@ -1,5 +1,5 @@
 {
-    "name": "userscript-esbuild-ts",
+    "name": "ytcomments-return-name",
     "type": "commonjs",
     "devDependencies": {
         "@swc/core": "^1.3.25",
@@ -35,15 +35,20 @@
         "dev": "npm run startHotReloadServer & npm run startExpressServer & npm run buildUserScriptDev"
     },
     "userScript": {
-        "@name": "userscript-esbuild-ts",
+        "@name": "Returns YouTube handle to username",
+        "@name:ja": "YouTubeコメント欄のハンドルを名前に戻す",
         "@version": "0.0.1",
         "@author": "yakisova41",
-        "@description": "yeah",
-        "@match": "https://www.google.com/",
+        "@license": "MIT",
+        "@namespace": "https://yakisova.com/Returns-YouTube-handle-to-username",
+        "@description": "The name of the YouTube comment section is the handle (@...) Overwrites your original username if your name",
+        "@description:ja": "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
+        "@match": "https://www.youtube.com/*",
+        "@grant": "none",
         "devServer": {
-            "port": 56024,
+            "port": 32492,
             "host": "localhost",
-            "websocket": 30305,
+            "websocket": 23042,
             "hot": true
         },
         "esbuild": {

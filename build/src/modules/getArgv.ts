@@ -1,4 +1,4 @@
-export default () => {
+export default (): any => {
     const argv = process.argv;
     let result = {};
 

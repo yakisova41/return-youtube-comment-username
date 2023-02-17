@@ -3,7 +3,7 @@ import path from "path";
 import writeUserscriptHeader from "../plugins/writeUserscriptHeader";
 import fs from "fs-extra";
 
-export default (plugins: Plugin[]) => {
+export default (plugins: Plugin[], additionConfig: BuildOptions) => {
     const workingDir = process.cwd();
 
     const packageJson = JSON.parse(
@@ -26,6 +26,10 @@ export default (plugins: Plugin[]) => {
             config[key] = packageJson.userScript.esbuild[key];
         });
     }
+
+    Object.keys(additionConfig).forEach((key) => {
+        config[key] = additionConfig[key];
+    });
 
     esbuild.build(config).catch(() => process.exit(1));
 };
