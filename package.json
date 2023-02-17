@@ -1,5 +1,5 @@
 {
-    "name": "ytcomments-return-name",
+    "name": "returns-youtube-handle-to-username",
     "type": "commonjs",
     "devDependencies": {
         "@swc/core": "^1.3.25",
