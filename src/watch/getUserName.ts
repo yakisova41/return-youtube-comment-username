@@ -1,10 +1,12 @@
 export async function getUserName(href: string) {
-    const data = await fetch(href + "/about").then((res) => res.text());
+    const id = href.split("/")[4];
 
-    const root = document.createElement("div");
-    root.innerHTML = data;
+    const data = await fetch(
+        `https://yt-returnname-api.vercel.app/api/idToName/${id}`,
+        {
+            method: "POST",
+        }
+    ).then((res) => res.text());
 
-    const name = root.querySelector("title");
-
-    return name.innerHTML.split(" - ")[0];
+    return data;
 }
