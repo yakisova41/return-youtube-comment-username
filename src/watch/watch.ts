@@ -1,8 +1,5 @@
 import { EventRoot } from "../lib/eventRoot";
-import {
-    CommentFetchEvent,
-    ReplyFetchEvent,
-} from "../listeners/commentFetchListener";
+import { CommentFetchEvent } from "../listeners/commentFetchListener";
 import { replaceComments } from "./replaceComments";
 import { renderingListener } from "../listeners/commentRenderingListener";
 import { replaceReplies } from "./replaceReplies";
