@@ -1,6 +1,7 @@
 {
     "name": "returns-youtube-handle-to-username",
     "type": "commonjs",
+    "version": "0.1.0",
     "devDependencies": {
         "@swc/core": "^1.3.25",
         "@types/greasemonkey": "^4.0.4",
@@ -31,13 +32,15 @@
         "build:builder": "npm run check && npm --prefix=build/ run build",
         "prebuild": "npm run check",
         "build": "npm run buildUserScript & npm run buildExtension",
+        "prerelease-build": "npm run check",
+        "release-build": "npm run buildUserScript outfile='/home/yakisova41/returns-youtube-handle-to-username/dist/$npm_package_name-$npm_package_version.user.js' & npm run buildUserScript minify outfile='/home/yakisova41/returns-youtube-handle-to-username/dist/$npm_package_name-$npm_package_version.min.user.js'",
         "predev": "npm run check",
         "dev": "npm run startHotReloadServer & npm run startExpressServer & npm run buildUserScriptDev"
     },
     "userScript": {
         "@name": "Returns YouTube handle to username",
         "@name:ja": "YouTubeコメント欄のハンドルを名前に戻す",
-        "@version": "0.0.1",
+        "@version": "0.1.0",
         "@author": "yakisova41",
         "@license": "MIT",
         "@namespace": "https://yakisova.com/Returns-YouTube-handle-to-username",
