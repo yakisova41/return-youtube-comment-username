@@ -2,6 +2,8 @@ import { findElement } from "../lib/findElement";
 import { getUserName } from "./getUserName";
 
 export function replaceComments(comments: any[], page: number) {
+    const nameStore = {};
+
     comments.forEach(async (comment, index) => {
         let nthChild: number;
         if (page === 0) {
@@ -26,9 +28,14 @@ export function replaceComments(comments: any[], page: number) {
                 nameElem = channelHrefElem.querySelector("span");
             }
 
-            getUserName(channelHrefElem.href).then((name) => {
-                nameElem.innerHTML = name;
-            });
+            if (channelHrefElem.href in nameStore) {
+                nameElem.innerHTML = nameStore[channelHrefElem.href];
+            } else {
+                getUserName(channelHrefElem.href).then((name) => {
+                    nameElem.innerHTML = name;
+                    nameStore[channelHrefElem.href] = name;
+                });
+            }
         });
     });
 }
