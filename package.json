@@ -4,6 +4,7 @@
     "version": "0.1.0",
     "devDependencies": {
         "@swc/core": "^1.3.25",
+        "@types/chrome": "^0.0.216",
         "@types/greasemonkey": "^4.0.4",
         "@types/node": "^18.11.18",
         "@typescript-eslint/eslint-plugin": "^5.48.0",
@@ -39,12 +40,12 @@
     },
     "userScript": {
         "@name": "Returns YouTube handle to username",
-        "@name:ja": "YouTubeコメント欄のハンドルを名前に戻す",
+        "@name:ja": "YouTubeコメント欄の名前を元に戻す",
         "@version": "0.1.0",
         "@author": "yakisova41",
         "@license": "MIT",
-        "@namespace": "https://yakisova.com/Returns-YouTube-handle-to-username",
-        "@description": "The name of the YouTube comment section is the handle (@...) Overwrites your original username if your name",
+        "@namespace": "https://yt-returnname-api.pages.dev/",
+        "@description": "This is to change the handle in the YouTube comments section to a username.",
         "@description:ja": "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
         "@match": "https://www.youtube.com/*",
         "@grant": "none",
