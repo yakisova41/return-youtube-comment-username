@@ -6,8 +6,14 @@
     "description": "__MSG_Description__",
     "content_scripts": [
         {
-            "matches": ["https://example.com/*"],
+            "matches": ["https://www.youtube.com/*"],
             "js": ["contentScript.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["embed.js"],
+            "matches": ["https://www.youtube.com/*"]
         }
     ],
     "default_locale": "en",

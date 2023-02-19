@@ -1,8 +1,8 @@
 {
     "Name": {
-        "message": "extension"
+        "message": "Returns YouTube handle to username"
     },
     "Description": {
-        "message": "extension description"
+        "message": "This is to change the handle in the YouTube comments section to a username."
     }
 }
