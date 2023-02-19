@@ -1,10 +1,11 @@
 export async function getUserName(href: string) {
-    const data = await fetch(href).then((res) => res.text());
+    const id = href.split("/")[4];
 
-    const root = document.createElement("div");
-    root.innerHTML = data;
-
-    const name = root.querySelector("title");
-
-    return name.innerHTML.split(" - ")[0];
+    const data = await fetch(
+        `https://yt-returnname-api.pages.dev/api/idToName?id=${id}`,
+        {
+            method: "POST",
+        }
+    ).then((res) => res.text());
+    return data;
 }

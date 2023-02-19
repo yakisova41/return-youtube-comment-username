@@ -14,7 +14,6 @@ export function main() {
             const pageName = newHref.split("/")[3].split("?")[0];
 
             if (pageName === "watch") {
-                console.log("Watch");
                 watch(eventRoot);
             }
         }
