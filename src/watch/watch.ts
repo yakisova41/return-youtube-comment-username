@@ -20,7 +20,7 @@ export async function watch(eventRoot: EventRoot) {
 
     eventRoot.addEventListener(
         "commentFetch",
-        ({ detail: { comments } }: CustomEvent<CommentFetchEvent>) => {
+        ({ detail: { comments, mode } }: CustomEvent<CommentFetchEvent>) => {
             comments.forEach((comment, index) => {
                 if (comment["commentThreadRenderer"]["replies"] !== undefined) {
                     commentsTargetIdStore.push({
@@ -34,18 +34,23 @@ export async function watch(eventRoot: EventRoot) {
                 }
             });
 
-            const handleRenderingSucess = () => {
-                replaceComments(comments, commentsPage);
-                eventRoot.removeEventListener(
+            if (mode === 1) {
+                const handleRenderingSucess = () => {
+                    replaceComments(comments, commentsPage);
+                    commentsPage = commentsPage + 1;
+                    eventRoot.native.removeEventListener(
+                        "commentsRenderingSuccess",
+                        handleRenderingSucess
+                    );
+                };
+                eventRoot.native.addEventListener(
                     "commentsRenderingSuccess",
                     handleRenderingSucess
                 );
+            } else {
+                replaceComments(comments, commentsPage);
                 commentsPage = commentsPage + 1;
-            };
-            eventRoot.addEventListener(
-                "commentsRenderingSuccess",
-                handleRenderingSucess
-            );
+            }
         }
     );
 
@@ -54,6 +59,7 @@ export async function watch(eventRoot: EventRoot) {
         ({ detail: { replies, targetId } }: CustomEvent) => {
             commentsTargetIdStore.forEach((targetData, index) => {
                 if (targetData.targetId === targetId) {
+                    console.log(targetData);
                     replaceReplies(targetData.commentsPage, targetData.index);
                 }
             });
