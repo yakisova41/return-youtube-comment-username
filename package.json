@@ -1,7 +1,7 @@
 {
     "name": "returns-youtube-handle-to-username",
     "type": "commonjs",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "devDependencies": {
         "@swc/core": "^1.3.25",
         "@types/chrome": "^0.0.216",
@@ -41,7 +41,7 @@
     "userScript": {
         "@name": "Returns YouTube handle to username",
         "@name:ja": "YouTubeコメント欄の名前を元に戻す",
-        "@version": "0.1.0",
+        "@version": "0.1.1",
         "@author": "yakisova41",
         "@license": "MIT",
         "@namespace": "https://yt-returnname-api.pages.dev/",
