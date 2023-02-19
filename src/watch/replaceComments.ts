@@ -32,7 +32,6 @@ export function replaceComments(comments: any[], page: number) {
             nameElem.innerHTML = nameStore[channelHrefElem.href];
         } else {
             getUserName(channelHrefElem.href).then((name) => {
-                console.log(nthChild, name);
                 nameElem.innerHTML = name;
                 nameStore[channelHrefElem.href] = name;
             });

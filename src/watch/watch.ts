@@ -59,7 +59,6 @@ export async function watch(eventRoot: EventRoot) {
         ({ detail: { replies, targetId } }: CustomEvent) => {
             commentsTargetIdStore.forEach((targetData, index) => {
                 if (targetData.targetId === targetId) {
-                    console.log(targetData);
                     replaceReplies(targetData.commentsPage, targetData.index);
                 }
             });
