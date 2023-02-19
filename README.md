@@ -1,10 +1,3 @@
 # Returns YouTube handle to username
 
-YouTube のコメント欄がハンドル(@user-xxxx)になってしまった場合に、(ある程度)元のユーザー名に上書きする UserScript です。
-
-# 注意点
-
-コメント欄の全コメントに対してチャンネルページの読み込みを行っているため
-トラフィックが非常に大きくなります。
-
-また場合によっては Recaptcha が表示されたり、日本においては電子計算機損壊等業務妨害罪とみなされる可能性もあるため、使用は自己責任でお願いします。
+This UserScript is change handle name to user name in YouTube.
