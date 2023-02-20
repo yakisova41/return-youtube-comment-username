@@ -1,7 +1,7 @@
 {
     "name": "__MSG_Name__",
     "short_name": "name",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "manifest_version": 3,
     "description": "__MSG_Description__",
     "content_scripts": [

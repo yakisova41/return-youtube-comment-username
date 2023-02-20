@@ -1,6 +1,6 @@
 {
     "Name": {
-        "message": "Returns YouTube handle to username"
+        "message": "Return YouTube Comment Username"
     },
     "Description": {
         "message": "This is to change the handle in the YouTube comments section to a username."

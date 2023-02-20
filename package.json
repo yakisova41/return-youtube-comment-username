@@ -1,7 +1,7 @@
 {
-    "name": "returns-youtube-handle-to-username",
+    "name": "return-youtube-comment-username",
     "type": "commonjs",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "devDependencies": {
         "@swc/core": "^1.3.25",
         "@types/chrome": "^0.0.216",
@@ -34,17 +34,17 @@
         "prebuild": "npm run check",
         "build": "npm run buildUserScript & npm run buildExtension",
         "prerelease-build": "npm run check",
-        "release-build": "npm run buildUserScript outfile='/home/yakisova41/returns-youtube-handle-to-username/dist/$npm_package_name-$npm_package_version.user.js' & npm run buildUserScript minify outfile='/home/yakisova41/returns-youtube-handle-to-username/dist/$npm_package_name-$npm_package_version.min.user.js'",
+        "release-build": "npm run buildUserScript outfile='./dist/$npm_package_name-$npm_package_version.user.js' & npm run buildUserScript minify outfile='./dist/$npm_package_name-$npm_package_version.min.user.js'",
         "predev": "npm run check",
         "dev": "npm run startHotReloadServer & npm run startExpressServer & npm run buildUserScriptDev"
     },
     "userScript": {
-        "@name": "Returns YouTube handle to username",
+        "@name": "Return YouTube Comment Username",
         "@name:ja": "YouTubeコメント欄の名前を元に戻す",
-        "@version": "0.1.1",
+        "@version": "0.1.2",
         "@author": "yakisova41",
         "@license": "MIT",
-        "@namespace": "https://yt-returnname-api.pages.dev/",
+        "@namespace": "https://yt-returnname-api.pages.dev/extension/",
         "@description": "This is to change the handle in the YouTube comments section to a username.",
         "@description:ja": "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
         "@match": "https://www.youtube.com/*",
