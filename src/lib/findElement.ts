@@ -1,60 +1,41 @@
-export const findElement = (selector: string): Promise<Element> => {
+export const findElement = (
+    selector: string,
+    limit: number = 1000
+): Promise<Element> => {
     return new Promise((resolve, reject) => {
-        if (isNativeInterval()) {
-            const interval = setInterval(() => {
-                const elem = document.querySelector(selector);
-                if (elem !== null) {
-                    clearInterval(interval);
-                    resolve(elem);
-                }
-            });
-        } else {
-            function search() {
-                setTimeout(() => {
-                    const elem = document.querySelector(selector);
-                    if (elem !== null) {
-                        resolve(elem);
-                    } else {
-                        search();
-                    }
-                });
+        let i = 0;
+        const interval = setInterval(() => {
+            const elem = document.querySelector(selector);
+            if (elem !== null) {
+                clearInterval(interval);
+                resolve(elem);
             }
-            search();
-        }
+            if (limit < i) {
+                clearInterval(interval);
+                reject(null);
+            }
+            i = i + 1;
+        });
     });
 };
 
 export const findElementAll = (
-    selector: string
+    selector: string,
+    limit: number = 1000
 ): Promise<NodeListOf<Element>> => {
     return new Promise((resolve, reject) => {
-        if (isNativeInterval()) {
-            const interval = setInterval(() => {
-                const elems = document.querySelectorAll(selector);
-                if (elems.length !== 0) {
-                    clearInterval(interval);
-                    resolve(elems);
-                }
-            });
-        } else {
-            function search() {
-                setTimeout(() => {
-                    const elems = document.querySelectorAll(selector);
-                    if (elems.length !== 0) {
-                        resolve(elems);
-                    } else {
-                        search();
-                    }
-                });
+        let i = 0;
+        const interval = setInterval(() => {
+            const elems = document.querySelectorAll(selector);
+            if (elems.length !== 0) {
+                clearInterval(interval);
+                resolve(elems);
             }
-            search();
-        }
+            if (limit < i) {
+                clearInterval(interval);
+                reject([]);
+            }
+            i = i + 1;
+        });
     });
 };
-
-function isNativeInterval() {
-    return (
-        window.setInterval.toString() ===
-        "function setInterval() { [native code] }"
-    );
-}
