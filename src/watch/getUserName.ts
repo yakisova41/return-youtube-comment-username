@@ -10,7 +10,7 @@ export async function getUserName(href: string) {
                 "accept-encoding": "gzip, deflate, br",
                 "accept-language": "ja",
                 "content-type": "application/json",
-                cookie: `GPS=1; YSC=sHEZ9k4QSS0; DEVICE_INFO=ChxOekl3TVRnNE9URTJNekk1TURJMU1qSTRNQT09EImAyZ8GGImAyZ8G; VISITOR_INFO1_LIVE=l_1q5weHuiE; PREF=f6=40000000&tz=Asia.Tokyo; ST-o2eza2=itct=CBQQ8JMBGAciEwjNqtCN86H9AhXnm1YBHbQhCBY%3D&csn=MC45NjQ2NTUxNjY1OTY0NjI0&endpoint=%7B%22clickTrackingParams%22%3A%22CBQQ8JMBGAciEwjNqtCN86H9AhXnm1YBHbQhCBY%3D%22%2C%22commandMetadata%22%3A%7B%22webCommandMetadata%22%3A%7B%22url%22%3A%22%2F%40rem6101%2Fchannels%22%2C%22webPageType%22%3A%22WEB_PAGE_TYPE_CHANNEL%22%2C%22rootVe%22%3A3611%2C%22apiUrl%22%3A%22%2Fyoutubei%2Fv1%2Fbrowse%22%7D%7D%2C%22browseEndpoint%22%3A%7B%22browseId%22%3A%22${id}%22%2C%22params%22%3A%22EghjaGFubmVsc_IGBAoCUgA%253D%22%2C%22canonicalBaseUrl%22%3A%22%2F%40rem6101%22%7D%7D`,
+                cookie: `GPS=1; YSC=sHEZ9k4QSS0; DEVICE_INFO=DEVICE_INFO; VISITOR_INFO1_LIVE=LLIIVVEE; PREF=f6=40000000&tz=Asia.Tokyo; ST-o2eza2=itct=itct&endpoint=%7B%22clickTrackingParams%22%3A%22CBQQ8JMBGAciEwjNqtCN86H9AhXnm1YBHABY%3D%22%2C%22commandMetadata%22%3A%7B%22webCommandMetadata%22%3A%7B%22url%22%3A%22%2F%40FUCKYOUTUBE%2Fchannels%22%2C%22webPageType%22%3A%22WEB_PAGE_TYPE_CHANNEL%22%2C%22rootVe%22%3A3611%2C%22apiUrl%22%3A%22%2Fyoutubei%2Fv1%2Fbrowse%22%7D%7D%2C%22browseEndpoint%22%3A%7B%22browseId%22%3A%22${id}%22%2C%22params%22%3A%22EghjaGFubmVsc_IGBAoCUgA%253D%22%2C%22canonicalBaseUrl%22%3A%22%2F%40FUCK_YOUTUBE%22%7D%7D`,
                 dnt: "1",
                 referer: `https://www.youtube.com/channel/${id}`,
                 "sec-ch-ua": `"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"`,
@@ -27,10 +27,9 @@ export async function getUserName(href: string) {
                 "sec-fetch-site": "same-origin",
                 "user-agent":
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-                "x-client-data":
-                    "CJK2yQEIprbJAQjBtskBCKmdygEImefKAQiSocsBCI72zAEI2YHNAQj1i80BCIuMzQEIpozNAQjIjc0BCNONzQEIuJHNAQiLk80BCNLhrAIYwcvMAQ==",
+                "x-client-data": "x-client-data",
                 "x-goog-authuser": "0",
-                "x-goog-visitor-id": "Cgs5aHR0b0xBdHdrZyjM_sifBg%3D%3D",
+                "x-goog-visitor-id": "visitorData",
                 "x-origin": "https://www.youtube.com",
                 "x-youtube-bootstrap-logged-in": "true",
                 "x-youtube-client-name": "1",
@@ -41,10 +40,10 @@ export async function getUserName(href: string) {
                     client: {
                         hl: "ja",
                         gl: "JP",
-                        remoteHost: "2404:7a85:2080:4200:e1c0:b52a:99db:ff9a",
+                        remoteHost: "1919:8a10:1145:1419:e1c9:b81a:09db:ff3a",
                         deviceMake: "",
                         deviceModel: "",
-                        visitorData: "Cgs5aHR0b0xBdHdrZyjM_sifBg%3D%3D",
+                        visitorData: "visitorData",
                         userAgent:
                             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36,gzip(gfe)",
                         clientName: "WEB",
@@ -56,8 +55,7 @@ export async function getUserName(href: string) {
                         platform: "DESKTOP",
                         clientFormFactor: "UNKNOWN_FORM_FACTOR",
                         configInfo: {
-                            appInstallData:
-                                "CMz-yJ8GEIfdrgUQ_u6uBRCJ6K4FEKLsrgUQ5_euBRDa6a4FEKSArwUQzN-uBRC2nP4SEILdrgUQtuCuBRDM9a4FEOLUrgUQoaf-EhCxpP4SEOWg_hIQlPiuBRC41K4FELiLrgUQ1qn-EhCR-PwS",
+                            appInstallData: "appInstallData",
                         },
                         userInterfaceTheme: "USER_INTERFACE_THEME_DARK",
                         timeZone: "Asia/Tokyo",
@@ -65,8 +63,7 @@ export async function getUserName(href: string) {
                         browserVersion: "110.0.0.0",
                         acceptHeader:
                             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                        deviceExperimentId:
-                            "ChxOekU0TmprNE5EZzJOamd4TkRRMk9ESXhOQT09EMz-yJ8GGKiZ9Z0G",
+                        deviceExperimentId: "deviceExperimentId",
                         screenWidthPoints: 599,
                         screenHeightPoints: 937,
                         screenPixelDensity: 1,
