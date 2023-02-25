@@ -29,7 +29,7 @@ export const devServer = {
 export const manifest = {
     name: "__MSG_Name__",
     short_name: "name",
-    version: "0.1.2",
+    version: packagejson.version,
     manifest_version: 3,
     description: "__MSG_Description__",
     content_scripts: [
