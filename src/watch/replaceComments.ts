@@ -1,5 +1,5 @@
 import { findElement } from "../lib/findElement";
-import { getUserName } from "./getUserName";
+import { getUserName } from "../lib/getUserName";
 
 export function replaceComments(comments: any[], page: number) {
     const nameStore = [];

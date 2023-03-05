@@ -1,5 +1,6 @@
-import { getUserName } from "./getUserName";
+import { getUserName } from "../lib/getUserName";
 import { findElementAll } from "../lib/findElement";
+
 export async function replaceReplies(page: number, targetIndex: number) {
     const nthChild = page * 20 + (targetIndex + 1);
 
