@@ -4,13 +4,7 @@ import { getUserName } from "./getUserName";
 export function replaceComments(comments: any[], page: number) {
     const nameStore = [];
     comments.forEach(async (c, index) => {
-        let nthChild: number;
-
-        if (page === 0) {
-            nthChild = index + 1;
-        } else {
-            nthChild = page * 20 + (index + 1);
-        }
+        const nthChild = page * 20 + (index + 1);
 
         const commentElem = await findElement(
             `#comments > #sections > #contents > ytd-comment-thread-renderer:nth-child(${nthChild})`
