@@ -36,7 +36,7 @@ export async function watch(eventRoot: EventRoot) {
 
             if (mode === 1) {
                 const handleRenderingSucess = () => {
-                    replaceComments(comments, commentsPage);
+                    replaceComments(comments, commentsPage, eventRoot);
                     commentsPage = commentsPage + 1;
                     eventRoot.native.removeEventListener(
                         "commentsRenderingSuccess",
@@ -48,7 +48,7 @@ export async function watch(eventRoot: EventRoot) {
                     handleRenderingSucess
                 );
             } else {
-                replaceComments(comments, commentsPage);
+                replaceComments(comments, commentsPage, eventRoot);
                 commentsPage = commentsPage + 1;
             }
         }
