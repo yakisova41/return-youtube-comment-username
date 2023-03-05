@@ -1,20 +1,24 @@
+import { EventRoot } from "../lib/eventRoot";
 import { findElement } from "../lib/findElement";
-import { getUserName } from "./getUserName";
+import { getUserName } from "../lib/getUserName";
 
-export function replaceComments(comments: any[], page: number) {
+export function replaceComments(
+    comments: any[],
+    page: number,
+    eventRoot: EventRoot
+) {
     const nameStore = [];
-    comments.forEach(async (c, index) => {
-        let nthChild: number;
 
-        if (page === 0) {
-            nthChild = index + 1;
-        } else {
-            nthChild = page * 20 + (index + 1);
-        }
+    comments.forEach(async (c, index) => {
+        const nthChild = page * 20 + (index + 1);
 
         const commentElem = await findElement(
             `#comments > #sections > #contents > ytd-comment-thread-renderer:nth-child(${nthChild})`
         );
+
+        eventRoot.addEventListener("pageChange", () => {
+            commentElem.remove();
+        });
 
         const channelHrefElem: HTMLAnchorElement = commentElem.querySelector(
             "#comment > #body > #main > #header > #header-author > h3 > a "

@@ -1,12 +1,8 @@
-import { getUserName } from "./getUserName";
+import { getUserName } from "../lib/getUserName";
 import { findElementAll } from "../lib/findElement";
+
 export async function replaceReplies(page: number, targetIndex: number) {
-    let nthChild: number;
-    if (page === 0) {
-        nthChild = targetIndex + 1;
-    } else {
-        nthChild = page * 20 + (targetIndex + 1);
-    }
+    const nthChild = page * 20 + (targetIndex + 1);
 
     const repliesElem = await findElementAll(
         `#comments > #sections > #contents > ytd-comment-thread-renderer:nth-child(${nthChild}) > #replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer`
