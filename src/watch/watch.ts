@@ -35,18 +35,23 @@ export async function watch(eventRoot: EventRoot) {
             });
 
             if (mode === 1) {
-                const handleRenderingSucess = () => {
+                if (comments.length !== 20) {
                     replaceComments(comments, commentsPage, eventRoot);
                     commentsPage = commentsPage + 1;
-                    eventRoot.native.removeEventListener(
+                } else {
+                    const handleRenderingSucess = () => {
+                        replaceComments(comments, commentsPage, eventRoot);
+                        commentsPage = commentsPage + 1;
+                        eventRoot.native.removeEventListener(
+                            "commentsRenderingSuccess",
+                            handleRenderingSucess
+                        );
+                    };
+                    eventRoot.native.addEventListener(
                         "commentsRenderingSuccess",
                         handleRenderingSucess
                     );
-                };
-                eventRoot.native.addEventListener(
-                    "commentsRenderingSuccess",
-                    handleRenderingSucess
-                );
+                }
             } else {
                 replaceComments(comments, commentsPage, eventRoot);
                 commentsPage = commentsPage + 1;
