@@ -1,6 +1,4 @@
-export async function getUserName(href: string) {
-  const id = href.split("/")[4];
-
+export async function getUserName(id: string): Promise<string> {
   const data = await fetch(
     `https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false`,
     {
@@ -116,10 +114,10 @@ export async function getUserName(href: string) {
       }),
     }
   )
-    .then((res) => res.text())
+    .then(async (res) => await res.text())
     .then((text) => {
       const data = JSON.parse(text);
-      const name = data["header"]["c4TabbedHeaderRenderer"]["title"];
+      const name: string = data.header.c4TabbedHeaderRenderer.title;
 
       return name;
     });
