@@ -1,17 +1,81 @@
 import { getUserName } from "./getUserName";
 
-export function main() {
-  let interval: null | NodeJS.Timer = null;
+export function main(): void {
+  let commentReplaceInterval = 0;
 
   pageChangeHandler((newHref) => {
-    if (interval !== null) {
-      clearInterval(interval);
+    const pageName = new URL(newHref).pathname.split("/")[1];
+
+    if (pageName === "watch" || pageName === "shorts") {
+      clearInterval(commentReplaceInterval);
+      commentReplaceInterval = runCommentsReplace();
+    }
+  });
+}
+
+function runCommentsReplace(): number {
+  return window.setInterval(() => {
+    /**
+     * 名前の置き換え
+     */
+    const authorSpan = document.querySelector(
+      "#author-text > span:not(.name-replaced)"
+    );
+
+    if (authorSpan !== null) {
+      authorSpan.classList.add("name-replaced");
+      const channelLink = authorSpan.parentElement;
+      const href = channelLink?.getAttribute("href");
+
+      if (channelLink !== null && typeof href === "string") {
+        void getUserName(href.split("/")[2]).then((name) => {
+          authorSpan.innerHTML = name;
+        });
+      }
     }
 
-    const path = new URL(newHref).pathname;
+    /**
+     * 返信先の名前の置き換え
+     */
+    const mention = document.querySelector(
+      "#content-text > a.yt-formatted-string:not(.name-replaced)"
+    );
 
-    if (path === "/watch") {
-      interval = replaceAllComments();
+    if (mention !== null) {
+      mention.classList.add("name-replaced");
+
+      if (mention.innerHTML.match("@.*") !== null) {
+        const href = mention.getAttribute("href");
+
+        if (href !== null) {
+          void getUserName(href.split("/")[2]).then((name) => {
+            mention.innerHTML = "@" + name;
+          });
+        }
+      }
+    }
+
+    /**
+     * 投稿者コメントの名前の置き換え
+     */
+    const channelNameSpan = document.querySelector(
+      "ytd-author-comment-badge-renderer > #name > #channel-name > #container > #text-container > yt-formatted-string:not(.name-replaced)"
+    );
+    const channelLink =
+      channelNameSpan?.parentElement?.parentElement?.parentElement
+        ?.parentElement;
+
+    if (channelLink !== null && channelNameSpan !== null) {
+      channelNameSpan.classList.add("name-replaced");
+
+      console.log(channelLink);
+      const href = channelLink?.getAttribute("href");
+
+      if (channelLink !== null && typeof href === "string") {
+        void getUserName(href.split("/")[2]).then((name) => {
+          channelNameSpan.innerHTML = name;
+        });
+      }
     }
   });
 }
@@ -20,163 +84,25 @@ export function main() {
  * hrefの変更を監視
  * @param handler 変更されたときの処理
  */
-function pageChangeHandler(handler: (newHref: string) => void) {
+function pageChangeHandler(handler: (newHref: string) => void): void {
   let beforeHref = "";
 
-  const observer = new MutationObserver(() => {
-    const href = location.href;
-    if (href !== beforeHref) {
-      handler(href);
-    }
-    beforeHref = href;
-  });
+  const body = document.querySelector("body");
 
-  observer.observe(document.querySelector("body"), {
-    childList: true,
-    subtree: true,
-  });
-}
-
-/**
- * 置き換え　コメントs、新しいコメントを監視
- */
-function replaceAllComments() {
-  const commentsSelector =
-    "#comments > #sections > #contents > ytd-comment-thread-renderer";
-  let commentElems = document.querySelectorAll(commentsSelector);
-
-  return setInterval(() => {
-    if (commentElems !== null) {
-      const elems = document.querySelectorAll(commentsSelector);
-
-      const diff = getDiff(elems, commentElems);
-
-      diff.forEach((newCommentElem) => {
-        normalCommentReplace(newCommentElem);
-
-        if (newCommentElem.querySelector("#replies:not([hidden])") !== null) {
-          repliesReplace(
-            newCommentElem.querySelector(
-              "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents"
-            )
-          );
-        }
-      });
-
-      commentElems = elems;
-    } else {
-      commentElems = document.querySelectorAll(commentsSelector);
-    }
-  });
-}
-
-/**
- * 普通のコメントの名前を置き換え
- */
-function normalCommentReplace(commentElem: Element) {
-  const channelLinkElem: HTMLAnchorElement = commentElem.querySelector(
-    "#comment > #body > #main > #header > #header-author > h3 > a "
-  );
-
-  //ユーザー名の要素は2パターンある
-  let nameElem: Element;
-  nameElem = commentElem.querySelector(
-    "#comment > #body > #main > #header  > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > #name > ytd-channel-name > #container > #text-container > #text "
-  );
-  if (nameElem === null) {
-    nameElem = channelLinkElem.querySelector("span");
-  }
-
-  getUserName(channelLinkElem.href).then((name) => {
-    nameElem.innerHTML = name;
-  });
-}
-
-/**
- * リプライたちの置き換え、監視
- */
-function repliesReplace(initialRepliesElem: Element) {
-  let repliesElem: NodeListOf<Element> = null;
-
-  const ob = new MutationObserver(() => {
-    const replies = initialRepliesElem.querySelectorAll("ytd-comment-renderer");
-
-    function replaceAndLastCheck(replies: NodeListOf<Element> | Element[]) {
-      replies.forEach((repliyElem: Element) => {
-        repliyCommentReplace(repliyElem);
-      });
-
-      //リプライ達の一番最後がcommentならobserverは切る
-      if (initialRepliesElem.lastChild.nodeName === "YTD-COMMENT-RENDERER") {
-        ob.disconnect();
+  if (body !== null) {
+    const observer = new MutationObserver(() => {
+      const href = location.href;
+      if (href !== beforeHref) {
+        handler(href);
       }
-    }
-
-    if (repliesElem !== null) {
-      const diff = getDiff(replies, repliesElem);
-      replaceAndLastCheck(diff);
-    } else {
-      replaceAndLastCheck(replies);
-    }
-
-    repliesElem = replies;
-  });
-  ob.observe(initialRepliesElem, {
-    childList: true,
-  });
-}
-
-/**
- * リプライコメントの名前と返信先を置き換え
- */
-function repliyCommentReplace(repliyElem: Element) {
-  const channelLinkElem: HTMLAnchorElement = repliyElem.querySelector(
-    "#body > #main > #header > #header-author > h3 > a "
-  );
-
-  //ユーザー名の要素は2パターンある
-  let nameElem: Element;
-  nameElem = repliyElem.querySelector(
-    "#comment > #body > #main > #header  > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > #name > ytd-channel-name > #container > #text-container > #text"
-  );
-  if (nameElem === null) {
-    nameElem = channelLinkElem.querySelector("span");
-  }
-
-  getUserName(channelLinkElem.href).then((name) => {
-    nameElem.innerHTML = name;
-  });
-
-  //formattedなstringの要素の中から返信先(@~~~)のtextを名前に置き換える
-  const formattedStringElems: NodeListOf<HTMLAnchorElement> =
-    repliyElem.querySelectorAll(
-      "#body > #main > #comment-content > #expander > #content > #content-text > a.yt-formatted-string"
-    );
-
-  formattedStringElems.forEach((formattedStringElem) => {
-    const text = formattedStringElem.innerHTML;
-    if (text.match("@.*")) {
-      getUserName(formattedStringElem.href).then((name) => {
-        formattedStringElem.innerHTML = "@" + name;
-      });
-    }
-  });
-}
-
-/**
- * 新たに追加された要素のdiffを取得する
- */
-function getDiff(elemsA: NodeListOf<Element>, elemsB: NodeListOf<Element>) {
-  //NodeListOf<Element>をElement[]に変換
-  function toArray(elems: NodeListOf<Element>) {
-    const arr: Element[] = [];
-    elems.forEach((e) => {
-      arr.push(e);
+      beforeHref = href;
     });
-    return arr;
-  }
 
-  return toArray(elemsA).filter((i) => toArray(elemsB).indexOf(i) === -1);
+    observer.observe(body, {
+      childList: true,
+      subtree: true,
+    });
+  }
 }
 
 main();
