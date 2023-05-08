@@ -2,24 +2,34 @@ import { getUserName } from "./getUserName";
 
 export function main(): void {
   let commentReplaceInterval = 0;
+  const pageChangeOb = pageChangeObserver();
 
-  pageChangeHandler((newHref) => {
+  pageChangeOb.addPageChangeListener((newHref) => {
     const pageName = new URL(newHref).pathname.split("/")[1];
 
     if (pageName === "watch" || pageName === "shorts") {
       clearInterval(commentReplaceInterval);
-      commentReplaceInterval = runCommentsReplace();
+      commentReplaceInterval = runCommentsReplace(pageChangeOb);
     }
   });
+
+  /**
+   * 元の名前を見えなくする
+   */
+  const style = document.createElement("style");
+  document.head.appendChild(style);
+  style.innerHTML = `#author-text > span:nth-child(1) ,ytd-author-comment-badge-renderer > #name > #channel-name > #container > #text-container > yt-formatted-string{
+    display:none;
+  }`;
 }
 
-function runCommentsReplace(): number {
+function runCommentsReplace(pageChangeOb: pageChangeObserverType): number {
   return window.setInterval(() => {
     /**
      * 名前の置き換え
      */
     const authorSpan = document.querySelector(
-      "#author-text > span:not(.name-replaced)"
+      "#author-text > span:nth-child(1):not(.name-replaced)"
     );
 
     if (authorSpan !== null) {
@@ -29,7 +39,7 @@ function runCommentsReplace(): number {
 
       if (channelLink !== null && typeof href === "string") {
         void getUserName(href.split("/")[2]).then((name) => {
-          authorSpan.innerHTML = name;
+          replacedElement(authorSpan, name);
         });
       }
     }
@@ -38,13 +48,13 @@ function runCommentsReplace(): number {
      * 返信先の名前の置き換え
      */
     const mention = document.querySelector(
-      "#content-text > a.yt-formatted-string:not(.name-replaced)"
+      `#content-text > a.yt-formatted-string[dir="auto"]:not(.name-replaced)`
     );
 
     if (mention !== null) {
       mention.classList.add("name-replaced");
-
       if (mention.innerHTML.match("@.*") !== null) {
+        mention.removeAttribute("dir");
         const href = mention.getAttribute("href");
 
         if (href !== null) {
@@ -67,13 +77,11 @@ function runCommentsReplace(): number {
 
     if (channelLink !== null && channelNameSpan !== null) {
       channelNameSpan.classList.add("name-replaced");
-
-      console.log(channelLink);
       const href = channelLink?.getAttribute("href");
 
       if (channelLink !== null && typeof href === "string") {
         void getUserName(href.split("/")[2]).then((name) => {
-          channelNameSpan.innerHTML = name;
+          replacedElement(channelNameSpan, name);
         });
       }
     }
@@ -84,16 +92,18 @@ function runCommentsReplace(): number {
  * hrefの変更を監視
  * @param handler 変更されたときの処理
  */
-function pageChangeHandler(handler: (newHref: string) => void): void {
+function pageChangeObserver(): pageChangeObserverType {
   let beforeHref = "";
-
   const body = document.querySelector("body");
+  const pageChangeListeners: pageChangeListener[] = [];
 
   if (body !== null) {
     const observer = new MutationObserver(() => {
       const href = location.href;
       if (href !== beforeHref) {
-        handler(href);
+        pageChangeListeners.forEach((listener) => {
+          listener(href);
+        });
       }
       beforeHref = href;
     });
@@ -103,6 +113,41 @@ function pageChangeHandler(handler: (newHref: string) => void): void {
       subtree: true,
     });
   }
+
+  return {
+    addPageChangeListener: (listener: pageChangeListener) => {
+      pageChangeListeners.push(listener);
+      return pageChangeListeners.length - 1;
+    },
+    removePageChangeListener: (key: number) => {
+      pageChangeListeners.splice(key, 1);
+    },
+  };
+}
+
+function replacedElement(nameElem: Element, name: string): void {
+  const className = "shit-youtube-handle-name";
+  const parent = nameElem.parentElement;
+
+  if (parent !== null) {
+    const replacedNameElem = parent.querySelector(`.${className}`);
+
+    if (replacedNameElem !== null) {
+      replacedNameElem.innerHTML = name;
+    } else {
+      const replacedNameElem = document.createElement("span");
+      replacedNameElem.className = nameElem.className;
+      replacedNameElem.classList.add(className);
+      replacedNameElem.innerHTML = name;
+      parent.appendChild(replacedNameElem);
+    }
+  }
+}
+
+type pageChangeListener = (href: string) => void;
+interface pageChangeObserverType {
+  addPageChangeListener: (callback: pageChangeListener) => number;
+  removePageChangeListener: (key: number) => void;
 }
 
 main();
