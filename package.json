@@ -15,7 +15,6 @@
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.55.0",
-    "esbuild": "^0.17.10",
     "esbuild-plugin-eslint": "^0.1.1",
     "esbuild-register": "^3.4.2",
     "eslint": "^8.31.0",
@@ -34,15 +33,15 @@
     "react-dom": "^18.2.0",
     "sass": "^1.58.3",
     "sha256": "^0.2.0",
+    "ts-extension-builder": "yakisova41/ts-extension-builder",
     "typescript": "^4.9.5",
     "ws": "^8.12.1"
   },
   "dependencies": {},
   "scripts": {
     "esbuild-register": "node --require esbuild-register",
-    "build:userscript": "npm run esbuild-register build/ build mode=userScript",
-    "build:extension": "npm run esbuild-register build/ build mode=extension",
-    "build": "npm run build:userscript && npm run build:extension minify && npm run build:userscript minify",
-    "dev": "npm run esbuild-register build/ dev mode=userScript"
+    "build:userscript": "npx ts-extension-builder build type=userscript",
+    "build:extension": "npx ts-extension-builder build type=extension",
+    "dev": "npx ts-extension-builder dev type=userscript"
   }
 }
