@@ -1,7 +1,7 @@
 import { getUserName } from "./getUserName";
 import { handleToName } from "./handleToName";
 
-export function main(): void {
+export default function main(): void {
   let commentReplaceInterval = 0;
   const pageChangeOb = pageChangeObserver();
 

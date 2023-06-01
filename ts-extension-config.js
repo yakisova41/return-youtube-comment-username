@@ -2,20 +2,24 @@ const packagejson = require("./package.json");
 const path = require("path");
 
 module.exports = {
-  userScriptHeader: {
-    "@name": "Return YouTube Comment Username",
-    "@name:ja": "YouTubeコメント欄の名前を元に戻す",
-    "@version": packagejson.version,
-    "@author": "yakisova41",
-    "@license": packagejson.license,
-    "@namespace": "https://yt-returnname-api.pages.dev/extension/",
-    "@description":
+  userScriptHeader: [
+    ["@name", "Return YouTube Comment Username"],
+    ["@name:ja", "YouTubeコメント欄の名前を元に戻す"],
+    ["@version", packagejson.version],
+    ["@author", "yakisova41"],
+    ["@license", packagejson.license],
+    ["@namespace", "https://yt-returnname-api.pages.dev/extension/"],
+    [
+      "@description",
       "This is to change the handle in the YouTube comments section to a username.",
-    "@description:ja":
+    ],
+    [
+      "@description:ja",
       "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
-    "@match": "https://www.youtube.com/*",
-    "@grant": "none",
-  },
+    ],
+    ["@match", "https://www.youtube.com/*"],
+    ["@grant", "none"],
+  ],
   devServer: {
     port: 5173,
     host: "localhost",
