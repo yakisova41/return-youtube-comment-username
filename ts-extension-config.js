@@ -24,8 +24,8 @@ module.exports = {
   manifest: {
     name: "__MSG_Name__",
     short_name: "name",
-    version: packagejson.version,
-    manifest_version: 3,
+    version: String(packagejson.version),
+    manifest_version: "3",
     description: "__MSG_Description__",
     content_scripts: [
       {
@@ -49,18 +49,20 @@ module.exports = {
   locales: {
     ja: {
       Name: {
-        message: "名前",
+        message: "YouTubeコメント欄の名前を元に戻す",
       },
       Description: {
-        message: "説明",
+        message:
+          "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
       },
     },
     en: {
       Name: {
-        message: "name",
+        message: "Return YouTube Comment Username",
       },
       Description: {
-        message: "descruotion",
+        message:
+          "This is to change the handle in the YouTube comments section to a username.",
       },
     },
   },
