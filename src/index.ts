@@ -1,15 +1,27 @@
 import { getUserName } from "./getUserName";
+import { handleToName } from "./handleToName";
 
-export function main(): void {
+export default function main(): void {
   let commentReplaceInterval = 0;
   const pageChangeOb = pageChangeObserver();
 
   pageChangeOb.addPageChangeListener((newHref) => {
-    const pageName = new URL(newHref).pathname.split("/")[1];
+    const pagePathArray = new URL(newHref).pathname.split("/");
+    switch (pagePathArray[1]) {
+      case "watch":
+      case "shorts":
+      case "post":
+        clearInterval(commentReplaceInterval);
+        commentReplaceInterval = runCommentsReplace(pageChangeOb);
+        break;
 
-    if (pageName === "watch" || pageName === "shorts") {
-      clearInterval(commentReplaceInterval);
-      commentReplaceInterval = runCommentsReplace(pageChangeOb);
+      default:
+        if (pagePathArray[2] === "community") {
+          clearInterval(commentReplaceInterval);
+          commentReplaceInterval = runCommentsReplace(pageChangeOb);
+        } else {
+          clearInterval(commentReplaceInterval);
+        }
     }
   });
 
@@ -38,9 +50,17 @@ function runCommentsReplace(pageChangeOb: pageChangeObserverType): number {
       const href = channelLink?.getAttribute("href");
 
       if (channelLink !== null && typeof href === "string") {
-        void getUserName(href.split("/")[2]).then((name) => {
-          replacedElement(authorSpan, name);
-        });
+        if (href.split("/")[1][0] === "@") {
+          // href is handle
+          void handleToName(href.split("/")[1]).then((name) => {
+            replacedElement(authorSpan, name);
+          });
+        } else {
+          // href is channel id
+          void getUserName(href.split("/")[2]).then((name) => {
+            replacedElement(authorSpan, name);
+          });
+        }
       }
     }
 
@@ -125,6 +145,9 @@ function pageChangeObserver(): pageChangeObserverType {
   };
 }
 
+/**
+ * 元の名前要素を非表示にした代わりに、名前置き換え済みの名前要素を追加
+ */
 function replacedElement(nameElem: Element, name: string): void {
   const className = "shit-youtube-handle-name";
   const parent = nameElem.parentElement;
