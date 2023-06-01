@@ -5,11 +5,22 @@ export function main(): void {
   const pageChangeOb = pageChangeObserver();
 
   pageChangeOb.addPageChangeListener((newHref) => {
-    const pageName = new URL(newHref).pathname.split("/")[1];
+    const pagePathArray = new URL(newHref).pathname.split("/");
+    switch (pagePathArray[1]) {
+      case "watch":
+      case "shorts":
+      case "post":
+        clearInterval(commentReplaceInterval);
+        commentReplaceInterval = runCommentsReplace(pageChangeOb);
+        break;
 
-    if (pageName === "watch" || pageName === "shorts") {
-      clearInterval(commentReplaceInterval);
-      commentReplaceInterval = runCommentsReplace(pageChangeOb);
+      default:
+        if (pagePathArray[2] === "community") {
+          clearInterval(commentReplaceInterval);
+          commentReplaceInterval = runCommentsReplace(pageChangeOb);
+        } else {
+          clearInterval(commentReplaceInterval);
+        }
     }
   });
 
