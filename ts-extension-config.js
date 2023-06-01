@@ -29,7 +29,7 @@ module.exports = {
     name: "__MSG_Name__",
     short_name: "name",
     version: String(packagejson.version),
-    manifest_version: "3",
+    manifest_version: 3,
     description: "__MSG_Description__",
     content_scripts: [
       {
