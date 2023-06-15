@@ -129,5 +129,3 @@ function replacedElement(nameElem: Element, name: string): void {
     }
   }
 }
-
-main();
