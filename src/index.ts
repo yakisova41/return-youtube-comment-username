@@ -142,6 +142,7 @@ function replacedElement(nameElem: Element, name: string): void {
 
     if (replacedNameElem !== null) {
       replacedNameElem.innerHTML = name;
+      replacedNameElem.className = nameElem.className;
     } else {
       const replacedNameElem = document.createElement("span");
       replacedNameElem.className = nameElem.className;
