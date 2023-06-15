@@ -2,5 +2,6 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "prettier.prettierPath": "./node_modules/prettier"
 }
