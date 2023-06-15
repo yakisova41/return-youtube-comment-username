@@ -11,7 +11,6 @@ export default function main(): void {
     const observer = new MutationObserver(() => {
       const href = location.href;
       if (href !== beforeHref) {
-        console.log("page change");
         clearInterval(commentReplaceInterval);
         commentReplaceInterval = runCommentsReplace();
       }
