@@ -3,12 +3,26 @@ import { handleToName } from "./handleToName";
 
 export default function main(): void {
   let commentReplaceInterval = 0;
-  const pageChangeOb = pageChangeObserver();
 
-  pageChangeOb.addPageChangeListener(() => {
-    clearInterval(commentReplaceInterval);
-    commentReplaceInterval = runCommentsReplace(pageChangeOb);
-  });
+  let beforeHref = "";
+  const body = document.querySelector("body");
+
+  if (body !== null) {
+    const observer = new MutationObserver(() => {
+      const href = location.href;
+      if (href !== beforeHref) {
+        console.log("page change");
+        clearInterval(commentReplaceInterval);
+        commentReplaceInterval = runCommentsReplace();
+      }
+      beforeHref = href;
+    });
+
+    observer.observe(body, {
+      childList: true,
+      subtree: true,
+    });
+  }
 
   /**
    * 元の名前を見えなくする
@@ -20,7 +34,7 @@ export default function main(): void {
   }`;
 }
 
-function runCommentsReplace(pageChangeOb: pageChangeObserverType): number {
+function runCommentsReplace(): number {
   return window.setInterval(() => {
     /**
      * 名前の置き換え
@@ -94,43 +108,6 @@ function runCommentsReplace(pageChangeOb: pageChangeObserverType): number {
 }
 
 /**
- * hrefの変更を監視
- * @param handler 変更されたときの処理
- */
-function pageChangeObserver(): pageChangeObserverType {
-  let beforeHref = "";
-  const body = document.querySelector("body");
-  const pageChangeListeners: pageChangeListener[] = [];
-
-  if (body !== null) {
-    const observer = new MutationObserver(() => {
-      const href = location.href;
-      if (href !== beforeHref) {
-        pageChangeListeners.forEach((listener) => {
-          listener(href);
-        });
-      }
-      beforeHref = href;
-    });
-
-    observer.observe(body, {
-      childList: true,
-      subtree: true,
-    });
-  }
-
-  return {
-    addPageChangeListener: (listener: pageChangeListener) => {
-      pageChangeListeners.push(listener);
-      return pageChangeListeners.length - 1;
-    },
-    removePageChangeListener: (key: number) => {
-      pageChangeListeners.splice(key, 1);
-    },
-  };
-}
-
-/**
  * 元の名前要素を非表示にした代わりに、名前置き換え済みの名前要素を追加
  */
 function replacedElement(nameElem: Element, name: string): void {
@@ -151,12 +128,6 @@ function replacedElement(nameElem: Element, name: string): void {
       parent.appendChild(replacedNameElem);
     }
   }
-}
-
-type pageChangeListener = (href: string) => void;
-interface pageChangeObserverType {
-  addPageChangeListener: (callback: pageChangeListener) => number;
-  removePageChangeListener: (key: number) => void;
 }
 
 main();
