@@ -1,5 +1,12 @@
 const packagejson = require("./package.json");
 const path = require("path");
+const fs = require("fs");
+
+function getIconBase64() {
+  const icon = fs.readFileSync(path.join(__dirname, "./assets/icon128.png"));
+  const buf = Buffer.from(icon).toString("base64");
+  return `data:image/png;base64,${buf}`;
+}
 
 module.exports = {
   userScriptHeader: [
@@ -8,6 +15,7 @@ module.exports = {
     ["@version", packagejson.version],
     ["@author", "yakisova41"],
     ["@license", packagejson.license],
+    ["@icon", getIconBase64()],
     ["@namespace", "https://yt-returnname-api.pages.dev/extension/"],
     [
       "@description",

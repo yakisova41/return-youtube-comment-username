@@ -3,27 +3,25 @@ import { handleToName } from "./handleToName";
 
 export default function main(): void {
   let commentReplaceInterval = 0;
-  const pageChangeOb = pageChangeObserver();
 
-  pageChangeOb.addPageChangeListener((newHref) => {
-    const pagePathArray = new URL(newHref).pathname.split("/");
-    switch (pagePathArray[1]) {
-      case "watch":
-      case "shorts":
-      case "post":
+  let beforeHref = "";
+  const body = document.querySelector("body");
+
+  if (body !== null) {
+    const observer = new MutationObserver(() => {
+      const href = location.href;
+      if (href !== beforeHref) {
         clearInterval(commentReplaceInterval);
-        commentReplaceInterval = runCommentsReplace(pageChangeOb);
-        break;
+        commentReplaceInterval = runCommentsReplace();
+      }
+      beforeHref = href;
+    });
 
-      default:
-        if (pagePathArray[2] === "community") {
-          clearInterval(commentReplaceInterval);
-          commentReplaceInterval = runCommentsReplace(pageChangeOb);
-        } else {
-          clearInterval(commentReplaceInterval);
-        }
-    }
-  });
+    observer.observe(body, {
+      childList: true,
+      subtree: true,
+    });
+  }
 
   /**
    * 元の名前を見えなくする
@@ -35,7 +33,7 @@ export default function main(): void {
   }`;
 }
 
-function runCommentsReplace(pageChangeOb: pageChangeObserverType): number {
+function runCommentsReplace(): number {
   return window.setInterval(() => {
     /**
      * 名前の置き換え
@@ -109,43 +107,6 @@ function runCommentsReplace(pageChangeOb: pageChangeObserverType): number {
 }
 
 /**
- * hrefの変更を監視
- * @param handler 変更されたときの処理
- */
-function pageChangeObserver(): pageChangeObserverType {
-  let beforeHref = "";
-  const body = document.querySelector("body");
-  const pageChangeListeners: pageChangeListener[] = [];
-
-  if (body !== null) {
-    const observer = new MutationObserver(() => {
-      const href = location.href;
-      if (href !== beforeHref) {
-        pageChangeListeners.forEach((listener) => {
-          listener(href);
-        });
-      }
-      beforeHref = href;
-    });
-
-    observer.observe(body, {
-      childList: true,
-      subtree: true,
-    });
-  }
-
-  return {
-    addPageChangeListener: (listener: pageChangeListener) => {
-      pageChangeListeners.push(listener);
-      return pageChangeListeners.length - 1;
-    },
-    removePageChangeListener: (key: number) => {
-      pageChangeListeners.splice(key, 1);
-    },
-  };
-}
-
-/**
  * 元の名前要素を非表示にした代わりに、名前置き換え済みの名前要素を追加
  */
 function replacedElement(nameElem: Element, name: string): void {
@@ -157,6 +118,7 @@ function replacedElement(nameElem: Element, name: string): void {
 
     if (replacedNameElem !== null) {
       replacedNameElem.innerHTML = name;
+      replacedNameElem.className = nameElem.className;
     } else {
       const replacedNameElem = document.createElement("span");
       replacedNameElem.className = nameElem.className;
@@ -166,11 +128,3 @@ function replacedElement(nameElem: Element, name: string): void {
     }
   }
 }
-
-type pageChangeListener = (href: string) => void;
-interface pageChangeObserverType {
-  addPageChangeListener: (callback: pageChangeListener) => number;
-  removePageChangeListener: (key: number) => void;
-}
-
-main();
