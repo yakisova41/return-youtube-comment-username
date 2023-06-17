@@ -236,11 +236,11 @@ function findElementByTrackingParams(
 
 declare global {
   interface DocumentEventMap {
-    "yt-action": CustomEvent<any>;
+    "yt-action": CustomEvent<YtAction<any>>;
     "yt-navigate-finish": CustomEvent<YtNavigateFinishEvent>;
   }
 
   interface ElementEventMap {
-    "yt-action": CustomEvent<any>;
+    "yt-action": CustomEvent<YtAction<any>>;
   }
 }
