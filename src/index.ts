@@ -59,6 +59,10 @@ function handleYtAppendContinuationItemsAction(detail: YtAction<any>): void {
       YtAppendContinuationItemsActionArg0<"comment">
     > = detail;
 
+    /**
+     * レンダリングの完了イベントがわからんので暫定対応で500ms遅延させています
+     * コメント描画完了のイベントをご存じの方、至急メールくれや
+     */
     setTimeout(() => {
       rewriteCommentNameFromContinuationItems(
         commentDetail.args[0].appendContinuationItemsAction.continuationItems
