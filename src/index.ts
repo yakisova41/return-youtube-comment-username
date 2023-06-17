@@ -63,7 +63,7 @@ export default function main(): void {
       if (slot === "RELOAD_CONTINUATION_SLOT_BODY") {
         const continuationItems =
           reloadDetail.args[0].reloadContinuationItemsCommand.continuationItems;
-        console.log(continuationItems);
+
         setTimeout(() => {
           rewriteCommentNameFromContinuationItems(continuationItems);
         }, 500);
@@ -98,9 +98,14 @@ function rewriteReplytNameFromContinuationItems(
       );
 
       if (replyCommentRenderer !== null) {
+        let isContainer = commentRenderer.authorIsChannelOwner;
+        if (commentRenderer.authorCommentBadge !== undefined) {
+          isContainer = true;
+        }
+
         nameRewriteOfCommentRenderer(
           replyCommentRenderer,
-          commentRenderer.authorIsChannelOwner,
+          isContainer,
           commentRenderer.authorEndpoint.browseEndpoint.browseId
         );
 
@@ -133,9 +138,18 @@ function rewriteCommentNameFromContinuationItems(
       );
 
       if (commentRenderer !== null && commentRenderer !== undefined) {
+        let isContainer =
+          commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
+        if (
+          commentThreadRenderer.comment.commentRenderer.authorCommentBadge !==
+          undefined
+        ) {
+          isContainer = true;
+        }
+
         nameRewriteOfCommentRenderer(
           commentRenderer,
-          commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner,
+          isContainer,
           commentThreadRenderer.comment.commentRenderer.authorEndpoint
             .browseEndpoint.browseId
         );
@@ -146,10 +160,13 @@ function rewriteCommentNameFromContinuationItems(
 
 /**
  * commentRenderer要素の名前を書き換えます
+ * @param commentRenderer commentRenderer要素
+ * @param isNameContainerRender 名前がcontainerに表示されるか(チャンネルオーナー、公式ミュージックチャンネル)など
+ * @param userId ユーザーID
  */
 function nameRewriteOfCommentRenderer(
   commentRenderer: Element,
-  isChnnelOwner: boolean,
+  isNameContainerRender: boolean,
   userId: string
 ): void {
   let nameElem = commentRenderer.querySelector(
@@ -159,7 +176,7 @@ function nameRewriteOfCommentRenderer(
   /**
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
-  if (isChnnelOwner) {
+  if (isNameContainerRender) {
     nameElem = commentRenderer.querySelector(
       "#body > #main > #header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string"
     );
@@ -168,7 +185,6 @@ function nameRewriteOfCommentRenderer(
   /**
    * 名前要素の書き換え
    */
-
   void getUserName(userId).then((name) => {
     if (nameElem !== null) {
       nameElem.textContent = name;

@@ -35,6 +35,7 @@ export interface CommentRenderer {
   expandButton: Button;
   collapseButton: Button;
   loggingDirectives: LoggingDirectives;
+  authorCommentBadge?: any;
 }
 
 export interface ActionButtons {
