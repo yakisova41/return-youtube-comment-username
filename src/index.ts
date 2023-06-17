@@ -1,10 +1,19 @@
+/* eslint-disable no-prototype-builtins */
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
-import { type YtServiceRequestCompletedEvent } from "./types/YtServiceRequestCompletedEvent";
 import { getUserName } from "./getUserName";
+import {
+  type YtAction,
+  type YtAppendContinuationItemsActionArg0,
+  type YtReloadContinuationItemsCommandArg0,
+} from "./types/YtAction";
+import {
+  type ReplyContinuationItems,
+  type ContinuationItems,
+} from "./types/AppendContinuationItemsAction";
 
 export default function main(): void {
-  const handleYtAction = ({ detail }: CustomEvent<any>): void => {
-    const { actionName } = detail;
+  const handleYtAction = (e: CustomEvent<YtAction<any>>): void => {
+    const { actionName } = e.detail;
 
     /**
      * yt-append-continuation-items-action
@@ -13,17 +22,30 @@ export default function main(): void {
      */
     if (actionName === "yt-append-continuation-items-action") {
       const continuationItems =
-        detail.args[0].appendContinuationItemsAction.continuationItems;
+        e.detail.args[0].appendContinuationItemsAction.continuationItems;
 
       if (isCommentRenderer(continuationItems)) {
         // Reply
+        const replyDetail: YtAction<
+          YtAppendContinuationItemsActionArg0<"reply">
+        > = e.detail;
+
         setTimeout(() => {
-          rewriteReplytNameFromContinuationItems(continuationItems);
+          rewriteReplytNameFromContinuationItems(
+            replyDetail.args[0].appendContinuationItemsAction.continuationItems
+          );
         }, 1);
       } else {
         // comment
+        const commentDetail: YtAction<
+          YtAppendContinuationItemsActionArg0<"comment">
+        > = e.detail;
+
         setTimeout(() => {
-          rewriteCommentNameFromContinuationItems(continuationItems);
+          rewriteCommentNameFromContinuationItems(
+            commentDetail.args[0].appendContinuationItemsAction
+              .continuationItems
+          );
         }, 500);
       }
     }
@@ -33,12 +55,15 @@ export default function main(): void {
      * 最初の20個以内のコメント読み込み時と、新しい順と評価順を切り替えた際のaction
      */
     if (actionName === "yt-reload-continuation-items-command") {
-      const { slot } = detail.args[0].reloadContinuationItemsCommand;
+      const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0> =
+        e.detail;
+
+      const { slot } = reloadDetail.args[0].reloadContinuationItemsCommand;
 
       if (slot === "RELOAD_CONTINUATION_SLOT_BODY") {
         const continuationItems =
-          detail.args[0].reloadContinuationItemsCommand.continuationItems;
-
+          reloadDetail.args[0].reloadContinuationItemsCommand.continuationItems;
+        console.log(continuationItems);
         setTimeout(() => {
           rewriteCommentNameFromContinuationItems(continuationItems);
         }, 500);
@@ -60,7 +85,9 @@ export default function main(): void {
  * trackingParamsを取得、trackingParamsから要素を取得して、
  * Replyの名前を書き換える。
  */
-function rewriteReplytNameFromContinuationItems(continuationItems: any): void {
+function rewriteReplytNameFromContinuationItems(
+  continuationItems: ReplyContinuationItems
+): void {
   continuationItems.forEach((continuationItem) => {
     const { commentRenderer } = continuationItem;
 
@@ -88,8 +115,10 @@ function rewriteReplytNameFromContinuationItems(continuationItems: any): void {
  * trackingParamsを取得、trackingParamsから要素を取得して、
  * コメントの名前を書き換える。
  */
-function rewriteCommentNameFromContinuationItems(continuationItems: any): void {
-  continuationItems.forEach((continuationItem: any) => {
+function rewriteCommentNameFromContinuationItems(
+  continuationItems: ContinuationItems
+): void {
+  continuationItems.forEach((continuationItem) => {
     const { commentThreadRenderer } = continuationItem;
 
     if (commentThreadRenderer !== undefined) {
@@ -172,7 +201,9 @@ function mentionRewriteOfCommentRenderer(commentRenderer: Element): void {
  * continuationItemsに含まれるデータの種類を判別
  * @returns trueの場合、リプライ/falseの場合、普通のコメント
  */
-function isCommentRenderer(continuationItems: any): boolean {
+function isCommentRenderer(
+  continuationItems: ContinuationItems | ReplyContinuationItems
+): boolean {
   if (continuationItems.length > 0) {
     if (continuationItems[0].hasOwnProperty("commentThreadRenderer")) {
       return false;
@@ -181,9 +212,9 @@ function isCommentRenderer(continuationItems: any): boolean {
     if (continuationItems[0].hasOwnProperty("commentRenderer")) {
       return true;
     }
-  } else {
-    return false;
   }
+
+  return false;
 }
 
 /**
@@ -205,13 +236,11 @@ function findElementByTrackingParams(
 
 declare global {
   interface DocumentEventMap {
-    "yt-service-request-completed": CustomEvent<YtServiceRequestCompletedEvent>;
     "yt-action": CustomEvent<any>;
     "yt-navigate-finish": CustomEvent<YtNavigateFinishEvent>;
   }
 
   interface ElementEventMap {
-    "yt-service-request-completed": CustomEvent<YtServiceRequestCompletedEvent>;
     "yt-action": CustomEvent<any>;
   }
 }
