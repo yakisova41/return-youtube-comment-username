@@ -1,7 +1,7 @@
 {
   "name": "return-youtube-comment-username",
   "license": "MIT",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "commonjs",
   "devDependencies": {
     "@swc/core": "^1.3.36",
@@ -35,7 +35,7 @@
     "sha256": "^0.2.0",
     "typescript": "^4.9.5",
     "ws": "^8.12.1",
-    "ts-extension-builder": "^0.2.2"
+    "ts-extension-builder": "^0.2.3"
   },
   "dependencies": {},
   "scripts": {

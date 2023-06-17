@@ -27,6 +27,7 @@ module.exports = {
     ],
     ["@match", "https://www.youtube.com/*"],
     ["@grant", "none"],
+    ["@run-at", "document-end"],
   ],
   devServer: {
     port: 5173,
@@ -39,18 +40,6 @@ module.exports = {
     version: String(packagejson.version),
     manifest_version: 3,
     description: "__MSG_Description__",
-    content_scripts: [
-      {
-        matches: ["https://www.youtube.com/*"],
-        js: ["contentScript.js"],
-      },
-    ],
-    web_accessible_resources: [
-      {
-        resources: ["embed.js"],
-        matches: ["https://www.youtube.com/*"],
-      },
-    ],
     default_locale: "en",
     icons: {
       16: "assets/icon16.png",
