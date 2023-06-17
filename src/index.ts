@@ -15,59 +15,13 @@ export default function main(): void {
   const handleYtAction = (e: CustomEvent<YtAction<any>>): void => {
     const { actionName } = e.detail;
 
-    /**
-     * yt-append-continuation-items-action
-     * コメントの2ページ目(1ページ20個区切りと考えた場合)からの読み込みと、
-     * リプライの読み込み時のaction
-     */
-    if (actionName === "yt-append-continuation-items-action") {
-      const continuationItems =
-        e.detail.args[0].appendContinuationItemsAction.continuationItems;
-
-      if (isCommentRenderer(continuationItems)) {
-        // Reply
-        const replyDetail: YtAction<
-          YtAppendContinuationItemsActionArg0<"reply">
-        > = e.detail;
-
-        setTimeout(() => {
-          rewriteReplytNameFromContinuationItems(
-            replyDetail.args[0].appendContinuationItemsAction.continuationItems
-          );
-        }, 1);
-      } else {
-        // comment
-        const commentDetail: YtAction<
-          YtAppendContinuationItemsActionArg0<"comment">
-        > = e.detail;
-
-        setTimeout(() => {
-          rewriteCommentNameFromContinuationItems(
-            commentDetail.args[0].appendContinuationItemsAction
-              .continuationItems
-          );
-        }, 500);
-      }
-    }
-
-    /**
-     * yt-reload-continuation-items-command
-     * 最初の20個以内のコメント読み込み時と、新しい順と評価順を切り替えた際のaction
-     */
-    if (actionName === "yt-reload-continuation-items-command") {
-      const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0> =
-        e.detail;
-
-      const { slot } = reloadDetail.args[0].reloadContinuationItemsCommand;
-
-      if (slot === "RELOAD_CONTINUATION_SLOT_BODY") {
-        const continuationItems =
-          reloadDetail.args[0].reloadContinuationItemsCommand.continuationItems;
-
-        setTimeout(() => {
-          rewriteCommentNameFromContinuationItems(continuationItems);
-        }, 500);
-      }
+    switch (actionName) {
+      case "yt-append-continuation-items-action":
+        handleYtAppendContinuationItemsAction(e.detail);
+        break;
+      case "yt-reload-continuation-items-command":
+        handleYtReloadContinuationItemsCommand(e.detail);
+        break;
     }
   };
 
@@ -78,6 +32,58 @@ export default function main(): void {
     document.removeEventListener("yt-action", handleYtAction);
     document.addEventListener("yt-action", handleYtAction);
   });
+}
+
+/**
+ * yt-append-continuation-items-action
+ * コメントの2ページ目(1ページ20個区切りと考えた場合)からの読み込みと、
+ * リプライの読み込み時のaction
+ */
+function handleYtAppendContinuationItemsAction(detail: YtAction<any>): void {
+  const continuationItems =
+    detail.args[0].appendContinuationItemsAction.continuationItems;
+
+  if (isCommentRenderer(continuationItems)) {
+    // Reply
+    const replyDetail: YtAction<YtAppendContinuationItemsActionArg0<"reply">> =
+      detail;
+
+    setTimeout(() => {
+      rewriteReplytNameFromContinuationItems(
+        replyDetail.args[0].appendContinuationItemsAction.continuationItems
+      );
+    }, 1);
+  } else {
+    // comment
+    const commentDetail: YtAction<
+      YtAppendContinuationItemsActionArg0<"comment">
+    > = detail;
+
+    setTimeout(() => {
+      rewriteCommentNameFromContinuationItems(
+        commentDetail.args[0].appendContinuationItemsAction.continuationItems
+      );
+    }, 500);
+  }
+}
+
+/**
+ * yt-reload-continuation-items-command
+ * 最初の20個以内のコメント読み込み時と、新しい順と評価順を切り替えた際のaction
+ */
+function handleYtReloadContinuationItemsCommand(detail: YtAction<any>): void {
+  const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0> = detail;
+
+  const { slot } = reloadDetail.args[0].reloadContinuationItemsCommand;
+
+  if (slot === "RELOAD_CONTINUATION_SLOT_BODY") {
+    const continuationItems =
+      reloadDetail.args[0].reloadContinuationItemsCommand.continuationItems;
+
+    setTimeout(() => {
+      rewriteCommentNameFromContinuationItems(continuationItems);
+    }, 500);
+  }
 }
 
 /**
