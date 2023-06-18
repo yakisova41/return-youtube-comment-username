@@ -25,6 +25,8 @@ export default function main(): void {
     }
   };
 
+  document.addEventListener("yt-action", handleYtAction);
+
   /**
    * page change
    */
