@@ -67,7 +67,7 @@ function handleYtAppendContinuationItemsAction(detail: YtAction<any>): void {
       rewriteCommentNameFromContinuationItems(
         commentDetail.args[0].appendContinuationItemsAction.continuationItems
       );
-    }, 500);
+    }, 100);
   }
 }
 
@@ -86,7 +86,7 @@ function handleYtReloadContinuationItemsCommand(detail: YtAction<any>): void {
 
     setTimeout(() => {
       rewriteCommentNameFromContinuationItems(continuationItems);
-    }, 500);
+    }, 100);
   }
 }
 
@@ -107,7 +107,9 @@ function rewriteReplytNameFromContinuationItems(
         "ytd-comment-renderer"
       );
 
-      if (replyCommentRenderer !== null) {
+      const reWriteReplyCommentRenderer = (
+        replyCommentRenderer: Element
+      ): void => {
         let isContainer = commentRenderer.authorIsChannelOwner;
         if (commentRenderer.authorCommentBadge !== undefined) {
           isContainer = true;
@@ -120,6 +122,21 @@ function rewriteReplytNameFromContinuationItems(
         );
 
         mentionRewriteOfCommentRenderer(replyCommentRenderer);
+      };
+
+      /**
+       * 要素が存在しない場合は再検索をします。
+       * 絶対に存在するはずなので。
+       */
+      if (replyCommentRenderer !== null) {
+        reWriteReplyCommentRenderer(replyCommentRenderer);
+      } else {
+        void reSearchElement(
+          commentRenderer.trackingParams,
+          "ytd-comment-renderer"
+        ).then((el) => {
+          reWriteReplyCommentRenderer(el);
+        });
       }
     }
   });
@@ -143,26 +160,39 @@ function rewriteCommentNameFromContinuationItems(
         "ytd-comment-thread-renderer"
       );
 
-      const commentRenderer = commentElem?.querySelector(
-        "ytd-comment-renderer"
-      );
-
-      if (commentRenderer !== null && commentRenderer !== undefined) {
-        let isContainer =
-          commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
-        if (
-          commentThreadRenderer.comment.commentRenderer.authorCommentBadge !==
-          undefined
-        ) {
-          isContainer = true;
-        }
-
-        nameRewriteOfCommentRenderer(
-          commentRenderer,
-          isContainer,
-          commentThreadRenderer.comment.commentRenderer.authorEndpoint
-            .browseEndpoint.browseId
+      const reWriteCommentElem = (commentElem: Element): void => {
+        const commentRenderer = commentElem?.querySelector(
+          "ytd-comment-renderer"
         );
+
+        if (commentRenderer !== null && commentRenderer !== undefined) {
+          let isContainer =
+            commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
+          if (
+            commentThreadRenderer.comment.commentRenderer.authorCommentBadge !==
+            undefined
+          ) {
+            isContainer = true;
+          }
+
+          nameRewriteOfCommentRenderer(
+            commentRenderer,
+            isContainer,
+            commentThreadRenderer.comment.commentRenderer.authorEndpoint
+              .browseEndpoint.browseId
+          );
+        }
+      };
+
+      if (commentElem !== null) {
+        reWriteCommentElem(commentElem);
+      } else {
+        void reSearchElement(
+          trackingParams,
+          "ytd-comment-thread-renderer"
+        ).then((commentElem) => {
+          reWriteCommentElem(commentElem);
+        });
       }
     }
   });
@@ -258,6 +288,33 @@ function findElementByTrackingParams(
     }
   });
   return returnElement;
+}
+
+/**
+ * 再検索
+ */
+async function reSearchElement(
+  trackingParams: string,
+  elementType: string
+): Promise<Element> {
+  return await new Promise((resolve) => {
+    let isFinding = true;
+
+    const search = (): void => {
+      const el = findElementByTrackingParams(trackingParams, elementType);
+      if (el !== null) {
+        resolve(el);
+        isFinding = false;
+      }
+      if (isFinding) {
+        setTimeout(() => {
+          search();
+        }, 100);
+      }
+    };
+
+    search();
+  });
 }
 
 declare global {
