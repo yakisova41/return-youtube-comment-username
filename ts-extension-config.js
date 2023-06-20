@@ -26,7 +26,7 @@ module.exports = {
       "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
     ],
     ["@match", "https://www.youtube.com/*"],
-    ["@grant", "none"],
+    ["@grant", "unsafeWindow"],
     ["@run-at", "document-end"],
   ],
   devServer: {
@@ -68,4 +68,5 @@ module.exports = {
     },
   },
   assetsDir: path.join(__dirname, "assets"),
+  noSandbox: true,
 };
