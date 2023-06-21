@@ -12,6 +12,7 @@ import {
 } from "./types/AppendContinuationItemsAction";
 import { type YtHistoryLoad } from "./types/YtHistoryLoad";
 import { type YtGetMultiPageMenuAction } from "./types/YtGetMultiPageMenuAction";
+import { type YtCreateCommentAction } from "./types/YtCreateCommentAction";
 
 export default function main(): void {
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
@@ -29,6 +30,9 @@ export default function main(): void {
         break;
       case "yt-get-multi-page-menu-action":
         handleYtGetMultiPageMenuAction(e.detail);
+        break;
+      case "yt-create-comment-action":
+        handleYtCreateCommentAction(e.detail);
         break;
     }
   };
@@ -144,6 +148,23 @@ function handleYtGetMultiPageMenuAction(detail: YtAction<any, any>): void {
 }
 
 /**
+ * 自分でコメントした時に自分のコメントを書き換え
+ */
+function handleYtCreateCommentAction(detail: YtAction<any, any>): void {
+  const createCommentDetail: YtAction<YtCreateCommentAction, Element> = detail;
+  const continuationItems = [
+    {
+      commentThreadRenderer:
+        createCommentDetail.args[0].createCommentAction.contents
+          .commentThreadRenderer,
+    },
+  ];
+  setTimeout(() => {
+    rewriteCommentNameFromContinuationItems(continuationItems);
+  }, 100);
+}
+
+/**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
  * trackingParamsを取得、trackingParamsから要素を取得して、
  * Replyの名前を書き換える。
@@ -208,9 +229,10 @@ function rewriteCommentNameFromContinuationItems(
 
     if (commentThreadRenderer !== undefined) {
       const { trackingParams } = commentThreadRenderer;
+
       const commentElem = findElementByTrackingParams(
         trackingParams,
-        "ytd-comment-thread-renderer"
+        "#comments > #sections > #contents > ytd-comment-thread-renderer"
       );
 
       const reWriteCommentElem = (commentElem: Element): void => {
@@ -331,10 +353,10 @@ function isCommentRenderer(
  */
 function findElementByTrackingParams(
   trackingParams: string,
-  elementName: string
+  elementSelector: string
 ): Element | null {
   let returnElement = null;
-  const elems = document.querySelectorAll<any>(elementName);
+  const elems = document.querySelectorAll<any>(elementSelector);
   elems.forEach((elem) => {
     if (elem.trackedParams === trackingParams) {
       returnElement = elem;
