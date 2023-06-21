@@ -10,9 +10,10 @@ import {
   type ReplyContinuationItems,
   type ContinuationItems,
 } from "./types/AppendContinuationItemsAction";
+import { type YtHistoryLoad } from "./types/YtHistoryLoad";
 
 export default function main(): void {
-  const handleYtAction = (e: CustomEvent<YtAction<any>>): void => {
+  const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
     const { actionName } = e.detail;
 
     switch (actionName) {
@@ -21,6 +22,9 @@ export default function main(): void {
         break;
       case "yt-reload-continuation-items-command":
         handleYtReloadContinuationItemsCommand(e.detail);
+        break;
+      case "yt-history-load":
+        handleYtHistory(e.detail);
         break;
     }
   };
@@ -41,14 +45,18 @@ export default function main(): void {
  * コメントの2ページ目(1ページ20個区切りと考えた場合)からの読み込みと、
  * リプライの読み込み時のaction
  */
-function handleYtAppendContinuationItemsAction(detail: YtAction<any>): void {
+function handleYtAppendContinuationItemsAction(
+  detail: YtAction<any, any>
+): void {
   const continuationItems =
     detail.args[0].appendContinuationItemsAction.continuationItems;
 
   if (isCommentRenderer(continuationItems)) {
     // Reply
-    const replyDetail: YtAction<YtAppendContinuationItemsActionArg0<"reply">> =
-      detail;
+    const replyDetail: YtAction<
+      YtAppendContinuationItemsActionArg0<"reply">,
+      Element
+    > = detail;
 
     setTimeout(() => {
       rewriteReplytNameFromContinuationItems(
@@ -58,7 +66,8 @@ function handleYtAppendContinuationItemsAction(detail: YtAction<any>): void {
   } else {
     // comment
     const commentDetail: YtAction<
-      YtAppendContinuationItemsActionArg0<"comment">
+      YtAppendContinuationItemsActionArg0<"comment">,
+      Element
     > = detail;
 
     /**
@@ -77,8 +86,11 @@ function handleYtAppendContinuationItemsAction(detail: YtAction<any>): void {
  * yt-reload-continuation-items-command
  * 最初の20個以内のコメント読み込み時と、新しい順と評価順を切り替えた際のaction
  */
-function handleYtReloadContinuationItemsCommand(detail: YtAction<any>): void {
-  const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0> = detail;
+function handleYtReloadContinuationItemsCommand(
+  detail: YtAction<any, any>
+): void {
+  const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0, Element> =
+    detail;
 
   const { slot } = reloadDetail.args[0].reloadContinuationItemsCommand;
 
@@ -86,6 +98,24 @@ function handleYtReloadContinuationItemsCommand(detail: YtAction<any>): void {
     const continuationItems =
       reloadDetail.args[0].reloadContinuationItemsCommand.continuationItems;
 
+    setTimeout(() => {
+      rewriteCommentNameFromContinuationItems(continuationItems);
+    }, 100);
+  }
+}
+
+/**
+ * ページ移動後に戻ったときはhistoryとかいう名前のキャッシュから最初の20コメントが読み込まれる
+ */
+function handleYtHistory(detail: YtAction<any, any>): void {
+  const historyDetail: YtAction<any, YtHistoryLoad> = detail;
+
+  const continuationItems =
+    historyDetail.args[1].historyEntry?.rootData.response.contents
+      .twoColumnWatchNextResults.results.results.contents[3].itemSectionRenderer
+      ?.contents;
+
+  if (continuationItems !== undefined) {
     setTimeout(() => {
       rewriteCommentNameFromContinuationItems(continuationItems);
     }, 100);
@@ -321,11 +351,11 @@ async function reSearchElement(
 
 declare global {
   interface DocumentEventMap {
-    "yt-action": CustomEvent<YtAction<any>>;
+    "yt-action": CustomEvent<YtAction<any, any>>;
     "yt-navigate-finish": CustomEvent<YtNavigateFinishEvent>;
   }
 
   interface ElementEventMap {
-    "yt-action": CustomEvent<YtAction<any>>;
+    "yt-action": CustomEvent<YtAction<any, any>>;
   }
 }

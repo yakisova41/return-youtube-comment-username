@@ -3,9 +3,9 @@ import {
   type ReplyContinuationItems,
 } from "./AppendContinuationItemsAction";
 
-export interface YtAction<T> {
+export interface YtAction<T, U> {
   actionName: string;
-  args: { 0: T; 1: Element; 2: any };
+  args: { 0: T; 1: U; 2: any };
   optionalAction: boolean;
   returnValue: any;
 }
