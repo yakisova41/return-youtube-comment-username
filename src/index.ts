@@ -140,10 +140,52 @@ function handleYtGetMultiPageMenuAction(detail: YtAction<any, any>): void {
     getMultiPageMenuDetail.args[0].getMultiPageMenuAction.menu
       .multiPageMenuRenderer.sections[1].itemSectionRenderer?.contents;
 
+  const highLightedReplyRenderer =
+    getMultiPageMenuDetail.args[0].getMultiPageMenuAction.menu
+      .multiPageMenuRenderer.sections[1].itemSectionRenderer?.contents[0]
+      .commentThreadRenderer.replies?.commentRepliesRenderer.teaserContents[0]
+      .commentRenderer;
+
   if (continuationItems !== undefined) {
     setTimeout(() => {
       rewriteCommentNameFromContinuationItems(continuationItems);
+
+      if (highLightedReplyRenderer !== undefined) {
+        let isContainer = highLightedReplyRenderer.authorIsChannelOwner;
+        if (highLightedReplyRenderer.authorCommentBadge !== undefined) {
+          isContainer = true;
+        }
+
+        rewriteHighlightedReply(
+          highLightedReplyRenderer.trackingParams,
+          isContainer,
+          highLightedReplyRenderer.authorEndpoint.browseEndpoint.browseId
+        );
+      }
     }, 100);
+  }
+}
+
+function rewriteHighlightedReply(
+  trackedParams: string,
+  isContainer: boolean,
+  userId: string
+): void {
+  const elem = findElementByTrackingParams(
+    trackedParams,
+    "ytd-comment-renderer"
+  );
+
+  const rewriteHighlightedReplyElem = (elem: Element): void => {
+    nameRewriteOfCommentRenderer(elem, isContainer, userId);
+  };
+
+  if (elem === null) {
+    void reSearchElement(trackedParams, "ytd-comment-renderer").then((elem) => {
+      rewriteHighlightedReplyElem(elem);
+    });
+  } else {
+    rewriteHighlightedReplyElem(elem);
   }
 }
 
