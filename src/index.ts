@@ -120,8 +120,8 @@ function handleYtHistory(detail: YtAction<any, any>): void {
 
   const continuationItems =
     historyDetail.args[1].historyEntry?.rootData.response.contents
-      .twoColumnWatchNextResults.results.results.contents[3].itemSectionRenderer
-      ?.contents;
+      .twoColumnWatchNextResults?.results?.results?.contents[3]
+      ?.itemSectionRenderer?.contents;
 
   if (continuationItems !== undefined) {
     setTimeout(() => {
