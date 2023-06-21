@@ -11,6 +11,7 @@ import {
   type ContinuationItems,
 } from "./types/AppendContinuationItemsAction";
 import { type YtHistoryLoad } from "./types/YtHistoryLoad";
+import { type YtGetMultiPageMenuAction } from "./types/YtGetMultiPageMenuAction";
 
 export default function main(): void {
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
@@ -25,6 +26,9 @@ export default function main(): void {
         break;
       case "yt-history-load":
         handleYtHistory(e.detail);
+        break;
+      case "yt-get-multi-page-menu-action":
+        handleYtGetMultiPageMenuAction(e.detail);
         break;
     }
   };
@@ -114,6 +118,23 @@ function handleYtHistory(detail: YtAction<any, any>): void {
     historyDetail.args[1].historyEntry?.rootData.response.contents
       .twoColumnWatchNextResults.results.results.contents[3].itemSectionRenderer
       ?.contents;
+
+  if (continuationItems !== undefined) {
+    setTimeout(() => {
+      rewriteCommentNameFromContinuationItems(continuationItems);
+    }, 100);
+  }
+}
+
+/**
+ * ヘッダーの通知欄にあるコメントを置き換え
+ */
+function handleYtGetMultiPageMenuAction(detail: YtAction<any, any>): void {
+  const getMultiPageMenuDetail: YtAction<YtGetMultiPageMenuAction, any> =
+    detail;
+  const continuationItems =
+    getMultiPageMenuDetail.args[0].getMultiPageMenuAction.menu
+      .multiPageMenuRenderer.sections[1].itemSectionRenderer?.contents;
 
   if (continuationItems !== undefined) {
     setTimeout(() => {
