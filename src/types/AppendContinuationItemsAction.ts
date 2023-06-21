@@ -1,6 +1,7 @@
 export type ContinuationItems = Array<{
   commentThreadRenderer: ConfinuationItem;
 }>;
+
 export type ReplyContinuationItems = Array<{
   commentRenderer: CommentRenderer;
 }>;
@@ -11,6 +12,15 @@ export interface ConfinuationItem {
   renderingPriority: string;
   isModeratedElqComment: boolean;
   loggingDirectives: LoggingDirectives;
+  replies?: {
+    commentRepliesRenderer: {
+      teaserContents: {
+        0: {
+          commentRenderer: CommentRenderer;
+        };
+      };
+    };
+  };
 }
 
 export interface Comment {
