@@ -14,7 +14,7 @@ module.exports = {
     ["@name:ja", "YouTubeコメント欄の名前を元に戻す"],
     ["@name:zh-CN", "恢復 YouTube 评论用户名"],
     ["@name:zh-TW", "恢復 YouTube 評論名稱"],
-    [("@version", packagejson.version)],
+    ["@version", packagejson.version],
     ["@author", "yakisova41"],
     ["@license", packagejson.license],
     ["@icon", getIconBase64()],
