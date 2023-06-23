@@ -25,7 +25,7 @@ module.exports = {
     ],
     [
       "@description:ja",
-      "YouTubeのコメント欄の名前をハンドル(@...)から元のユーザー名に書き換えます",
+      "YouTubeのコメント欄の名前をハンドル(@...)からユーザー名に書き換えます。",
     ],
     ["@description:zh-TW", "此腳本將 YouTube 評論部分中的“handle”替換為用戶名"],
     ["@description:zh-CN", "此脚本将 YouTube 评论部分中的“handle”替换为用户名"],
@@ -58,7 +58,7 @@ module.exports = {
       },
       Description: {
         message:
-          "YouTubeのコメント欄の名前をハンドルからユーザー名に書き換えます。",
+          "YouTubeのコメント欄の名前をハンドル(@...)からユーザー名に書き換えます。",
       },
     },
     en: {
