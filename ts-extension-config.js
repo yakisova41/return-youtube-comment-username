@@ -12,19 +12,23 @@ module.exports = {
   userScriptHeader: [
     ["@name", "Return YouTube Comment Username"],
     ["@name:ja", "YouTubeコメント欄の名前を元に戻す"],
-    ["@version", packagejson.version],
+    ["@name:zh-CN", "恢復 YouTube 评论用户名"],
+    ["@name:zh-TW", "恢復 YouTube 評論名稱"],
+    [("@version", packagejson.version)],
     ["@author", "yakisova41"],
     ["@license", packagejson.license],
     ["@icon", getIconBase64()],
-    ["@namespace", "https://yt-returnname-api.pages.dev/extension/"],
+    ["@namespace", "https://rycu.yakisova.com"],
     [
       "@description",
-      "This is to change the handle in the YouTube comments section to a username.",
+      'This script replaces the "handle" in the YouTube comments section to user name',
     ],
     [
       "@description:ja",
-      "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
+      "YouTubeのコメント欄の名前をハンドル(@...)から元のユーザー名に書き換えます",
     ],
+    ["@description:zh-TW", "此腳本將 YouTube 評論部分中的“handle”替換為用戶名"],
+    ["@description:zh-CN", "此脚本将 YouTube 评论部分中的“handle”替换为用户名"],
     ["@match", "https://www.youtube.com/*"],
     ["@grant", "unsafeWindow"],
     ["@run-at", "document-end"],
@@ -54,7 +58,7 @@ module.exports = {
       },
       Description: {
         message:
-          "YouTubeのコメント欄の名前がハンドル(@...)表記になってしまった場合に、元のユーザーネームに上書きします。",
+          "YouTubeのコメント欄の名前をハンドルからユーザー名に書き換えます。",
       },
     },
     en: {
@@ -63,7 +67,7 @@ module.exports = {
       },
       Description: {
         message:
-          "This is to change the handle in the YouTube comments section to a username.",
+          'This script replaces the "handle" in the YouTube comments section to user name',
       },
     },
   },
