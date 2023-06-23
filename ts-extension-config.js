@@ -18,7 +18,7 @@ module.exports = {
     ["@author", "yakisova41"],
     ["@license", packagejson.license],
     ["@icon", getIconBase64()],
-    ["@namespace", "https://rycu.yakisova.com"],
+    ["@namespace", "https://yt-returnname-api.pages.dev/extension/"],
     [
       "@description",
       'This script replaces the "handle" in the YouTube comments section to user name',
