@@ -29,7 +29,7 @@
     "fs-extra": "^11.1.0",
     "glob": "^8.1.0",
     "node-css-require": "^0.4.6",
-    "prettier": "^2.8.7",
+    "prettier": "2.8.6",
     "react-dom": "^18.2.0",
     "sass": "^1.58.3",
     "sha256": "^0.2.0",
