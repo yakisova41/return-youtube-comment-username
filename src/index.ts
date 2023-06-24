@@ -176,12 +176,12 @@ function rewriteHighlightedReply(
   isContainer: boolean,
   userId: string
 ): void {
-  const elem = findElementByTrackingParams(
+  const elem = findElementByTrackingParams<ShadyElement>(
     trackedParams,
     "ytd-comment-renderer"
   );
 
-  const rewriteHighlightedReplyElem = (elem: Element): void => {
+  const rewriteHighlightedReplyElem = (elem: ShadyElement): void => {
     nameRewriteOfCommentRenderer(elem, isContainer, userId);
   };
 
@@ -223,13 +223,13 @@ function rewriteReplytNameFromContinuationItems(
     const { commentRenderer } = continuationItem;
 
     if (commentRenderer !== undefined) {
-      const replyCommentRenderer = findElementByTrackingParams(
+      const replyCommentRenderer = findElementByTrackingParams<ShadyElement>(
         commentRenderer.trackingParams,
         "ytd-comment-renderer"
       );
 
       const reWriteReplyCommentRenderer = (
-        replyCommentRenderer: Element
+        replyCommentRenderer: ShadyElement
       ): void => {
         let isContainer = commentRenderer.authorIsChannelOwner;
         if (commentRenderer.authorCommentBadge !== undefined) {
@@ -277,15 +277,13 @@ function rewriteCommentNameFromContinuationItems(
     if (commentThreadRenderer !== undefined) {
       const { trackingParams } = commentThreadRenderer;
 
-      const commentElem = findElementByTrackingParams(
+      const commentElem = findElementByTrackingParams<ShadyElement>(
         trackingParams,
         "#comments > #sections > #contents > ytd-comment-thread-renderer"
       );
 
-      const reWriteCommentElem = (commentElem: Element): void => {
-        const commentRenderer = commentElem?.querySelector(
-          "ytd-comment-renderer"
-        );
+      const reWriteCommentElem = (commentElem: ShadyElement): void => {
+        const commentRenderer = commentElem.__shady_native_children[0];
 
         if (commentRenderer !== null && commentRenderer !== undefined) {
           let isContainer =
@@ -327,21 +325,24 @@ function rewriteCommentNameFromContinuationItems(
  * @param userId ユーザーID
  */
 function nameRewriteOfCommentRenderer(
-  commentRenderer: Element,
+  commentRenderer: ShadyElement,
   isNameContainerRender: boolean,
   userId: string
 ): void {
-  let nameElem = commentRenderer.querySelector(
-    "#body > #main > #header > #header-author > h3 > a > span"
+  const commentRendererBody = commentRenderer.__shady_native_children[2];
+
+  let nameElem = commentRendererBody.querySelector<ShadyElement>(
+    "#main > #header > #header-author > h3 > a > span"
   );
 
   /**
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
   if (isNameContainerRender) {
-    nameElem = commentRenderer.querySelector(
-      "#body > #main > #header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string"
-    );
+    nameElem =
+      commentRendererBody.__shady_native_children[1].querySelector<ShadyElement>(
+        "#header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string"
+      );
   }
 
   /**
@@ -349,7 +350,11 @@ function nameRewriteOfCommentRenderer(
    */
   void getUserName(userId).then((name) => {
     if (nameElem !== null) {
-      nameElem.textContent = name;
+      if (isNameContainerRender) {
+        nameElem.__shady_native_innerHTML = name;
+      } else {
+        nameElem.textContent = name;
+      }
     }
   });
 }
@@ -358,9 +363,11 @@ function nameRewriteOfCommentRenderer(
  * comment内のaタクを全取得して
  * 返信先リンクのもののみ書き換え
  */
-function mentionRewriteOfCommentRenderer(commentRenderer: Element): void {
-  const aTags = commentRenderer.querySelectorAll(
-    "#body > #main > #comment-content > ytd-expander > #content > #content-text > a"
+function mentionRewriteOfCommentRenderer(commentRenderer: ShadyElement): void {
+  const commentRendererBody = commentRenderer.__shady_native_children[2];
+  const main = commentRendererBody.__shady_native_children[1];
+  const aTags = main.querySelectorAll(
+    "#comment-content > ytd-expander > #content > #content-text > a"
   );
 
   aTags.forEach((aTag) => {
@@ -398,10 +405,10 @@ function isCommentRenderer(
 /**
  * trackingParams(コンポーネント固有のID?)から要素を検索
  */
-function findElementByTrackingParams(
+function findElementByTrackingParams<T = Element>(
   trackingParams: string,
   elementSelector: string
-): Element | null {
+): T | null {
   let returnElement = null;
   const elems = document.querySelectorAll<any>(elementSelector);
   elems.forEach((elem) => {
@@ -415,15 +422,15 @@ function findElementByTrackingParams(
 /**
  * 再検索
  */
-async function reSearchElement(
+async function reSearchElement<T = ShadyElement>(
   trackingParams: string,
   elementType: string
-): Promise<Element> {
+): Promise<T> {
   return await new Promise((resolve) => {
     let isFinding = true;
 
     const search = (): void => {
-      const el = findElementByTrackingParams(trackingParams, elementType);
+      const el = findElementByTrackingParams<T>(trackingParams, elementType);
       if (el !== null) {
         resolve(el);
         isFinding = false;
@@ -448,4 +455,12 @@ declare global {
   interface ElementEventMap {
     "yt-action": CustomEvent<YtAction<any, any>>;
   }
+}
+
+/**
+ * polymerの要素？知らんけど
+ */
+export interface ShadyElement extends HTMLElement {
+  __shady_native_children: ShadyElement[];
+  __shady_native_innerHTML: string;
 }
