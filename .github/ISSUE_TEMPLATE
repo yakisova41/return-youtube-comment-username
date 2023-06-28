@@ -1,0 +1,54 @@
+name: Bug Report
+description: Bug Report
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+        Please be as specific and brief as possible, and write in English, which can be translated into any language through translation.
+
+        日本語でも可能です。
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Enter the browser that caused the problem (e.g., Chrome 114.0.5735.134)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: releaseType
+    attributes:
+      label: Release Type
+      options:
+        - Chrome Extension
+        - Userscript
+    validations:
+      required: true
+
+  - type: input
+    id: userscriptManager
+    attributes:
+      label: Userscript manager
+      description: If you are using the Userscript version, please tell us which manager you are using (e.g., Tampermonkey 4.19.0)
+    validations:
+      required: false
+
+  - type: input
+    id: probremUrl
+    attributes:
+      label: The URL where the problem occurred
+      description: Please let us know the URL of the video or page where the problem occurred.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What is the problem?
+      description: Please tell me what exactly is the problem?
+    validations:
+      required: true
