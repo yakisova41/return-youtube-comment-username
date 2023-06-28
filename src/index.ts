@@ -18,27 +18,21 @@ export default function main(): void {
     switch (actionName) {
       case "yt-append-continuation-items-action":
         handleYtAppendContinuationItemsAction(e.detail);
-        console.log(actionName);
         break;
       case "yt-reload-continuation-items-command":
         handleYtReloadContinuationItemsCommand(e.detail);
-        console.log(actionName);
         break;
       case "yt-history-load":
         handleYtHistory(e.detail);
-        console.log(actionName);
         break;
       case "yt-get-multi-page-menu-action":
         handleYtGetMultiPageMenuAction(e.detail);
-        console.log(actionName);
         break;
       case "yt-create-comment-action":
         handleYtCreateCommentAction(e.detail);
-        console.log(actionName);
         break;
       case "yt-create-comment-reply-action":
         handleYtCreateCommentReplyAction(e.detail);
-        console.log(actionName);
         break;
     }
   };

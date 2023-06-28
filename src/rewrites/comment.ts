@@ -15,7 +15,6 @@ import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRew
 export function rewriteCommentNameFromContinuationItems(
   continuationItems: ContinuationItems
 ): void {
-  console.log(continuationItems);
   continuationItems.forEach((continuationItem) => {
     const { commentThreadRenderer } = continuationItem;
 
