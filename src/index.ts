@@ -12,7 +12,10 @@ import {
 } from "./types/AppendContinuationItemsAction";
 import { type YtHistoryLoad } from "./types/YtHistoryLoad";
 import { type YtGetMultiPageMenuAction } from "./types/YtGetMultiPageMenuAction";
-import { type YtCreateCommentAction } from "./types/YtCreateCommentAction";
+import {
+  type YtCreateCommentReplyAction,
+  type YtCreateCommentAction,
+} from "./types/YtCreateCommentAction";
 
 export default function main(): void {
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
@@ -33,6 +36,10 @@ export default function main(): void {
         break;
       case "yt-create-comment-action":
         handleYtCreateCommentAction(e.detail);
+        break;
+
+      case "yt-create-comment-reply-action":
+        handleYtCreateCommentReplyAction(e.detail);
         break;
     }
   };
@@ -212,6 +219,26 @@ function handleYtCreateCommentAction(detail: YtAction<any, any>): void {
 }
 
 /**
+ * 自分が返信した時に自分の返信を書き換え
+ */
+function handleYtCreateCommentReplyAction(detail: YtAction<any, any>): void {
+  const createReplyDetail: YtAction<YtCreateCommentReplyAction, Element> =
+    detail;
+  const continuationItems: ReplyContinuationItems = [
+    {
+      commentRenderer:
+        createReplyDetail.args[0].createCommentReplyAction.contents
+          .commentRenderer,
+    },
+  ];
+  console.log(continuationItems[0].commentRenderer.trackingParams);
+
+  setTimeout(() => {
+    rewriteReplytNameFromContinuationItems(continuationItems);
+  }, 100);
+}
+
+/**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
  * trackingParamsを取得、trackingParamsから要素を取得して、
  * Replyの名前を書き換える。
@@ -225,7 +252,7 @@ function rewriteReplytNameFromContinuationItems(
     if (commentRenderer !== undefined) {
       const replyCommentRenderer = findElementByTrackingParams<ShadyElement>(
         commentRenderer.trackingParams,
-        "ytd-comment-renderer"
+        "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer"
       );
 
       const reWriteReplyCommentRenderer = (
@@ -254,7 +281,7 @@ function rewriteReplytNameFromContinuationItems(
       } else {
         void reSearchElement(
           commentRenderer.trackingParams,
-          "ytd-comment-renderer"
+          "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer"
         ).then((el) => {
           reWriteReplyCommentRenderer(el);
         });
