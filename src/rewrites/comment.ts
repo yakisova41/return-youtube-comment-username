@@ -3,11 +3,11 @@ import {
   reSearchElement,
   type ShadyElement,
 } from "src/lib/findElementByTrackingParams";
-import { nameRewriteOfCommentRenderer } from "src/lib/nameRewriteOfCommentRenderer";
 import {
   type ContinuationItems,
   type ConfinuationItem,
 } from "src/types/AppendContinuationItemsAction";
+import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。

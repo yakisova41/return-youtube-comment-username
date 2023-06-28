@@ -3,7 +3,7 @@ import {
   reSearchElement,
   type ShadyElement,
 } from "src/lib/findElementByTrackingParams";
-import { nameRewriteOfCommentRenderer } from "src/lib/nameRewriteOfCommentRenderer";
+import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 
 /**
  * highLightedReplyの要素を書き換え

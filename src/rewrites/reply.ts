@@ -3,12 +3,13 @@ import {
   reSearchElement,
   type ShadyElement,
 } from "src/lib/findElementByTrackingParams";
-import { mentionRewriteOfCommentRenderer } from "src/lib/mentionRewriteOfCommentRenderer";
-import { nameRewriteOfCommentRenderer } from "src/lib/nameRewriteOfCommentRenderer";
+
 import {
   type CommentRenderer,
   type ReplyContinuationItems,
 } from "src/types/AppendContinuationItemsAction";
+import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
+import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 
 /**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
