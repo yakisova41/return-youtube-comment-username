@@ -1,5 +1,6 @@
-import { type ShadyElement } from "./findElementByTrackingParams";
-import { getUserName } from "./getUserName";
+import { type ShadyElement } from "../../lib/findElementByTrackingParams";
+import { getUserName } from "../../lib/getUserName";
+import { escapeString } from "../../lib/escapeString";
 
 /**
  * comment内のaタクを全取得して
@@ -19,7 +20,7 @@ export function mentionRewriteOfCommentRenderer(
       const href = aTag.getAttribute("href");
       if (href !== null) {
         void getUserName(href.split("/")[2]).then((name) => {
-          aTag.textContent = `@${name} `;
+          aTag.textContent = `@${escapeString(name)} `;
         });
       }
     }

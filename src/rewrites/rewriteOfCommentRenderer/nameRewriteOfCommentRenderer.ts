@@ -1,5 +1,6 @@
-import { type ShadyElement } from "./findElementByTrackingParams";
-import { getUserName } from "./getUserName";
+import { escapeString } from "../../lib/escapeString";
+import { type ShadyElement } from "../../lib/findElementByTrackingParams";
+import { getUserName } from "../../lib/getUserName";
 
 /**
  * commentRenderer要素の名前を書き換えます
@@ -34,9 +35,9 @@ export function nameRewriteOfCommentRenderer(
   void getUserName(userId).then((name) => {
     if (nameElem !== null) {
       if (isNameContainerRender) {
-        nameElem.__shady_native_innerHTML = name;
+        nameElem.__shady_native_innerHTML = escapeString(name);
       } else {
-        nameElem.textContent = name;
+        nameElem.textContent = escapeString(name);
       }
     }
   });
