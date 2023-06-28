@@ -61,20 +61,19 @@ function reWriteCommentElem(
  */
 async function getCommentElem(trackingParams: string): Promise<ShadyElement> {
   return await new Promise((resolve) => {
-    const selector =
-      "ytd-comments > #sections > #contents > ytd-comment-thread-renderer";
-
     const commentElem = findElementByTrackingParams<ShadyElement>(
       trackingParams,
-      selector
+      "#comments > #sections > #contents > ytd-comment-thread-renderer"
     );
 
     if (commentElem !== null) {
       resolve(commentElem);
     } else {
-      void reSearchElement(trackingParams, selector).then((commentElem) => {
-        resolve(commentElem);
-      });
+      void reSearchElement(trackingParams, "ytd-comment-thread-renderer").then(
+        (commentElem) => {
+          resolve(commentElem);
+        }
+      );
     }
   });
 }

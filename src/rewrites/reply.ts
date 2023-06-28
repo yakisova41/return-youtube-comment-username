@@ -24,6 +24,7 @@ export function rewriteReplytNameFromContinuationItems(
 
     if (commentRenderer !== undefined) {
       void getReplyElem(commentRenderer.trackingParams).then((replyElem) => {
+        console.log(replyElem);
         reWriteReplyElem(replyElem, commentRenderer);
       });
     }
@@ -57,7 +58,10 @@ function reWriteReplyElem(
 async function getReplyElem(trackingParams: string): Promise<ShadyElement> {
   return await new Promise((resolve) => {
     const selector =
-      "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
+      "ytd-comment-thread-renderer > #replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
+
+    const teaserSelector =
+      "ytd-comment-thread-renderer > #replies > ytd-comment-replies-renderer > #teaser-replies > ytd-comment-renderer";
 
     const commentElem = findElementByTrackingParams<ShadyElement>(
       trackingParams,
@@ -70,6 +74,12 @@ async function getReplyElem(trackingParams: string): Promise<ShadyElement> {
       void reSearchElement(trackingParams, selector).then((commentElem) => {
         resolve(commentElem);
       });
+
+      void reSearchElement(trackingParams, teaserSelector).then(
+        (commentElem) => {
+          resolve(commentElem);
+        }
+      );
     }
   });
 }
