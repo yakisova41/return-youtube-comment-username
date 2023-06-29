@@ -17,17 +17,20 @@ import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRew
  * Replyの名前を書き換える。
  */
 export function rewriteReplytNameFromContinuationItems(
-  continuationItems: ReplyContinuationItems
+  continuationItems: ReplyContinuationItems,
+  isTeaser: boolean = false
 ): void {
   continuationItems.forEach((continuationItem) => {
     const { commentRenderer } = continuationItem;
 
     if (commentRenderer !== undefined) {
-      void getReplyElem(commentRenderer.commentId).then((replyElems) => {
-        replyElems.forEach((replyElem) => {
-          reWriteReplyElem(replyElem, commentRenderer);
-        });
-      });
+      void getReplyElem(commentRenderer.commentId, isTeaser).then(
+        (replyElems) => {
+          replyElems.forEach((replyElem) => {
+            reWriteReplyElem(replyElem, commentRenderer);
+          });
+        }
+      );
     }
   });
 }
@@ -37,17 +40,17 @@ export function rewriteReplytNameFromContinuationItems(
  */
 function reWriteReplyElem(
   replyElem: ShadyElement,
-  commentRenderer: CommentRenderer
+  rendererData: CommentRenderer
 ): void {
-  let isContainer = commentRenderer.authorIsChannelOwner;
-  if (commentRenderer.authorCommentBadge !== undefined) {
+  let isContainer = rendererData.authorIsChannelOwner;
+  if (rendererData.authorCommentBadge !== undefined) {
     isContainer = true;
   }
 
   nameRewriteOfCommentRenderer(
     replyElem,
     isContainer,
-    commentRenderer.authorEndpoint.browseEndpoint.browseId
+    rendererData.authorEndpoint.browseEndpoint.browseId
   );
 
   mentionRewriteOfCommentRenderer(replyElem);
@@ -56,21 +59,30 @@ function reWriteReplyElem(
 /**
  * リプライの要素をtrackingParamsから取得
  */
-async function getReplyElem(commentId: string): Promise<ShadyElement[]> {
+async function getReplyElem(
+  commentId: string,
+  isTeaser: boolean
+): Promise<ShadyElement[]> {
   return await new Promise((resolve) => {
-    const selector = "ytd-comment-renderer";
+    let selector =
+      "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
 
-    const commentElem = findElementAllByCommentId<ShadyElement>(
+    if (isTeaser) {
+      selector =
+        "ytd-comment-replies-renderer >#teaser-replies > ytd-comment-renderer";
+    }
+
+    const commentRenderer = findElementAllByCommentId<ShadyElement>(
       commentId,
       selector
     );
 
-    if (commentElem !== null) {
-      resolve(commentElem);
+    if (commentRenderer !== null) {
+      resolve(commentRenderer);
     } else {
       void reSearchElementAllByCommentId(commentId, selector).then(
-        (commentElem) => {
-          resolve(commentElem);
+        (commentRenderer) => {
+          resolve(commentRenderer);
         }
       );
     }

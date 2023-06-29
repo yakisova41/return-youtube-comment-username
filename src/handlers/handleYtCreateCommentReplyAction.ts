@@ -20,6 +20,6 @@ export function handleYtCreateCommentReplyAction(
   ];
 
   setTimeout(() => {
-    rewriteReplytNameFromContinuationItems(continuationItems);
+    rewriteReplytNameFromContinuationItems(continuationItems, true);
   }, 100);
 }
