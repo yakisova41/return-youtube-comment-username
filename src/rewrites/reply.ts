@@ -17,20 +17,17 @@ import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRew
  * Replyの名前を書き換える。
  */
 export function rewriteReplytNameFromContinuationItems(
-  continuationItems: ReplyContinuationItems,
-  isTeaser: boolean = false
+  continuationItems: ReplyContinuationItems
 ): void {
   continuationItems.forEach((continuationItem) => {
     const { commentRenderer } = continuationItem;
 
     if (commentRenderer !== undefined) {
-      void getReplyElem(commentRenderer.commentId, isTeaser).then(
-        (replyElems) => {
-          replyElems.forEach((replyElem) => {
-            reWriteReplyElem(replyElem, commentRenderer);
-          });
-        }
-      );
+      void getReplyElem(commentRenderer.commentId).then((replyElems) => {
+        replyElems.forEach((replyElem) => {
+          reWriteReplyElem(replyElem, commentRenderer);
+        });
+      });
     }
   });
 }
@@ -59,18 +56,10 @@ function reWriteReplyElem(
 /**
  * リプライの要素をtrackingParamsから取得
  */
-async function getReplyElem(
-  commentId: string,
-  isTeaser: boolean
-): Promise<ShadyElement[]> {
+async function getReplyElem(commentId: string): Promise<ShadyElement[]> {
   return await new Promise((resolve) => {
-    let selector =
+    const selector =
       "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
-
-    if (isTeaser) {
-      selector =
-        "ytd-comment-replies-renderer >#teaser-replies > ytd-comment-renderer";
-    }
 
     const commentRenderer = findElementAllByCommentId<ShadyElement>(
       commentId,
@@ -85,6 +74,37 @@ async function getReplyElem(
           resolve(commentRenderer);
         }
       );
+    }
+  });
+}
+
+/**
+ * リプライ追加時に追加される要素の場所が操作によって異なるので
+ * どっちも書き換えとく
+ */
+export function rewriteTeaserReplytNameFromContinuationItems(
+  continuationItems: ReplyContinuationItems
+): void {
+  continuationItems.forEach((continuationItem) => {
+    const { commentRenderer } = continuationItem;
+
+    if (commentRenderer !== undefined) {
+      void reSearchElementAllByCommentId(
+        commentRenderer.commentId,
+        "ytd-comment-replies-renderer > #teaser-replies > ytd-comment-renderer"
+      ).then((replyElems) => {
+        replyElems.forEach((replyElem) => {
+          reWriteReplyElem(replyElem, commentRenderer);
+        });
+      });
+      void reSearchElementAllByCommentId(
+        commentRenderer.commentId,
+        "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer"
+      ).then((replyElems) => {
+        replyElems.forEach((replyElem) => {
+          reWriteReplyElem(replyElem, commentRenderer);
+        });
+      });
     }
   });
 }

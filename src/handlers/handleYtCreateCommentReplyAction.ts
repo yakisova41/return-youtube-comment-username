@@ -1,4 +1,4 @@
-import { rewriteReplytNameFromContinuationItems } from "src/rewrites/reply";
+import { rewriteTeaserReplytNameFromContinuationItems } from "src/rewrites/reply";
 import { type ReplyContinuationItems } from "src/types/AppendContinuationItemsAction";
 import { type YtAction } from "src/types/YtAction";
 import { type YtCreateCommentReplyAction } from "src/types/YtCreateCommentAction";
@@ -11,6 +11,7 @@ export function handleYtCreateCommentReplyAction(
 ): void {
   const createReplyDetail: YtAction<YtCreateCommentReplyAction, Element> =
     detail;
+
   const continuationItems: ReplyContinuationItems = [
     {
       commentRenderer:
@@ -20,6 +21,6 @@ export function handleYtCreateCommentReplyAction(
   ];
 
   setTimeout(() => {
-    rewriteReplytNameFromContinuationItems(continuationItems, true);
+    rewriteTeaserReplytNameFromContinuationItems(continuationItems);
   }, 100);
 }
