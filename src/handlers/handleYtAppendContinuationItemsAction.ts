@@ -1,4 +1,4 @@
-import { isCommentRenderer } from "src/lib/isCommentRenderer";
+import { isCommentRenderer } from "src/utils/isCommentRenderer";
 import { rewriteCommentNameFromContinuationItems } from "src/rewrites/comment";
 import { rewriteReplytNameFromContinuationItems } from "src/rewrites/reply";
 import {

@@ -2,7 +2,7 @@ import {
   findElementByTrackingParams,
   reSearchElement,
   type ShadyElement,
-} from "src/lib/findElementByTrackingParams";
+} from "src/utils/findElementByTrackingParams";
 import {
   type ContinuationItems,
   type ConfinuationItem,

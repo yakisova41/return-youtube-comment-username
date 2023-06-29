@@ -1,6 +1,6 @@
-import { escapeString } from "../../lib/escapeString";
-import { type ShadyElement } from "../../lib/findElementByTrackingParams";
-import { getUserName } from "../../lib/getUserName";
+import { escapeString } from "../../utils/escapeString";
+import { type ShadyElement } from "../../utils/findElementByTrackingParams";
+import { getUserName } from "../../utils/getUserName";
 
 /**
  * commentRenderer要素の名前を書き換えます

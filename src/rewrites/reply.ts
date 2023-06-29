@@ -2,7 +2,7 @@ import {
   findElementAllByCommentId,
   reSearchElementAllByCommentId,
   type ShadyElement,
-} from "src/lib/findElementByTrackingParams";
+} from "src/utils/findElementByTrackingParams";
 
 import {
   type CommentRenderer,

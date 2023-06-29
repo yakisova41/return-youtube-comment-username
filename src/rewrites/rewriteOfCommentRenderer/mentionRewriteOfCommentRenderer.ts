@@ -1,6 +1,6 @@
-import { type ShadyElement } from "../../lib/findElementByTrackingParams";
-import { getUserName } from "../../lib/getUserName";
-import { escapeString } from "../../lib/escapeString";
+import { type ShadyElement } from "../../utils/findElementByTrackingParams";
+import { getUserName } from "../../utils/getUserName";
+import { escapeString } from "../../utils/escapeString";
 
 /**
  * comment内のaタクを全取得して
