@@ -1,5 +1,6 @@
 import {
-  findElementAllByCommentId,
+  findElementByTrackingParams,
+  reSearchElement,
   reSearchElementAllByCommentId,
   type ShadyElement,
 } from "src/utils/findElementByTrackingParams";
@@ -23,10 +24,8 @@ export function rewriteReplytNameFromContinuationItems(
     const { commentRenderer } = continuationItem;
 
     if (commentRenderer !== undefined) {
-      void getReplyElem(commentRenderer.commentId).then((replyElems) => {
-        replyElems.forEach((replyElem) => {
-          reWriteReplyElem(replyElem, commentRenderer);
-        });
+      void getReplyElem(commentRenderer.trackingParams).then((replyElem) => {
+        reWriteReplyElem(replyElem, commentRenderer);
       });
     }
   });
@@ -56,24 +55,22 @@ function reWriteReplyElem(
 /**
  * リプライの要素をtrackingParamsから取得
  */
-async function getReplyElem(commentId: string): Promise<ShadyElement[]> {
+async function getReplyElem(trackedParams: string): Promise<ShadyElement> {
   return await new Promise((resolve) => {
     const selector =
-      "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
+      "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
 
-    const commentRenderer = findElementAllByCommentId<ShadyElement>(
-      commentId,
+    const commentRenderer = findElementByTrackingParams<ShadyElement>(
+      trackedParams,
       selector
     );
 
     if (commentRenderer !== null) {
       resolve(commentRenderer);
     } else {
-      void reSearchElementAllByCommentId(commentId, selector).then(
-        (commentRenderer) => {
-          resolve(commentRenderer);
-        }
-      );
+      void reSearchElement(trackedParams, selector).then((commentRenderer) => {
+        resolve(commentRenderer);
+      });
     }
   });
 }
