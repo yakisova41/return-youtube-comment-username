@@ -39,6 +39,6 @@ export function handleYtAppendContinuationItemsAction(
       rewriteCommentNameFromContinuationItems(
         commentDetail.args[0].appendContinuationItemsAction.continuationItems
       );
-    }, 100);
+    }, 10);
   }
 }
