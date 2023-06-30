@@ -48,6 +48,10 @@ body:
 
   - type: textarea
     attributes:
+      label: What scripts or extensions do you use with it?
+
+  - type: textarea
+    attributes:
       label: What is the problem?
       description: Please tell me what exactly is the problem?
     validations:
