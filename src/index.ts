@@ -57,4 +57,13 @@ declare global {
   interface ElementEventMap {
     "yt-action": CustomEvent<YtAction<any, any>>;
   }
+
+  interface Window {
+    yt: {
+      config_: {
+        HL: string;
+        GL: string;
+      };
+    };
+  }
 }

@@ -14,6 +14,8 @@ export async function getUserName(id: string): Promise<string> {
       body: JSON.stringify({
         context: {
           client: {
+            hl: window.yt.config_.HL,
+            gl: window.yt.config_.GL,
             remoteHost: "1919:8a10:1145:1419:e1c9:b81a:09db:ff3a",
             clientName: "WEB",
             clientVersion: "2.20230628.01.00",
