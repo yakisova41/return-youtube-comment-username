@@ -35,7 +35,7 @@
     "ws": "^8.12.1",
     "ts-extension-builder": "^0.2.5"
   },
-  "dependencies": {},
+  "dependencies": { "fast-xml-parser": "^4.2.5" },
   "scripts": {
     "esbuild-register": "node --require esbuild-register",
     "build:userscript": "npx ts-extension-builder build type=userscript",

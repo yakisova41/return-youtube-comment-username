@@ -7,11 +7,14 @@ export function findElementByTrackingParams<T = Element>(
 ): T | null {
   let returnElement = null;
   const elems = document.querySelectorAll<any>(elementSelector);
-  elems.forEach((elem) => {
-    if (elem.trackedParams === trackingParams) {
-      returnElement = elem;
+
+  for (let i = 0; i < elems.length; i++) {
+    if (elems[i].trackedParams === trackingParams) {
+      returnElement = elems[i];
+      break;
     }
-  });
+  }
+
   return returnElement;
 }
 
