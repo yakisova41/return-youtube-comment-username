@@ -33,7 +33,7 @@
     "sha256": "^0.2.0",
     "typescript": "^4.9.5",
     "ws": "^8.12.1",
-    "ts-extension-builder": "^0.2.4"
+    "ts-extension-builder": "^0.2.5"
   },
   "dependencies": {},
   "scripts": {
