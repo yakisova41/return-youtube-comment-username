@@ -20,6 +20,22 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Version of release (e.g., 0.3.7)
+    validations:
+      required: true
+
+  - type: input
+    id: yt-version
+    attributes:
+      label: youTube Client Version
+      description: Right-click on the video and click on `Copy Debug Log` and paste the `release_version` from the json file that will be copied. (e.g., youtube.player.web_20230718_01_RC00)
+    validations:
+      required: true
+      
   - type: dropdown
     id: releaseType
     attributes:
