@@ -1,5 +1,3 @@
-import { XMLParser } from "fast-xml-parser";
-
 export async function getUserName(id: string): Promise<string> {
   const data = await fetch(
     `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`,
@@ -11,9 +9,12 @@ export async function getUserName(id: string): Promise<string> {
   )
     .then(async (res) => await res.text())
     .then((text) => {
-      const parser = new XMLParser();
-      const data = parser.parse(text);
-      return data.feed.title;
+      const match = text.match("<title>([^<].*)</title>");
+      if (match !== null) {
+        return match[1];
+      } else {
+        return "API ERROR";
+      }
     });
   return data;
 }

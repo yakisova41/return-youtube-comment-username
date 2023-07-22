@@ -14,7 +14,6 @@ import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 export default function main(): void {
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
     const { actionName } = e.detail;
-
     switch (actionName) {
       case "yt-append-continuation-items-action":
         handleYtAppendContinuationItemsAction(e.detail);
