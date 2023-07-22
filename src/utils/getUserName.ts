@@ -1,4 +1,8 @@
+import { debugLog } from "./debugLog";
+
 export async function getUserName(id: string): Promise<string> {
+  debugLog("Get name");
+
   const data = await fetch(
     `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`,
     {
