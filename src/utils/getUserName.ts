@@ -7,13 +7,16 @@ export async function getUserName(id: string): Promise<string> {
       keepalive: false,
     }
   )
-    .then(async (res) => await res.text())
+    .then(async (res) => {
+      if (res.status !== 200) throw new Error(`API Status is ${res.status}`);
+      return await res.text();
+    })
     .then((text) => {
       const match = text.match("<title>([^<].*)</title>");
       if (match !== null) {
         return match[1];
       } else {
-        return "API ERROR";
+        throw new Error("XML title not found");
       }
     });
   return data;

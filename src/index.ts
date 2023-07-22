@@ -10,8 +10,11 @@ import { handleYtReloadContinuationItemsCommand } from "./handlers/handleYtReloa
 
 import { type YtAction } from "./types/YtAction";
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
+import { debugLog } from "./utils/debugLog";
 
 export default function main(): void {
+  debugLog("Script start");
+
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
     const { actionName } = e.detail;
     switch (actionName) {
