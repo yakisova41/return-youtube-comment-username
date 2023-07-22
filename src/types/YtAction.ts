@@ -24,7 +24,7 @@ export interface YtAppendContinuationItemsActionArg0<
 export interface YtReloadContinuationItemsCommandArg0 {
   clickTrackingParams: string;
   reloadContinuationItemsCommand: {
-    continuationItems: ContinuationItems;
+    continuationItems?: ContinuationItems;
     slot: "RELOAD_CONTINUATION_SLOT_BODY" | "RELOAD_CONTINUATION_SLOT_HEADER";
     targetId: string;
   };
