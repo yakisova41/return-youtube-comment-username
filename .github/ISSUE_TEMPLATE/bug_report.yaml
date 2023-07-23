@@ -31,7 +31,7 @@ body:
   - type: input
     id: yt-version
     attributes:
-      label: youTube Client Version
+      label: YouTube Client Version
       description: Right-click on the video and click on `Copy Debug Log` and paste the `release_version` from the json file that will be copied. (e.g., youtube.player.web_20230718_01_RC00)
     validations:
       required: true
@@ -65,10 +65,12 @@ body:
   - type: textarea
     attributes:
       label: What scripts or extensions do you use with it?
+      description: Please write all scripts and extensions (including AdBlock, etc.) that run on youtube.com that you use
 
   - type: textarea
     attributes:
       label: What is the problem?
-      description: Please tell me what exactly is the problem?
+      description: Please let me know what the problem is.
+Also, if possible, please attach a drag-and-drop screenshot of your DevTools console and network.
     validations:
       required: true
