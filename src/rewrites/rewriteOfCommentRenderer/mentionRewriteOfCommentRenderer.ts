@@ -1,6 +1,7 @@
 import { type ShadyElement } from "../../utils/findElementByTrackingParams";
 import { getUserName } from "../../utils/getUserName";
 import { escapeString } from "../../utils/escapeString";
+import { debugErr } from "src/utils/debugLog";
 
 /**
  * comment内のaタクを全取得して
@@ -18,10 +19,17 @@ export function mentionRewriteOfCommentRenderer(
   aTags.forEach((aTag) => {
     if (aTag.textContent?.match("@.*") !== null) {
       const href = aTag.getAttribute("href");
+
       if (href !== null) {
-        void getUserName(href.split("/")[2]).then((name) => {
-          aTag.textContent = `@${escapeString(name)} `;
-        });
+        void getUserName(href.split("/")[2])
+          .then((name) => {
+            aTag.textContent = `@${escapeString(name)} `;
+          })
+          .catch((e) => {
+            debugErr(e);
+          });
+      } else {
+        debugErr("Mention Atag is have not Href attr");
       }
     }
   });

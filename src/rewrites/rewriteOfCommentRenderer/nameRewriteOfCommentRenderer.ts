@@ -1,3 +1,4 @@
+import { debugErr } from "src/utils/debugLog";
 import { escapeString } from "../../utils/escapeString";
 import { type ShadyElement } from "../../utils/findElementByTrackingParams";
 import { getUserName } from "../../utils/getUserName";
@@ -32,13 +33,19 @@ export function nameRewriteOfCommentRenderer(
   /**
    * 名前要素の書き換え
    */
-  void getUserName(userId).then((name) => {
-    if (nameElem !== null) {
-      if (isNameContainerRender) {
-        nameElem.__shady_native_innerHTML = escapeString(name);
+  void getUserName(userId)
+    .then((name) => {
+      if (nameElem !== null) {
+        if (isNameContainerRender) {
+          nameElem.__shady_native_innerHTML = escapeString(name);
+        } else {
+          nameElem.textContent = escapeString(name);
+        }
       } else {
-        nameElem.textContent = escapeString(name);
+        debugErr("Name element is null");
       }
-    }
-  });
+    })
+    .catch((e) => {
+      debugErr(e);
+    });
 }

@@ -11,6 +11,7 @@ import {
 } from "src/types/AppendContinuationItemsAction";
 import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
+import { debugLog } from "src/utils/debugLog";
 
 /**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
@@ -20,6 +21,8 @@ import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRew
 export function rewriteReplytNameFromContinuationItems(
   continuationItems: ReplyContinuationItems
 ): void {
+  debugLog("Reply Rewrite");
+
   continuationItems.forEach((continuationItem) => {
     const { commentRenderer } = continuationItem;
 
@@ -94,6 +97,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
           reWriteReplyElem(replyElem, commentRenderer);
         });
       });
+
       void reSearchElementAllByCommentId(
         commentRenderer.commentId,
         "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer"

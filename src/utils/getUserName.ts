@@ -1,6 +1,8 @@
-import { XMLParser } from "fast-xml-parser";
+import { debugLog } from "./debugLog";
 
 export async function getUserName(id: string): Promise<string> {
+  debugLog("Get name");
+
   const data = await fetch(
     `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`,
     {
@@ -9,11 +11,17 @@ export async function getUserName(id: string): Promise<string> {
       keepalive: false,
     }
   )
-    .then(async (res) => await res.text())
+    .then(async (res) => {
+      if (res.status !== 200) throw new Error(`API Status is ${res.status}`);
+      return await res.text();
+    })
     .then((text) => {
-      const parser = new XMLParser();
-      const data = parser.parse(text);
-      return data.feed.title;
+      const match = text.match("<title>([^<].*)</title>");
+      if (match !== null) {
+        return match[1];
+      } else {
+        throw new Error("XML title not found");
+      }
     });
   return data;
 }

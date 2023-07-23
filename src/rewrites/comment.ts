@@ -8,6 +8,7 @@ import {
   type ConfinuationItem,
 } from "src/types/AppendContinuationItemsAction";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
+import { debugErr, debugLog } from "src/utils/debugLog";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。
@@ -15,6 +16,8 @@ import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRew
 export function rewriteCommentNameFromContinuationItems(
   continuationItems: ContinuationItems
 ): void {
+  debugLog("Comment Rewrite");
+
   continuationItems.forEach((continuationItem) => {
     const { commentThreadRenderer } = continuationItem;
 
@@ -69,11 +72,13 @@ async function getCommentElem(trackingParams: string): Promise<ShadyElement> {
     if (commentElem !== null) {
       resolve(commentElem);
     } else {
-      void reSearchElement(trackingParams, "ytd-comment-thread-renderer").then(
-        (commentElem) => {
+      void reSearchElement(trackingParams, "ytd-comment-thread-renderer")
+        .then((commentElem) => {
           resolve(commentElem);
-        }
-      );
+        })
+        .catch((e) => {
+          debugErr(e);
+        });
     }
   });
 }
