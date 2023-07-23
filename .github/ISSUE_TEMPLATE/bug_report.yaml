@@ -70,7 +70,6 @@ body:
   - type: textarea
     attributes:
       label: What is the problem?
-      description: Please let me know what the problem is.
-Also, if possible, please attach a drag-and-drop screenshot of your DevTools console and network.
+      description: Please let me know what the problem is. Also, if possible, please attach a drag-and-drop screenshot of your DevTools console and network.
     validations:
       required: true
