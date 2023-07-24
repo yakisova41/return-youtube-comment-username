@@ -20,8 +20,10 @@ export function handleYtReloadContinuationItemsCommand(
     const continuationItems =
       reloadDetail.args[0].reloadContinuationItemsCommand.continuationItems;
 
-    setTimeout(() => {
-      rewriteCommentNameFromContinuationItems(continuationItems);
-    }, 100);
+    if (continuationItems !== undefined) {
+      setTimeout(() => {
+        rewriteCommentNameFromContinuationItems(continuationItems);
+      }, 100);
+    }
   }
 }
