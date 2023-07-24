@@ -14,7 +14,7 @@ export interface YtAppendContinuationItemsActionArg0<
   T extends keyof ContinuationItemsList
 > {
   appendContinuationItemsAction: {
-    continuationItems?: ContinuationItemsList[T];
+    continuationItems: ContinuationItemsList[T];
     targetId: string;
     clickTrackingParams: string;
   };
