@@ -25,8 +25,6 @@ export async function reSearchElement<T = ShadyElement>(
   trackingParams: string,
   selector: string
 ): Promise<T> {
-  const timeOut = 10000;
-
   return await new Promise((resolve) => {
     let isFinding = true;
 
@@ -44,13 +42,6 @@ export async function reSearchElement<T = ShadyElement>(
     };
 
     search();
-
-    setTimeout(() => {
-      if (isFinding) {
-        isFinding = false;
-        throw new Error(`Research Timeout trackingParams: ${trackingParams}`);
-      }
-    }, timeOut);
   });
 }
 
