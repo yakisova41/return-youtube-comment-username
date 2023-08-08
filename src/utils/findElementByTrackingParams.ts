@@ -1,3 +1,5 @@
+import { debugErr } from "./debugLog";
+
 /**
  * trackingParams(コンポーネント固有のID?)から要素を検索
  */
@@ -6,12 +8,28 @@ export function findElementByTrackingParams<T = Element>(
   elementSelector: string
 ): T | null {
   let returnElement = null;
+  let errorAlerted = false;
   const elems = document.querySelectorAll<any>(elementSelector);
 
   for (let i = 0; i < elems.length; i++) {
+    if (
+      elems[i]?.trackedParams === undefined &&
+      elems[i]?.controllerProxy?.trackedParams === undefined
+    ) {
+      debugErr("TrackdParams property is not found");
+    }
+
     if (elems[i].trackedParams === trackingParams) {
       returnElement = elems[i];
       break;
+    } else if (elems[i]?.controllerProxy?.trackedParams === trackingParams) {
+      returnElement = elems[i];
+      break;
+    } else {
+      if (!errorAlerted) {
+        void searchTrackedParamsByObject(trackingParams, elems[i]);
+        errorAlerted = true;
+      }
     }
   }
 
@@ -55,6 +73,10 @@ export function findElementAllByCommentId<T = Element>(
   const returnElements: T[] = [];
   const elems = document.querySelectorAll<any>(elementSelector);
   elems.forEach((elem) => {
+    if (elem !== undefined && elem.__data.data.commentId === undefined) {
+      debugErr("Reply CommentId is not found");
+    }
+
     if (elem.__data.data.commentId === commnetId) {
       returnElements.push(elem);
     }
@@ -87,6 +109,30 @@ export async function reSearchElementAllByCommentId<T = ShadyElement>(
 
     search();
   });
+}
+
+export async function searchTrackedParamsByObject(
+  param: string,
+  elem: Element
+): Promise<any> {
+  const elemObj = Object(elem);
+
+  const search = (obj: Record<string, any>, history: string[]): void => {
+    Object.keys(obj).forEach((k) => {
+      if (typeof obj[k] === "object") {
+        search(obj[k], [...history, k]);
+      } else if (obj[k] === param) {
+        history.push(k);
+        alert(
+          `[Return YouTube Comment Username] Unknown Object format!\n"${history.join(
+            ">"
+          )}"`
+        );
+      }
+    });
+  };
+
+  search(elemObj, []);
 }
 
 /**
