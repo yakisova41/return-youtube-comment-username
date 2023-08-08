@@ -9,6 +9,7 @@ import {
 } from "src/types/AppendContinuationItemsAction";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
+import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。
@@ -27,6 +28,16 @@ export function rewriteCommentNameFromContinuationItems(
       void getCommentElem(trackingParams).then((commentElem) => {
         reWriteCommentElem(commentElem, commentThreadRenderer);
       });
+
+      if (
+        commentThreadRenderer.replies?.commentRepliesRenderer.teaserContents !==
+        undefined
+      ) {
+        // teaser repliy exist
+        rewriteTeaserReplytNameFromContinuationItems(
+          commentThreadRenderer.replies?.commentRepliesRenderer.teaserContents
+        );
+      }
     }
   });
 }

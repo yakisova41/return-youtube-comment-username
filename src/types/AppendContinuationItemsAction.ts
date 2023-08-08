@@ -14,11 +14,9 @@ export interface ConfinuationItem {
   loggingDirectives: LoggingDirectives;
   replies?: {
     commentRepliesRenderer: {
-      teaserContents: {
-        0: {
-          commentRenderer: CommentRenderer;
-        };
-      };
+      teaserContents: Array<{
+        commentRenderer: CommentRenderer;
+      }>;
     };
   };
 }
