@@ -75,6 +75,12 @@ export function findElementAllByCommentId<T = Element>(
   elems.forEach((elem) => {
     if (elem !== undefined) {
       if (
+        elem?.__data?.data?.commentId === undefined &&
+        elem?.controllerProxy?.__data?.data?.commentId === undefined
+      ) {
+        debugErr("Reply CommentId is not found");
+        console.log(elem);
+      } else if (
         elem?.__data?.data?.commentId !== undefined &&
         elem.__data.data.commentId === commnetId
       ) {
@@ -84,8 +90,6 @@ export function findElementAllByCommentId<T = Element>(
         elem.controllerProxy.__data.data.commentId === commnetId
       ) {
         returnElements.push(elem);
-      } else {
-        debugErr("Reply CommentId is not found");
       }
     }
   });
