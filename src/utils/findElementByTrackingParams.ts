@@ -1,3 +1,5 @@
+import { debugErr } from "./debugLog";
+
 /**
  * trackingParams(コンポーネント固有のID?)から要素を検索
  */
@@ -8,12 +10,21 @@ export function findElementByTrackingParams<T = Element>(
   let returnElement = null;
   const elems = document.querySelectorAll<any>(elementSelector);
   for (let i = 0; i < elems.length; i++) {
-    if (
-      elems[i].trackedParams === trackingParams ||
-      elems[i].controllerProxy.trackedParams === trackingParams
-    ) {
-      returnElement = elems[i];
-      break;
+    if (elems[i] !== undefined) {
+      if (
+        elems[i].trackedParams === undefined &&
+        elems[i].controllerProxy.trackedParams === undefined
+      ) {
+        debugErr("TrackdParams property is not found");
+      }
+
+      if (
+        elems[i].trackedParams === trackingParams ||
+        elems[i].controllerProxy.trackedParams === trackingParams
+      ) {
+        returnElement = elems[i];
+        break;
+      }
     }
   }
 
@@ -57,6 +68,10 @@ export function findElementAllByCommentId<T = Element>(
   const returnElements: T[] = [];
   const elems = document.querySelectorAll<any>(elementSelector);
   elems.forEach((elem) => {
+    if (elem !== undefined && elem.__data.data.commentId === undefined) {
+      debugErr("Reply CommentId is not found");
+    }
+
     if (elem.__data.data.commentId === commnetId) {
       returnElements.push(elem);
     }
