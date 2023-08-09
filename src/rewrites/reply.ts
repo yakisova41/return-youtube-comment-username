@@ -85,6 +85,8 @@ async function getReplyElem(trackedParams: string): Promise<ShadyElement> {
 export function rewriteTeaserReplytNameFromContinuationItems(
   continuationItems: ReplyContinuationItems
 ): void {
+  debugLog("Teaser Reply Rewrite");
+
   continuationItems.forEach((continuationItem) => {
     const { commentRenderer } = continuationItem;
 
