@@ -12,6 +12,7 @@ import {
 import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugLog } from "src/utils/debugLog";
+import { getUserName } from "src/utils/getUserName";
 
 /**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
@@ -53,6 +54,7 @@ function reWriteReplyElem(
   );
 
   mentionRewriteOfCommentRenderer(replyElem);
+  replyInputRewrite(replyElem);
 }
 
 /**
@@ -109,5 +111,30 @@ export function rewriteTeaserReplytNameFromContinuationItems(
         });
       });
     }
+  });
+}
+
+/**
+ * 返信に返信する際にinputに追加される返信先リンクのハンドルを名前に書き換え
+ */
+export function replyInputRewrite(replyElem: ShadyElement): void {
+  const replyToReplyBtn = replyElem.querySelector(
+    "#reply-button-end > ytd-button-renderer"
+  );
+  const replyToReplyHander = (): void => {
+    const replyLink = replyElem.querySelector("#contenteditable-root > a");
+    const href = replyLink?.getAttribute("href");
+    const channelId = href?.split("/")[2];
+
+    if (channelId !== undefined && replyLink !== null) {
+      void getUserName(channelId).then((name) => {
+        replyLink.textContent = ` @${name}`;
+      });
+    }
+    replyToReplyBtn?.removeEventListener("click", replyToReplyHander);
+  };
+  replyToReplyBtn?.addEventListener("click", replyToReplyHander);
+  document.addEventListener("rycu-pagechange", () => {
+    replyToReplyBtn?.removeEventListener("click", replyToReplyHander);
   });
 }
