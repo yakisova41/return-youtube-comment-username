@@ -3,6 +3,7 @@ import {
   reSearchElement,
   type ShadyElement,
 } from "src/utils/findElementByTrackingParams";
+import { replyInputRewrite } from "./reply";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 
 /**
@@ -20,6 +21,7 @@ export function rewriteHighlightedReply(
 
   const rewriteHighlightedReplyElem = (elem: ShadyElement): void => {
     nameRewriteOfCommentRenderer(elem, isContainer, userId);
+    replyInputRewrite(elem);
   };
 
   if (elem === null) {
