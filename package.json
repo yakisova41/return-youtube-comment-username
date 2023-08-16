@@ -1,6 +1,6 @@
 {
   "name": "return-youtube-comment-username",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "devDependencies": {
     "@swc/core": "^1.3.36",
     "@types/chrome": "^0.0.217",
