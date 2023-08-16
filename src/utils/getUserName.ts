@@ -1,4 +1,5 @@
-import { debugLog } from "./debugLog";
+import { debugLog, debugErr } from "./debugLog";
+import { decodeString } from "./escapeString";
 
 export async function getUserName(id: string): Promise<string> {
   debugLog("Get name");
@@ -18,9 +19,10 @@ export async function getUserName(id: string): Promise<string> {
     .then((text) => {
       const match = text.match("<title>([^<].*)</title>");
       if (match !== null) {
-        return match[1];
+        return decodeString(match[1]);
       } else {
-        throw new Error("XML title not found");
+        debugErr("XML title not found");
+        return "";
       }
     });
   return data;
