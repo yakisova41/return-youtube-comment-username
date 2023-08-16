@@ -39,7 +39,7 @@ export function nameRewriteOfCommentRenderer(
         if (isNameContainerRender) {
           nameElem.__shady_native_innerHTML = escapeString(name);
         } else {
-          nameElem.textContent = escapeString(name);
+          nameElem.textContent = name;
         }
       } else {
         debugErr("Name element is null");
