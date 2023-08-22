@@ -1,6 +1,5 @@
 import { type ShadyElement } from "../../utils/findElementByTrackingParams";
 import { getUserName } from "../../utils/getUserName";
-import { escapeString } from "../../utils/escapeString";
 import { debugErr } from "src/utils/debugLog";
 
 /**
@@ -10,8 +9,18 @@ import { debugErr } from "src/utils/debugLog";
 export function mentionRewriteOfCommentRenderer(
   commentRenderer: ShadyElement
 ): void {
-  const commentRendererBody = commentRenderer.__shady_native_children[2];
-  const main = commentRendererBody.__shady_native_children[1];
+  const commentRendererBody = Array.from(
+    commentRenderer.__shady_native_children
+  ).filter((elem) => {
+    return elem.id === "body";
+  })[0];
+
+  const main = Array.from(commentRendererBody.__shady_native_children).filter(
+    (elem) => {
+      return elem.id === "main";
+    }
+  )[0];
+
   const aTags = main.querySelectorAll(
     "#comment-content > ytd-expander > #content > #content-text > a"
   );
@@ -23,7 +32,7 @@ export function mentionRewriteOfCommentRenderer(
       if (href !== null) {
         void getUserName(href.split("/")[2])
           .then((name) => {
-            aTag.textContent = `@${escapeString(name)} `;
+            aTag.textContent = `@${name} `;
           })
           .catch((e) => {
             debugErr(e);

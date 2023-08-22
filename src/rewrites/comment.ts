@@ -24,7 +24,6 @@ export function rewriteCommentNameFromContinuationItems(
 
     if (commentThreadRenderer !== undefined) {
       const { trackingParams } = commentThreadRenderer;
-
       void getCommentElem(trackingParams).then((commentElem) => {
         reWriteCommentElem(commentElem, commentThreadRenderer);
       });
@@ -49,7 +48,11 @@ function reWriteCommentElem(
   commentElem: ShadyElement,
   commentThreadRenderer: ConfinuationItem
 ): void {
-  const commentRenderer = commentElem.__shady_native_children[0];
+  const commentRenderer = Array.from(
+    commentElem.__shady_native_children
+  ).filter((elem) => {
+    return elem.id === "comment";
+  })[0];
 
   if (commentRenderer !== null && commentRenderer !== undefined) {
     let isContainer =
