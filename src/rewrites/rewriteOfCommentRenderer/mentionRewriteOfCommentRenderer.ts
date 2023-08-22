@@ -1,6 +1,5 @@
 import { type ShadyElement } from "../../utils/findElementByTrackingParams";
 import { getUserName } from "../../utils/getUserName";
-import { escapeString } from "../../utils/escapeString";
 import { debugErr } from "src/utils/debugLog";
 
 /**
@@ -33,7 +32,7 @@ export function mentionRewriteOfCommentRenderer(
       if (href !== null) {
         void getUserName(href.split("/")[2])
           .then((name) => {
-            aTag.textContent = `@${escapeString(name)} `;
+            aTag.textContent = `@${name} `;
           })
           .catch((e) => {
             debugErr(e);
