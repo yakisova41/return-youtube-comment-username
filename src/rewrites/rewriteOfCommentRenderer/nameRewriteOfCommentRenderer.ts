@@ -14,7 +14,11 @@ export function nameRewriteOfCommentRenderer(
   isNameContainerRender: boolean,
   userId: string
 ): void {
-  const commentRendererBody = commentRenderer.__shady_native_children[2];
+  const commentRendererBody = Array.from(
+    commentRenderer.__shady_native_children
+  ).filter((elem) => {
+    return elem.id === "body";
+  })[0];
 
   let nameElem = commentRendererBody.querySelector<ShadyElement>(
     "#main > #header > #header-author > h3 > a > span"
@@ -24,8 +28,11 @@ export function nameRewriteOfCommentRenderer(
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
   if (isNameContainerRender) {
-    nameElem =
-      commentRendererBody.__shady_native_children[1].querySelector<ShadyElement>(
+    nameElem = Array.from(commentRendererBody.__shady_native_children)
+      .filter((elem) => {
+        return elem.id === "main";
+      })[0]
+      .querySelector<ShadyElement>(
         "#header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string"
       );
   }

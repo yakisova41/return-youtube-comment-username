@@ -13,7 +13,6 @@ export function handleYtReloadContinuationItemsCommand(
 ): void {
   const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0, Element> =
     detail;
-
   const { slot } = reloadDetail.args[0].reloadContinuationItemsCommand;
 
   if (slot === "RELOAD_CONTINUATION_SLOT_BODY") {
