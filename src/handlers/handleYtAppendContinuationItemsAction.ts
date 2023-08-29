@@ -27,7 +27,7 @@ export function handleYtAppendContinuationItemsAction(
       rewriteReplytNameFromContinuationItems(
         replyDetail.args[0].appendContinuationItemsAction.continuationItems
       );
-    }, 1);
+    }, 100);
   } else {
     // comment
     const commentDetail: YtAction<
@@ -39,6 +39,6 @@ export function handleYtAppendContinuationItemsAction(
       rewriteCommentNameFromContinuationItems(
         commentDetail.args[0].appendContinuationItemsAction.continuationItems
       );
-    }, 10);
+    }, 400);
   }
 }
