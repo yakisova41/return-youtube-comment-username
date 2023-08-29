@@ -123,6 +123,9 @@ export async function reSearchElementAllByCommentId<T = ShadyElement>(
   });
 }
 
+/**
+ * エラーが出た時にtrackedparamsまでのpathをユーザーに通知
+ */
 export async function searchTrackedParamsByObject(
   param: string,
   elem: Element
