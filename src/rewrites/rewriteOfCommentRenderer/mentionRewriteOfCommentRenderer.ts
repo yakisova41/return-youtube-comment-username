@@ -9,37 +9,32 @@ import { debugErr } from "src/utils/debugLog";
 export function mentionRewriteOfCommentRenderer(
   commentRenderer: ShadyElement
 ): void {
-  const commentRendererBody = Array.from(
-    commentRenderer.__shady_native_children
-  ).filter((elem) => {
-    return elem.id === "body";
-  })[0];
+  const commentRendererBody =
+    commentRenderer.__shady_native_children.namedItem("body");
 
-  const main = Array.from(commentRendererBody.__shady_native_children).filter(
-    (elem) => {
-      return elem.id === "main";
-    }
-  )[0];
+  const main = commentRendererBody?.__shady_native_children.namedItem("main");
 
-  const aTags = main.querySelectorAll(
-    "#comment-content > ytd-expander > #content > #content-text > a"
-  );
+  if (main !== undefined && main !== null) {
+    const aTags = main.querySelectorAll(
+      "#comment-content > ytd-expander > #content > #content-text > a"
+    );
 
-  aTags.forEach((aTag) => {
-    if (aTag.textContent?.match("@.*") !== null) {
-      const href = aTag.getAttribute("href");
+    for (let i = 0; i < aTags.length; i++) {
+      if (aTags[i].textContent?.match("@.*") !== null) {
+        const href = aTags[i].getAttribute("href");
 
-      if (href !== null) {
-        void getUserName(href.split("/")[2])
-          .then((name) => {
-            aTag.textContent = `@${name} `;
-          })
-          .catch((e) => {
-            debugErr(e);
-          });
-      } else {
-        debugErr("Mention Atag is have not Href attr");
+        if (href !== null) {
+          void getUserName(href.split("/")[2])
+            .then((name) => {
+              aTags[i].textContent = `@${name} `;
+            })
+            .catch((e) => {
+              debugErr(e);
+            });
+        } else {
+          debugErr("Mention Atag is have not Href attr");
+        }
       }
     }
-  });
+  }
 }

@@ -19,26 +19,26 @@ export function rewriteCommentNameFromContinuationItems(
 ): void {
   debugLog("Comment Rewrite");
 
-  continuationItems.forEach((continuationItem) => {
-    const { commentThreadRenderer } = continuationItem;
-
-    if (commentThreadRenderer !== undefined) {
-      const { trackingParams } = commentThreadRenderer;
-      void getCommentElem(trackingParams).then((commentElem) => {
-        reWriteCommentElem(commentElem, commentThreadRenderer);
+  for (let i = 0; i < continuationItems.length; i++) {
+    if (continuationItems[i].commentThreadRenderer !== undefined) {
+      void getCommentElem(
+        continuationItems[i].commentThreadRenderer.trackingParams
+      ).then((commentElem) => {
+        reWriteCommentElem(
+          commentElem,
+          continuationItems[i].commentThreadRenderer
+        );
       });
 
-      if (
-        commentThreadRenderer.replies?.commentRepliesRenderer.teaserContents !==
-        undefined
-      ) {
+      const teaserContents =
+        continuationItems[i].commentThreadRenderer.replies
+          ?.commentRepliesRenderer.teaserContents;
+      if (teaserContents !== undefined) {
         // teaser repliy exist
-        rewriteTeaserReplytNameFromContinuationItems(
-          commentThreadRenderer.replies?.commentRepliesRenderer.teaserContents
-        );
+        rewriteTeaserReplytNameFromContinuationItems(teaserContents);
       }
     }
-  });
+  }
 }
 
 /**
@@ -48,11 +48,8 @@ function reWriteCommentElem(
   commentElem: ShadyElement,
   commentThreadRenderer: ConfinuationItem
 ): void {
-  const commentRenderer = Array.from(
-    commentElem.__shady_native_children
-  ).filter((elem) => {
-    return elem.id === "comment";
-  })[0];
+  const commentRenderer =
+    commentElem.__shady_native_children.namedItem("comment");
 
   if (commentRenderer !== null && commentRenderer !== undefined) {
     let isContainer =

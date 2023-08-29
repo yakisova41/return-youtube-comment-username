@@ -24,15 +24,15 @@ export function rewriteReplytNameFromContinuationItems(
 ): void {
   debugLog("Reply Rewrite");
 
-  continuationItems.forEach((continuationItem) => {
-    const { commentRenderer } = continuationItem;
+  for (let i = 0; i < continuationItems.length; i++) {
+    const { commentRenderer } = continuationItems[i];
 
     if (commentRenderer !== undefined) {
       void getReplyElem(commentRenderer.trackingParams).then((replyElem) => {
         reWriteReplyElem(replyElem, commentRenderer);
       });
     }
-  });
+  }
 }
 
 /**
@@ -89,8 +89,8 @@ export function rewriteTeaserReplytNameFromContinuationItems(
 ): void {
   debugLog("Teaser Reply Rewrite");
 
-  continuationItems.forEach((continuationItem) => {
-    const { commentRenderer } = continuationItem;
+  for (let i = 0; i < continuationItems.length; i++) {
+    const { commentRenderer } = continuationItems[i];
 
     if (commentRenderer !== undefined) {
       void reSearchElementAllByCommentId(
@@ -111,7 +111,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
         });
       });
     }
-  });
+  }
 }
 
 /**

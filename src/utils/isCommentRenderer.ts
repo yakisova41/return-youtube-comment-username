@@ -12,11 +12,11 @@ export function isCommentRenderer(
   continuationItems: ContinuationItems | ReplyContinuationItems
 ): boolean {
   if (continuationItems.length > 0) {
-    if (continuationItems[0].hasOwnProperty("commentThreadRenderer")) {
+    if ("commentThreadRenderer" in continuationItems[0]) {
       return false;
     }
 
-    if (continuationItems[0].hasOwnProperty("commentRenderer")) {
+    if ("commentRenderer" in continuationItems[0]) {
       return true;
     }
   }

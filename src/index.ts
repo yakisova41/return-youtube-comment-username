@@ -16,8 +16,7 @@ export default function main(): void {
   debugLog("Script start");
 
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
-    const { actionName } = e.detail;
-    switch (actionName) {
+    switch (e.detail.actionName) {
       case "yt-append-continuation-items-action":
         handleYtAppendContinuationItemsAction(e.detail);
         break;

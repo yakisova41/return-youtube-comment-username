@@ -14,11 +14,12 @@ export function nameRewriteOfCommentRenderer(
   isNameContainerRender: boolean,
   userId: string
 ): void {
-  const commentRendererBody = Array.from(
-    commentRenderer.__shady_native_children
-  ).filter((elem) => {
-    return elem.id === "body";
-  })[0];
+  const commentRendererBody =
+    commentRenderer.__shady_native_children.namedItem("body");
+
+  if (commentRendererBody === null) {
+    throw new Error("[rycu] comment renderer body is null");
+  }
 
   let nameElem = commentRendererBody.querySelector<ShadyElement>(
     "#main > #header > #header-author > h3 > a > span"
@@ -28,13 +29,14 @@ export function nameRewriteOfCommentRenderer(
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
   if (isNameContainerRender) {
-    nameElem = Array.from(commentRendererBody.__shady_native_children)
-      .filter((elem) => {
-        return elem.id === "main";
-      })[0]
-      .querySelector<ShadyElement>(
+    const containerMain =
+      commentRendererBody.__shady_native_children.namedItem("main");
+
+    if (containerMain !== null) {
+      nameElem = containerMain.querySelector<ShadyElement>(
         "#header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string"
       );
+    }
   }
 
   /**

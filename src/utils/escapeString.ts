@@ -1,15 +1,15 @@
 export function escapeString(text: string): string {
   return text
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll(`"`, `&quot;`)
-    .replaceAll(`'`, `&#39;`);
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, `&quot;`)
+    .replace(/'/g, `&#39;`);
 }
 
 export function decodeString(text: string): string {
   return text
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll(`&quot;`, `"`)
-    .replaceAll(`&#39;`, `'`);
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, `"`)
+    .replace(/&#39;/g, `'`);
 }
