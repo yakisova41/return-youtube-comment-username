@@ -10,6 +10,7 @@ import {
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
+import { getShadyChildren } from "src/utils/getShadyChildren";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。
@@ -48,8 +49,7 @@ function reWriteCommentElem(
   commentElem: ShadyElement,
   commentThreadRenderer: ConfinuationItem
 ): void {
-  const commentRenderer =
-    commentElem.__shady_native_children.namedItem("comment");
+  const commentRenderer = getShadyChildren(commentElem, 1, "comment");
 
   if (commentRenderer !== null && commentRenderer !== undefined) {
     let isContainer =
