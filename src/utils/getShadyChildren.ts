@@ -1,5 +1,10 @@
 import { type ShadyElement } from "./findElementByTrackingParams";
 
+/**
+ * 基本的には子要素をindexで取得して負荷を軽減します。
+ * 子要素のidが事前に指定されたidと一致しない場合(仕様変更などで要素の順番が変わった時)に
+ * queryselectorで要素を取得してユーザーにエラーメッセージを出し、issueを促します。
+ */
 export function getShadyChildren(
   parentElement: ShadyElement,
   index: number,
