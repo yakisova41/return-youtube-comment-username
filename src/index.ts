@@ -16,8 +16,7 @@ export default function main(): void {
   debugLog("Script start");
 
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
-    const { actionName } = e.detail;
-    switch (actionName) {
+    switch (e.detail.actionName) {
       case "yt-append-continuation-items-action":
         handleYtAppendContinuationItemsAction(e.detail);
         break;
@@ -45,8 +44,6 @@ export default function main(): void {
    * page change
    */
   document.addEventListener("yt-navigate-finish", ({ detail }) => {
-    document.removeEventListener("yt-action", handleYtAction);
-    document.addEventListener("yt-action", handleYtAction);
     document.dispatchEvent(new Event("rycu-pagechange"));
   });
 }

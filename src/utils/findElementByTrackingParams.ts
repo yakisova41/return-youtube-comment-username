@@ -72,27 +72,27 @@ export function findElementAllByCommentId<T = Element>(
 ): T[] {
   const returnElements: T[] = [];
   const elems = document.querySelectorAll<any>(elementSelector);
-  elems.forEach((elem) => {
-    if (elem !== undefined) {
+  for (let i = 0; i < elems.length; i++) {
+    if (elems[i] !== undefined) {
       if (
-        elem?.__data?.data?.commentId === undefined &&
-        elem?.controllerProxy?.__data?.data?.commentId === undefined
+        elems[i]?.__data?.data?.commentId === undefined &&
+        elems[i]?.controllerProxy?.__data?.data?.commentId === undefined
       ) {
         debugErr("Reply CommentId is not found");
-        console.log(elem);
+        console.log(elems[i]);
       } else if (
-        elem?.__data?.data?.commentId !== undefined &&
-        elem.__data.data.commentId === commnetId
+        elems[i]?.__data?.data?.commentId !== undefined &&
+        elems[i].__data.data.commentId === commnetId
       ) {
-        returnElements.push(elem);
+        returnElements.push(elems[i]);
       } else if (
-        elem?.controllerProxy?.__data?.data?.commentId !== undefined &&
-        elem.controllerProxy.__data.data.commentId === commnetId
+        elems[i]?.controllerProxy?.__data?.data?.commentId !== undefined &&
+        elems[i].controllerProxy.__data.data.commentId === commnetId
       ) {
-        returnElements.push(elem);
+        returnElements.push(elems[i]);
       }
     }
-  });
+  }
   return returnElements;
 }
 
@@ -123,6 +123,9 @@ export async function reSearchElementAllByCommentId<T = ShadyElement>(
   });
 }
 
+/**
+ * エラーが出た時にtrackedparamsまでのpathをユーザーに通知
+ */
 export async function searchTrackedParamsByObject(
   param: string,
   elem: Element
@@ -151,7 +154,7 @@ export async function searchTrackedParamsByObject(
  * polymerの要素？知らんけど
  */
 export interface ShadyElement extends HTMLElement {
-  __shady_native_children: ShadyElement[];
+  __shady_native_children: HTMLCollectionOf<ShadyElement>;
   __shady_native_innerHTML: string;
   __data: {
     data: {

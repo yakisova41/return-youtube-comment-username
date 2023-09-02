@@ -9,7 +9,7 @@ export async function getUserName(id: string): Promise<string> {
     {
       method: "GET",
       cache: "default",
-      keepalive: false,
+      keepalive: true,
     }
   )
     .then(async (res) => {
