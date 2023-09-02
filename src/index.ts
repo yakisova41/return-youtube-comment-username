@@ -44,8 +44,6 @@ export default function main(): void {
    * page change
    */
   document.addEventListener("yt-navigate-finish", ({ detail }) => {
-    document.removeEventListener("yt-action", handleYtAction);
-    document.addEventListener("yt-action", handleYtAction);
     document.dispatchEvent(new Event("rycu-pagechange"));
   });
 }
