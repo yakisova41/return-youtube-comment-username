@@ -13,8 +13,9 @@ import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 import { debugLog } from "./utils/debugLog";
 
 export default function main(): void {
-  debugLog("Script start");
+  debugLog("Script start")
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
     switch (e.detail.actionName) {
       case "yt-append-continuation-items-action":
@@ -43,18 +44,20 @@ export default function main(): void {
   /**
    * page change
    */
-  document.addEventListener("yt-navigate-finish", ({ detail }) => {
+  document.addEventListener("yt-navigate-finish", () => {
     document.dispatchEvent(new Event("rycu-pagechange"));
   });
 }
 
 declare global {
   interface DocumentEventMap {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     "yt-action": CustomEvent<YtAction<any, any>>;
     "yt-navigate-finish": CustomEvent<YtNavigateFinishEvent>;
   }
 
   interface ElementEventMap {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     "yt-action": CustomEvent<YtAction<any, any>>;
   }
 
