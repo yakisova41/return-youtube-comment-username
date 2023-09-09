@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-
+    name: build and lint
     runs-on: ubuntu-latest
 
     strategy:
