@@ -13,12 +13,12 @@ import { getUserName } from "../../utils/getUserName";
 export function nameRewriteOfCommentRenderer(
   commentRenderer: ShadyElement,
   isNameContainerRender: boolean,
-  userId: string
+  userId: string,
 ): void {
   const commentRendererBody: ShadyElement | null = getShadyChildren(
     commentRenderer,
-    3,
-    "body"
+    2,
+    "body",
   );
 
   if (commentRendererBody === null) {
@@ -26,7 +26,7 @@ export function nameRewriteOfCommentRenderer(
   }
 
   let nameElem = commentRendererBody.querySelector<ShadyElement>(
-    "#main > #header > #header-author > h3 > a > span"
+    "#main > #header > #header-author > h3 > a > span",
   );
 
   /**
@@ -37,7 +37,7 @@ export function nameRewriteOfCommentRenderer(
 
     if (containerMain !== null) {
       nameElem = containerMain.querySelector<ShadyElement>(
-        "#header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string"
+        "#header > #header-author > #author-comment-badge > ytd-author-comment-badge-renderer > a > #channel-name > #container > #text-container > yt-formatted-string",
       );
     }
   }

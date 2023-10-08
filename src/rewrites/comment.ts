@@ -16,18 +16,18 @@ import { getShadyChildren } from "src/utils/getShadyChildren";
  * confinuationItemsを元にコメントの名前を書き換える。
  */
 export function rewriteCommentNameFromContinuationItems(
-  continuationItems: ContinuationItems
+  continuationItems: ContinuationItems,
 ): void {
   debugLog("Comment Rewrite");
 
   for (let i = 0; i < continuationItems.length; i++) {
     if (continuationItems[i].commentThreadRenderer !== undefined) {
       void getCommentElem(
-        continuationItems[i].commentThreadRenderer.trackingParams
+        continuationItems[i].commentThreadRenderer.trackingParams,
       ).then((commentElem) => {
         reWriteCommentElem(
           commentElem,
-          continuationItems[i].commentThreadRenderer
+          continuationItems[i].commentThreadRenderer,
         );
       });
 
@@ -47,10 +47,9 @@ export function rewriteCommentNameFromContinuationItems(
  */
 function reWriteCommentElem(
   commentElem: ShadyElement,
-  commentThreadRenderer: ConfinuationItem
+  commentThreadRenderer: ConfinuationItem,
 ): void {
-  const commentRenderer = getShadyChildren(commentElem, 1, "comment");
-
+  const commentRenderer = getShadyChildren(commentElem, 0, "comment");
   if (commentRenderer !== null && commentRenderer !== undefined) {
     let isContainer =
       commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
@@ -65,7 +64,7 @@ function reWriteCommentElem(
       commentRenderer,
       isContainer,
       commentThreadRenderer.comment.commentRenderer.authorEndpoint
-        .browseEndpoint.browseId
+        .browseEndpoint.browseId,
     );
   }
 }
@@ -77,7 +76,7 @@ async function getCommentElem(trackingParams: string): Promise<ShadyElement> {
   return await new Promise((resolve) => {
     const commentElem = findElementByTrackingParams<ShadyElement>(
       trackingParams,
-      "#comments > #sections > #contents > ytd-comment-thread-renderer"
+      "#comments > #sections > #contents > ytd-comment-thread-renderer",
     );
 
     if (commentElem !== null) {
