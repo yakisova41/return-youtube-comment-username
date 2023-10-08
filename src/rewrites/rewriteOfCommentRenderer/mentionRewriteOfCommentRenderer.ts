@@ -8,15 +8,15 @@ import { getShadyChildren } from "src/utils/getShadyChildren";
  * 返信先リンクのもののみ書き換え
  */
 export function mentionRewriteOfCommentRenderer(
-  commentRenderer: ShadyElement
+  commentRenderer: ShadyElement,
 ): void {
-  const commentRendererBody = getShadyChildren(commentRenderer, 3, "body");
+  const commentRendererBody = getShadyChildren(commentRenderer, 2, "body");
 
   const main = commentRendererBody?.querySelector<ShadyElement>("#main");
 
   if (main !== undefined && main !== null) {
     const aTags = main.querySelectorAll(
-      "#comment-content > ytd-expander > #content > #content-text > a"
+      "#comment-content > ytd-expander > #content > #content-text > a",
     );
 
     for (let i = 0; i < aTags.length; i++) {
