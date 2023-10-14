@@ -1,10 +1,74 @@
-import { debugLog } from "./debugLog";
+import { debugErr, debugLog } from "./debugLog";
 import { decodeString } from "./escapeString";
 
-export async function getUserName(id: string): Promise<string> {
-  debugLog("Get name");
+let isUseFeed = true;
 
-  const data = await fetch(
+export async function getUserName(id: string): Promise<string> {
+  /**
+   * RSSフィードが障害時に、フロントエンドのAPIに切り替え
+   */
+  return new Promise((resolve) => {
+    if (isUseFeed) {
+      debugLog("Get name by Feed");
+
+      fetchFeed(id)
+        .then((name) => {
+          resolve(name);
+        })
+        .catch(() => {
+          isUseFeed = false;
+
+          debugErr("Catch Feed API Error");
+
+          fetchBrowse(id).then((name) => {
+            resolve(name);
+          });
+        });
+    } else {
+      debugLog("Get name by Browse");
+
+      fetchBrowse(id).then((name) => {
+        resolve(name);
+      });
+    }
+  });
+}
+
+/**
+ * RSSフィードから名前を取得
+ * 20ミリ秒程度で高速
+ */
+async function fetchFeed(id: string) {
+  return await fetch(
+    `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`,
+    {
+      method: "GET",
+      cache: "default",
+      keepalive: true,
+    },
+  )
+    .then(async (res) => {
+      if (res.status !== 200)
+        throw new Error(`Feed API Error\nstatus: ${res.status}`);
+      return await res.text();
+    })
+    .then((text) => {
+      const match = text.match("<title>([^<].*)</title>");
+      if (match !== null) {
+        return decodeString(match[1]);
+      } else {
+        debugErr("XML title not found");
+        return "";
+      }
+    });
+}
+
+/**
+ * YouTubeのフロントエンドで使用されているAPIから名前を取得
+ * 100ミリ秒程度と低速
+ */
+async function fetchBrowse(id: string) {
+  return await fetch(
     `https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false`,
     {
       method: "POST",
@@ -40,15 +104,12 @@ export async function getUserName(id: string): Promise<string> {
   )
     .then(async (res) => {
       if (res.status !== 200)
-        throw new Error(`API Error\nstatus: ${res.status}`);
-      return await res.text();
+        throw new Error(`Browse API Error\nstatus: ${res.status}`);
+      return await res.json();
     })
     .then((text) => {
-      const data = JSON.parse(text);
-      const name: string = data.header.c4TabbedHeaderRenderer.title;
+      const name: string = text.header.c4TabbedHeaderRenderer.title;
 
       return decodeString(name);
     });
-
-  return data;
 }
