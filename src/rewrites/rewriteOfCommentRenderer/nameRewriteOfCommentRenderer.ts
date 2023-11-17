@@ -26,7 +26,7 @@ export function nameRewriteOfCommentRenderer(
   }
 
   let nameElem = commentRendererBody.querySelector<ShadyElement>(
-    "#main > #header > #header-author > h3 > a > span",
+    "#main > #header > #header-author > h3 > a > yt-formatted-string",
   );
 
   /**
@@ -48,6 +48,11 @@ export function nameRewriteOfCommentRenderer(
   void getUserName(userId)
     .then((name) => {
       if (nameElem !== null) {
+        if (nameElem.getAttribute("is-empty") !== null) {
+          nameElem.removeAttribute("is-empty");
+          console.log("false");
+        }
+
         if (isNameContainerRender) {
           nameElem.__shady_native_innerHTML = escapeString(name);
         } else {
