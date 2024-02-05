@@ -1,6 +1,6 @@
 {
   "name": "return-youtube-comment-username",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "devDependencies": {
     "eslint": "^8.31.0",
     "prettier": "^3.0.3",
