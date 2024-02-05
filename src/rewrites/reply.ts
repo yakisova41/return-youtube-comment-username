@@ -17,6 +17,7 @@ import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRew
 import { debugLog } from "src/utils/debugLog";
 import { getUserName } from "src/utils/getUserName";
 import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import { mentionRewriteOfCommentRendererV2 } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRendererV2";
 
 /**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
@@ -87,6 +88,8 @@ function reWriteReplyElem(
 
 function reWriteReplyElemV2(replyElem: ShadyElement) {
   nameRewriteOfCommentViewModel(replyElem);
+  mentionRewriteOfCommentRendererV2(replyElem);
+  replyInputRewrite(replyElem);
 }
 
 /**
