@@ -12,14 +12,13 @@ export function mentionRewriteOfCommentRendererV2(
 ): void {
   const commentRendererBody = getShadyChildren(commentRenderer, 2, "body");
   const main = commentRendererBody?.querySelector<ShadyElement>("#main");
-
   if (main !== undefined && main !== null) {
     const aTags = main.querySelectorAll(
       "#expander > #content > #content-text > span > span > a",
     );
 
     for (let i = 0; i < aTags.length; i++) {
-      if (aTags[i].textContent?.match("@.*") !== null) {
+      if (aTags[i].getAttribute("href")?.match("/channel/.*") !== null) {
         const href = aTags[i].getAttribute("href");
 
         if (href !== null) {
