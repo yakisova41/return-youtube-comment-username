@@ -1,10 +1,87 @@
 export type ContinuationItems = Array<{
-  commentThreadRenderer: ConfinuationItem;
+  commentThreadRenderer: ConfinuationItem | ConfinuationItemV2;
+}>;
+
+export type ContinuationItemsV2 = Array<{
+  commentThreadRenderer: ConfinuationItemV2;
 }>;
 
 export type ReplyContinuationItems = Array<{
   commentRenderer: CommentRenderer;
 }>;
+
+export type ReplyContinuationItemsV2 = Array<{
+  commentViewModel: CommentViewModelCommentViewModel;
+}>;
+
+export function isReplyContinuationItemsV1(
+  obj: ReplyContinuationItems | ReplyContinuationItemsV2,
+): obj is ReplyContinuationItems {
+  return Object.hasOwn(obj[0], "commentRenderer");
+}
+
+export function isReplyContinuationItemsV2(
+  obj: ReplyContinuationItems | ReplyContinuationItemsV2,
+): obj is ReplyContinuationItemsV2 {
+  return Object.hasOwn(obj[0], "commentViewModel");
+}
+
+/**
+ * The format of the ConfinuationItem has changed since the version of 02/03/2024
+ */
+export interface ConfinuationItemV2 {
+  trackingParams: string;
+  renderingPriority: string;
+  isModeratedElqComment: boolean;
+  commentViewModel: CommentViewModel;
+  loggingDirectives: LoggingDirectives;
+  replies?: {
+    commentRepliesRenderer: {
+      teaserContents: Array<{
+        commentRenderer: CommentRenderer;
+      }>;
+    };
+  };
+}
+
+export function isConfinuationItemV2(
+  obj: ConfinuationItem | ConfinuationItemV2,
+): obj is ConfinuationItemV2 {
+  return Object.hasOwn(obj, "commentViewModel");
+}
+
+export interface CommentViewModel {
+  commentViewModel: CommentViewModelCommentViewModel;
+}
+
+export interface CommentViewModelCommentViewModel {
+  commentKey: string;
+  sharedKey: string;
+  toolbarStateKey: string;
+  toolbarSurfaceKey: string;
+  commentId: string;
+  commentSurfaceKey: string;
+  rendererContext: RendererContext;
+}
+
+export interface RendererContext {
+  loggingContext: LoggingContext;
+}
+
+export interface LoggingContext {
+  loggingDirectives: LoggingDirectives;
+}
+
+export interface LoggingDirectives {
+  trackingParams: string;
+  visibility: Visibility;
+  enableDisplayloggerExperiment: boolean;
+}
+
+export interface Visibility {
+  types: string;
+}
+/**========================== */
 
 export interface ConfinuationItem {
   comment: Comment;
@@ -19,6 +96,12 @@ export interface ConfinuationItem {
       }>;
     };
   };
+}
+
+export function isConfinuationItemV1(
+  obj: ConfinuationItem | ConfinuationItemV2,
+): obj is ConfinuationItem {
+  return Object.hasOwn(obj, "comment");
 }
 
 export interface Comment {
@@ -43,6 +126,7 @@ export interface CommentRenderer {
   expandButton: Button;
   collapseButton: Button;
   loggingDirectives: LoggingDirectives;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   authorCommentBadge?: any;
 }
 

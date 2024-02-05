@@ -13,7 +13,7 @@ import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 import { debugLog } from "./utils/debugLog";
 
 export default function main(): void {
-  debugLog("Script start")
+  debugLog("Script start");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {

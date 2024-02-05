@@ -11,7 +11,7 @@ export interface YtAction<T, U> {
 }
 
 export interface YtAppendContinuationItemsActionArg0<
-  T extends keyof ContinuationItemsList
+  T extends keyof ContinuationItemsList,
 > {
   appendContinuationItemsAction: {
     continuationItems: ContinuationItemsList[T];

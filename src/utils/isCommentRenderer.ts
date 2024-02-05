@@ -1,7 +1,9 @@
 /* eslint-disable no-prototype-builtins */
 import {
+  ReplyContinuationItemsV2,
   type ContinuationItems,
   type ReplyContinuationItems,
+  ContinuationItemsV2,
 } from "src/types/AppendContinuationItemsAction";
 
 /**
@@ -9,7 +11,7 @@ import {
  * @returns trueの場合、リプライ/falseの場合、普通のコメント
  */
 export function isCommentRenderer(
-  continuationItems: ContinuationItems | ReplyContinuationItems
+  continuationItems: ContinuationItems | ReplyContinuationItems,
 ): boolean {
   if (continuationItems.length > 0) {
     if ("commentThreadRenderer" in continuationItems[0]) {
@@ -17,6 +19,22 @@ export function isCommentRenderer(
     }
 
     if ("commentRenderer" in continuationItems[0]) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function isCommentRendererV2(
+  continuationItems: ContinuationItemsV2 | ReplyContinuationItemsV2,
+): boolean {
+  if (continuationItems.length > 0) {
+    if ("commentThreadRenderer" in continuationItems[0]) {
+      return false;
+    }
+
+    if ("commentViewModel" in continuationItems[0]) {
       return true;
     }
   }

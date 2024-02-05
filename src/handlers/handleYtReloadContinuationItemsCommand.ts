@@ -9,7 +9,8 @@ import {
  * 最初の20個以内のコメント読み込み時と、新しい順と評価順を切り替えた際のaction
  */
 export function handleYtReloadContinuationItemsCommand(
-  detail: YtAction<any, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detail: YtAction<any, any>,
 ): void {
   const reloadDetail: YtAction<YtReloadContinuationItemsCommandArg0, Element> =
     detail;

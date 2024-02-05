@@ -1,4 +1,7 @@
-import { isCommentRenderer } from "src/utils/isCommentRenderer";
+import {
+  isCommentRenderer,
+  isCommentRendererV2,
+} from "src/utils/isCommentRenderer";
 import { rewriteCommentNameFromContinuationItems } from "src/rewrites/comment";
 import { rewriteReplytNameFromContinuationItems } from "src/rewrites/reply";
 import {
@@ -12,11 +15,16 @@ import {
  * リプライの読み込み時のaction
  */
 export function handleYtAppendContinuationItemsAction(
-  detail: YtAction<any, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detail: YtAction<any, any>,
 ): void {
   const continuationItems =
     detail.args[0].appendContinuationItemsAction.continuationItems;
-  if (isCommentRenderer(continuationItems)) {
+
+  if (
+    isCommentRenderer(continuationItems) ||
+    isCommentRendererV2(continuationItems)
+  ) {
     // Reply
     const replyDetail: YtAction<
       YtAppendContinuationItemsActionArg0<"reply">,
@@ -25,7 +33,7 @@ export function handleYtAppendContinuationItemsAction(
 
     setTimeout(() => {
       rewriteReplytNameFromContinuationItems(
-        replyDetail.args[0].appendContinuationItemsAction.continuationItems
+        replyDetail.args[0].appendContinuationItemsAction.continuationItems,
       );
     }, 100);
   } else {
@@ -37,7 +45,7 @@ export function handleYtAppendContinuationItemsAction(
 
     setTimeout(() => {
       rewriteCommentNameFromContinuationItems(
-        commentDetail.args[0].appendContinuationItemsAction.continuationItems
+        commentDetail.args[0].appendContinuationItemsAction.continuationItems,
       );
     }, 400);
   }

@@ -8,11 +8,16 @@ import {
 import {
   type CommentRenderer,
   type ReplyContinuationItems,
+  ReplyContinuationItemsV2,
+  isReplyContinuationItemsV1,
+  isReplyContinuationItemsV2,
 } from "src/types/AppendContinuationItemsAction";
 import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugLog } from "src/utils/debugLog";
 import { getUserName } from "src/utils/getUserName";
+import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import { mentionRewriteOfCommentRendererV2 } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRendererV2";
 
 /**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
@@ -20,17 +25,41 @@ import { getUserName } from "src/utils/getUserName";
  * Replyの名前を書き換える。
  */
 export function rewriteReplytNameFromContinuationItems(
-  continuationItems: ReplyContinuationItems
+  continuationItems: ReplyContinuationItems | ReplyContinuationItemsV2,
 ): void {
   debugLog("Reply Rewrite");
 
-  for (let i = 0; i < continuationItems.length; i++) {
-    const { commentRenderer } = continuationItems[i];
+  if (isReplyContinuationItemsV1(continuationItems)) {
+    debugLog("Reply continuationItems V1");
 
-    if (commentRenderer !== undefined) {
-      void getReplyElem(commentRenderer.trackingParams).then((replyElem) => {
-        reWriteReplyElem(replyElem, commentRenderer);
-      });
+    for (let i = 0; i < continuationItems.length; i++) {
+      const { commentRenderer } = continuationItems[i];
+
+      if (commentRenderer !== undefined) {
+        void getReplyElem(commentRenderer.trackingParams, "V1").then(
+          (replyElem) => {
+            reWriteReplyElem(replyElem, commentRenderer);
+          },
+        );
+      }
+    }
+  }
+
+  if (isReplyContinuationItemsV2(continuationItems)) {
+    debugLog("Reply continuationItems V2");
+
+    for (let i = 0; i < continuationItems.length; i++) {
+      const { commentViewModel } = continuationItems[i];
+
+      if (commentViewModel !== undefined) {
+        void getReplyElem(
+          commentViewModel.rendererContext.loggingContext.loggingDirectives
+            .trackingParams,
+          "V2",
+        ).then((replyElem) => {
+          reWriteReplyElemV2(replyElem);
+        });
+      }
     }
   }
 }
@@ -40,7 +69,7 @@ export function rewriteReplytNameFromContinuationItems(
  */
 function reWriteReplyElem(
   replyElem: ShadyElement,
-  rendererData: CommentRenderer
+  rendererData: CommentRenderer,
 ): void {
   let isContainer = rendererData.authorIsChannelOwner;
   if (rendererData.authorCommentBadge !== undefined) {
@@ -50,24 +79,34 @@ function reWriteReplyElem(
   nameRewriteOfCommentRenderer(
     replyElem,
     isContainer,
-    rendererData.authorEndpoint.browseEndpoint.browseId
+    rendererData.authorEndpoint.browseEndpoint.browseId,
   );
 
   mentionRewriteOfCommentRenderer(replyElem);
   replyInputRewrite(replyElem);
 }
 
+function reWriteReplyElemV2(replyElem: ShadyElement) {
+  nameRewriteOfCommentViewModel(replyElem);
+  mentionRewriteOfCommentRendererV2(replyElem);
+  replyInputRewrite(replyElem);
+}
+
 /**
  * リプライの要素をtrackingParamsから取得
  */
-async function getReplyElem(trackedParams: string): Promise<ShadyElement> {
+async function getReplyElem(
+  trackedParams: string,
+  version: "V1" | "V2",
+): Promise<ShadyElement> {
   return await new Promise((resolve) => {
     const selector =
-      "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer";
+      "#replies > ytd-comment-replies-renderer > #expander > #expander-contents > #contents > " +
+      (version === "V1" ? "ytd-comment-renderer" : "ytd-comment-view-model");
 
     const commentRenderer = findElementByTrackingParams<ShadyElement>(
       trackedParams,
-      selector
+      selector,
     );
 
     if (commentRenderer !== null) {
@@ -85,7 +124,7 @@ async function getReplyElem(trackedParams: string): Promise<ShadyElement> {
  * どっちも書き換えとく
  */
 export function rewriteTeaserReplytNameFromContinuationItems(
-  continuationItems: ReplyContinuationItems
+  continuationItems: ReplyContinuationItems,
 ): void {
   debugLog("Teaser Reply Rewrite");
 
@@ -95,7 +134,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
     if (commentRenderer !== undefined) {
       void reSearchElementAllByCommentId(
         commentRenderer.commentId,
-        "ytd-comment-replies-renderer > #teaser-replies > ytd-comment-renderer"
+        "ytd-comment-replies-renderer > #teaser-replies > ytd-comment-renderer",
       ).then((replyElems) => {
         replyElems.forEach((replyElem) => {
           reWriteReplyElem(replyElem, commentRenderer);
@@ -104,7 +143,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
 
       void reSearchElementAllByCommentId(
         commentRenderer.commentId,
-        "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer"
+        "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer",
       ).then((replyElems) => {
         replyElems.forEach((replyElem) => {
           reWriteReplyElem(replyElem, commentRenderer);
@@ -119,7 +158,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
  */
 export function replyInputRewrite(replyElem: ShadyElement): void {
   const replyToReplyBtn = replyElem.querySelector(
-    "#reply-button-end > ytd-button-renderer"
+    "#reply-button-end > ytd-button-renderer",
   );
   const replyToReplyHander = (): void => {
     const replyLink = replyElem.querySelector("#contenteditable-root > a");
