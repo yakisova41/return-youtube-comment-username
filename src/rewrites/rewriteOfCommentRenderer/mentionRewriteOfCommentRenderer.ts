@@ -20,7 +20,7 @@ export function mentionRewriteOfCommentRenderer(
     );
 
     for (let i = 0; i < aTags.length; i++) {
-      if (aTags[i].textContent?.match("@.*") !== null) {
+      if (aTags[i].getAttribute("href")?.match("/channel/.*") !== null) {
         const href = aTags[i].getAttribute("href");
 
         if (href !== null) {
