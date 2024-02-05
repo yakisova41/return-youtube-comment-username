@@ -6,11 +6,15 @@ import {
 import {
   type ContinuationItems,
   type ConfinuationItem,
+  ConfinuationItemV2,
+  isConfinuationItemV1,
+  isConfinuationItemV2,
 } from "src/types/AppendContinuationItemsAction";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
 import { getShadyChildren } from "src/utils/getShadyChildren";
+import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。
@@ -47,25 +51,38 @@ export function rewriteCommentNameFromContinuationItems(
  */
 function reWriteCommentElem(
   commentElem: ShadyElement,
-  commentThreadRenderer: ConfinuationItem,
+  commentThreadRenderer: ConfinuationItem | ConfinuationItemV2,
 ): void {
-  const commentRenderer = getShadyChildren(commentElem, 0, "comment");
+  const commentRenderer = getShadyChildren(commentElem, 1, "comment");
+
   if (commentRenderer !== null && commentRenderer !== undefined) {
-    let isContainer =
-      commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
-    if (
-      commentThreadRenderer.comment.commentRenderer.authorCommentBadge !==
-      undefined
-    ) {
-      isContainer = true;
+    if (isConfinuationItemV1(commentThreadRenderer)) {
+      debugLog("Comment continuationItems V1");
+
+      let isContainer =
+        commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
+
+      if (
+        commentThreadRenderer.comment.commentRenderer.authorCommentBadge !==
+        undefined
+      ) {
+        isContainer = true;
+      }
+
+      nameRewriteOfCommentRenderer(
+        commentRenderer,
+        isContainer,
+        commentThreadRenderer.comment.commentRenderer.authorEndpoint
+          .browseEndpoint.browseId,
+      );
     }
 
-    nameRewriteOfCommentRenderer(
-      commentRenderer,
-      isContainer,
-      commentThreadRenderer.comment.commentRenderer.authorEndpoint
-        .browseEndpoint.browseId,
-    );
+    if (isConfinuationItemV2(commentThreadRenderer)) {
+      debugLog("Comment continuationItems V2");
+
+      // let isContainer = commentThreadRenderer.commentViewModel.commentViewModel;
+      nameRewriteOfCommentViewModel(commentRenderer);
+    }
   }
 }
 
