@@ -5,24 +5,25 @@ import { debugErr } from "./debugLog";
  */
 export function findElementByTrackingParams<T = Element>(
   trackingParams: string,
-  elementSelector: string
+  elementSelector: string,
 ): T | null {
   let returnElement = null;
   let errorAlerted = false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const elems = document.querySelectorAll<any>(elementSelector);
 
   for (let i = 0; i < elems.length; i++) {
     if (
       elems[i]?.trackedParams === undefined &&
-      elems[i]?.controllerProxy?.trackedParams === undefined
+      elems[i]?.polymerController?.trackedParams === undefined
     ) {
-      debugErr("TrackdParams property is not found");
+      debugErr("TrackedParams property is not found");
     }
 
     if (elems[i].trackedParams === trackingParams) {
       returnElement = elems[i];
       break;
-    } else if (elems[i]?.controllerProxy?.trackedParams === trackingParams) {
+    } else if (elems[i]?.polymerController?.trackedParams === trackingParams) {
       returnElement = elems[i];
       break;
     } else {
@@ -41,7 +42,7 @@ export function findElementByTrackingParams<T = Element>(
  */
 export async function reSearchElement<T = ShadyElement>(
   trackingParams: string,
-  selector: string
+  selector: string,
 ): Promise<T> {
   return await new Promise((resolve) => {
     let isFinding = true;
@@ -68,15 +69,16 @@ export async function reSearchElement<T = ShadyElement>(
  */
 export function findElementAllByCommentId<T = Element>(
   commnetId: string,
-  elementSelector: string
+  elementSelector: string,
 ): T[] {
   const returnElements: T[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const elems = document.querySelectorAll<any>(elementSelector);
   for (let i = 0; i < elems.length; i++) {
     if (elems[i] !== undefined) {
       if (
         elems[i]?.__data?.data?.commentId === undefined &&
-        elems[i]?.controllerProxy?.__data?.data?.commentId === undefined
+        elems[i]?.polymerController?.__data?.data?.commentId === undefined
       ) {
         debugErr("Reply CommentId is not found");
         console.log(elems[i]);
@@ -86,8 +88,8 @@ export function findElementAllByCommentId<T = Element>(
       ) {
         returnElements.push(elems[i]);
       } else if (
-        elems[i]?.controllerProxy?.__data?.data?.commentId !== undefined &&
-        elems[i].controllerProxy.__data.data.commentId === commnetId
+        elems[i]?.polymerController?.__data?.data?.commentId !== undefined &&
+        elems[i].polymerController.__data.data.commentId === commnetId
       ) {
         returnElements.push(elems[i]);
       }
@@ -101,7 +103,7 @@ export function findElementAllByCommentId<T = Element>(
  */
 export async function reSearchElementAllByCommentId<T = ShadyElement>(
   commnetId: string,
-  selector: string
+  selector: string,
 ): Promise<T[]> {
   return await new Promise((resolve) => {
     let isFinding = true;
@@ -128,21 +130,19 @@ export async function reSearchElementAllByCommentId<T = ShadyElement>(
  */
 export async function searchTrackedParamsByObject(
   param: string,
-  elem: Element
+  elem: Element,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   const elemObj = Object(elem);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const search = (obj: Record<string, any>, history: string[]): void => {
     Object.keys(obj).forEach((k) => {
       if (typeof obj[k] === "object") {
         search(obj[k], [...history, k]);
       } else if (obj[k] === param) {
         history.push(k);
-        alert(
-          `[Return YouTube Comment Username] Unknown Object format!\n"${history.join(
-            ">"
-          )}"`
-        );
+        debugErr(`Unknown Object format!\n"${history.join(">")}"`);
       }
     });
   };
@@ -159,6 +159,14 @@ export interface ShadyElement extends HTMLElement {
   __data: {
     data: {
       commentId: string;
+    };
+  };
+  polymerController: {
+    __data: {
+      data: {
+        trackingParams: string;
+        commentId: string;
+      };
     };
   };
 }
