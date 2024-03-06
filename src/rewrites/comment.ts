@@ -53,7 +53,7 @@ function reWriteCommentElem(
   commentElem: ShadyElement,
   commentThreadRenderer: ConfinuationItem | ConfinuationItemV2,
 ): void {
-  const commentRenderer = getShadyChildren(commentElem, 1, "comment");
+  const commentRenderer = getShadyChildren(commentElem, 0, "comment");
 
   if (commentRenderer !== null && commentRenderer !== undefined) {
     if (isConfinuationItemV1(commentThreadRenderer)) {
