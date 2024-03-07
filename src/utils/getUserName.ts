@@ -1,4 +1,4 @@
-import { debugErr, debugLog } from "./debugLog";
+import { debugErr } from "./debugLog";
 import { decodeString } from "./escapeString";
 
 let isUseFeed = true;
@@ -9,8 +9,6 @@ export async function getUserName(id: string): Promise<string> {
    */
   return new Promise((resolve) => {
     if (isUseFeed) {
-      debugLog("Get name by Feed");
-
       fetchFeed(id)
         .then((name) => {
           resolve(name);
@@ -18,15 +16,13 @@ export async function getUserName(id: string): Promise<string> {
         .catch(() => {
           isUseFeed = false;
 
-          debugErr("Catch Feed API Error");
+          debugErr("Catch Feed API Error\nChange to Browse mode");
 
           fetchBrowse(id).then((name) => {
             resolve(name);
           });
         });
     } else {
-      debugLog("Get name by Browse");
-
       fetchBrowse(id).then((name) => {
         resolve(name);
       });

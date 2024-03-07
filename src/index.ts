@@ -12,8 +12,18 @@ import { type YtAction } from "./types/YtAction";
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 import { debugLog } from "./utils/debugLog";
 
+import pkg from "package.json";
+
 export default function main(): void {
-  debugLog("Script start");
+  debugLog(
+    `Return Youtube comment Username v${pkg.version}`,
+    [
+      `INNERTUBE_CLIENT_VERSION: ${window.yt.config_.INNERTUBE_CLIENT_VERSION}`,
+      `INNERTUBE_CONTEXT_CLIENT_VERSION: ${window.yt.config_.INNERTUBE_CONTEXT_CLIENT_VERSION}`,
+      `Browser: ${window.yt.config_.INNERTUBE_CONTEXT.client.browserName} v${window.yt.config_.INNERTUBE_CONTEXT.client.browserVersion}`,
+      `Login: ${window.yt.config_.LOGGED_IN}`,
+    ].join("\n"),
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
@@ -66,6 +76,16 @@ declare global {
       config_: {
         HL: string;
         GL: string;
+        PAGE_BUILD_LABEL: string;
+        INNERTUBE_CONTEXT_CLIENT_VERSION: string;
+        INNERTUBE_CLIENT_VERSION: string;
+        INNERTUBE_CONTEXT: {
+          client: {
+            browserName: string;
+            browserVersion: string;
+          };
+        };
+        LOGGED_IN: boolean;
       };
     };
   }

@@ -81,7 +81,6 @@ export function findElementAllByCommentId<T = Element>(
         elems[i]?.polymerController?.__data?.data?.commentId === undefined
       ) {
         debugErr("Reply CommentId is not found");
-        console.log(elems[i]);
       } else if (
         elems[i]?.__data?.data?.commentId !== undefined &&
         elems[i].__data.data.commentId === commnetId

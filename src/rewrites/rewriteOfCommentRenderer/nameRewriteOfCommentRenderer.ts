@@ -50,7 +50,6 @@ export function nameRewriteOfCommentRenderer(
       if (nameElem !== null) {
         if (nameElem.getAttribute("is-empty") !== null) {
           nameElem.removeAttribute("is-empty");
-          console.log("false");
         }
 
         if (isNameContainerRender) {
