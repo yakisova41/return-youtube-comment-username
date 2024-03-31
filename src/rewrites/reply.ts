@@ -86,7 +86,7 @@ function reWriteReplyElem(
   replyInputRewrite(replyElem);
 }
 
-function reWriteReplyElemV2(replyElem: ShadyElement) {
+export function reWriteReplyElemV2(replyElem: ShadyElement) {
   nameRewriteOfCommentViewModel(replyElem);
   mentionRewriteOfCommentRendererV2(replyElem);
   replyInputRewrite(replyElem);
@@ -127,7 +127,6 @@ export function rewriteTeaserReplytNameFromContinuationItems(
   continuationItems: ReplyContinuationItems,
 ): void {
   debugLog("Teaser Reply Rewrite");
-
   for (let i = 0; i < continuationItems.length; i++) {
     const { commentRenderer } = continuationItems[i];
 

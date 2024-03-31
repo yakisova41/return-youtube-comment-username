@@ -1,14 +1,23 @@
 import { rewriteCommentNameFromContinuationItems } from "src/rewrites/comment";
-import { rewriteHighlightedReply } from "src/rewrites/highlightedReply";
+import {
+  rewriteHighlightedReply,
+  rewriteHighlightedReplyV2,
+} from "src/rewrites/highlightedReply";
+import { isReplyContinuationItemsV1 } from "src/types/AppendContinuationItemsAction";
 import { type YtAction } from "src/types/YtAction";
 import { type YtGetMultiPageMenuAction } from "src/types/YtGetMultiPageMenuAction";
+import { debugLog } from "src/utils/debugLog";
 
 /**
  * ヘッダーの通知欄にあるコメントを置き換え
  */
 export function handleYtGetMultiPageMenuAction(
-  detail: YtAction<any, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detail: YtAction<any, any>,
 ): void {
+  debugLog("handleYtGetMultiPageMenuAction");
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getMultiPageMenuDetail: YtAction<YtGetMultiPageMenuAction, any> =
     detail;
   const continuationItems =
@@ -25,19 +34,25 @@ export function handleYtGetMultiPageMenuAction(
       rewriteCommentNameFromContinuationItems(continuationItems);
 
       if (highLightedTeaserContents !== undefined) {
-        const highLightedReplyRenderer =
-          highLightedTeaserContents[0]?.commentRenderer;
-        let isContainer = highLightedReplyRenderer.authorIsChannelOwner;
+        debugLog("HighLighted Teaser Reply found.");
 
-        if (highLightedReplyRenderer.authorCommentBadge !== undefined) {
-          isContainer = true;
+        if (isReplyContinuationItemsV1(highLightedTeaserContents)) {
+          debugLog("highLighted Teaser Reply V1");
+
+          const highLightedReplyRenderer =
+            highLightedTeaserContents[0]?.commentRenderer;
+
+          rewriteHighlightedReply(highLightedReplyRenderer.trackingParams);
+        } else {
+          debugLog("highLighted Teaser Reply V2");
+          const commentViewModel =
+            highLightedTeaserContents[0]?.commentViewModel;
+          const trackingParams =
+            commentViewModel.rendererContext.loggingContext.loggingDirectives
+              .trackingParams;
+
+          rewriteHighlightedReplyV2(trackingParams);
         }
-
-        rewriteHighlightedReply(
-          highLightedReplyRenderer.trackingParams,
-          isContainer,
-          highLightedReplyRenderer.authorEndpoint.browseEndpoint.browseId
-        );
       }
     }, 100);
   }

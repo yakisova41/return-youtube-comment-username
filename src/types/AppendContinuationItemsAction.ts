@@ -37,9 +37,7 @@ export interface ConfinuationItemV2 {
   loggingDirectives: LoggingDirectives;
   replies?: {
     commentRepliesRenderer: {
-      teaserContents: Array<{
-        commentRenderer: CommentRenderer;
-      }>;
+      teaserContents: ReplyContinuationItems | ReplyContinuationItemsV2;
     };
   };
 }
