@@ -7,7 +7,8 @@ import { type YtCreateCommentReplyAction } from "src/types/YtCreateCommentAction
  * 自分が返信した時に自分の返信を書き換え
  */
 export function handleYtCreateCommentReplyAction(
-  detail: YtAction<any, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detail: YtAction<any, any>,
 ): void {
   const createReplyDetail: YtAction<YtCreateCommentReplyAction, Element> =
     detail;
