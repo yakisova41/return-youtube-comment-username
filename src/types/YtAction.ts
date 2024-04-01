@@ -5,8 +5,10 @@ import {
 
 export interface YtAction<T, U> {
   actionName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: { 0: T; 1: U; 2: any };
   optionalAction: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   returnValue: any;
 }
 
