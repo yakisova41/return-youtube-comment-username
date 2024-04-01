@@ -5,7 +5,9 @@ import { type YtHistoryLoad } from "src/types/YtHistoryLoad";
 /**
  * ページ移動後に戻ったときはhistoryとかいう名前のキャッシュから最初の20コメントが読み込まれる
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handleYtHistory(detail: YtAction<any, any>): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const historyDetail: YtAction<any, YtHistoryLoad> = detail;
 
   const continuationItems =

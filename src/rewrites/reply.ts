@@ -86,7 +86,7 @@ function reWriteReplyElem(
   replyInputRewrite(replyElem);
 }
 
-function reWriteReplyElemV2(replyElem: ShadyElement) {
+export function reWriteReplyElemV2(replyElem: ShadyElement) {
   nameRewriteOfCommentViewModel(replyElem);
   mentionRewriteOfCommentRendererV2(replyElem);
   replyInputRewrite(replyElem);
@@ -124,31 +124,55 @@ async function getReplyElem(
  * どっちも書き換えとく
  */
 export function rewriteTeaserReplytNameFromContinuationItems(
-  continuationItems: ReplyContinuationItems,
+  continuationItems: ReplyContinuationItems | ReplyContinuationItemsV2,
 ): void {
   debugLog("Teaser Reply Rewrite");
 
   for (let i = 0; i < continuationItems.length; i++) {
-    const { commentRenderer } = continuationItems[i];
+    if (isReplyContinuationItemsV1(continuationItems)) {
+      debugLog("Teaser Reply V1");
 
-    if (commentRenderer !== undefined) {
-      void reSearchElementAllByCommentId(
-        commentRenderer.commentId,
-        "ytd-comment-replies-renderer > #teaser-replies > ytd-comment-renderer",
-      ).then((replyElems) => {
-        replyElems.forEach((replyElem) => {
-          reWriteReplyElem(replyElem, commentRenderer);
-        });
-      });
+      const { commentRenderer } = continuationItems[i];
 
-      void reSearchElementAllByCommentId(
-        commentRenderer.commentId,
-        "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer",
-      ).then((replyElems) => {
-        replyElems.forEach((replyElem) => {
-          reWriteReplyElem(replyElem, commentRenderer);
+      if (commentRenderer !== undefined) {
+        void reSearchElementAllByCommentId(
+          commentRenderer.commentId,
+          "ytd-comment-replies-renderer > #teaser-replies > ytd-comment-renderer",
+        ).then((replyElems) => {
+          replyElems.forEach((replyElem) => {
+            reWriteReplyElem(replyElem, commentRenderer);
+          });
         });
-      });
+
+        void reSearchElementAllByCommentId(
+          commentRenderer.commentId,
+          "ytd-comment-replies-renderer > #expander > #expander-contents > #contents > ytd-comment-renderer",
+        ).then((replyElems) => {
+          replyElems.forEach((replyElem) => {
+            reWriteReplyElem(replyElem, commentRenderer);
+          });
+        });
+      }
+    }
+
+    if (isReplyContinuationItemsV2(continuationItems)) {
+      debugLog("Teaser Reply V2");
+
+      const { commentViewModel } = continuationItems[i];
+
+      if (commentViewModel !== undefined) {
+        const elem = findElementByTrackingParams<ShadyElement>(
+          commentViewModel.rendererContext.loggingContext.loggingDirectives
+            .trackingParams,
+          "#teaser-replies > ytd-comment-view-model",
+        );
+
+        if (elem === null) {
+          throw new Error("Can not found Teaser Reply V2 Elem");
+        }
+
+        reWriteReplyElemV2(elem);
+      }
     }
   }
 }

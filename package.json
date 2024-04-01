@@ -12,7 +12,7 @@
     "build:userscript": "npx ts-extension-builder build type=userscript",
     "build:extension": "npx ts-extension-builder build type=extension",
     "dev": "npx ts-extension-builder dev type=userscript",
-    "lint": "npx eslint --fix src/index.ts"
+    "lint": "npx eslint --fix src/**/*.ts"
   },
   "type": "commonjs",
   "dependencies": {

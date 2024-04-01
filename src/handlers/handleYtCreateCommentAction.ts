@@ -5,6 +5,7 @@ import { type YtCreateCommentAction } from "src/types/YtCreateCommentAction";
 /**
  * 自分でコメントした時に自分のコメントを書き換え
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handleYtCreateCommentAction(detail: YtAction<any, any>): void {
   const createCommentDetail: YtAction<YtCreateCommentAction, Element> = detail;
   const continuationItems = [

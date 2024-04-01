@@ -3,32 +3,49 @@ import {
   reSearchElement,
   type ShadyElement,
 } from "src/utils/findElementByTrackingParams";
-import { replyInputRewrite } from "./reply";
-import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
+import { reWriteReplyElemV2 } from "./reply";
 
 /**
  * highLightedReplyの要素を書き換え
  */
-export function rewriteHighlightedReply(
+export function rewriteHighlightedReply(trackedParams: string): void {
+  getReplyElem(trackedParams, "V1").then((replyElem) => {
+    reWriteReplyElemV2(replyElem);
+  });
+}
+
+/**
+ * highLightedReplyの要素を書き換え
+ */
+export function rewriteHighlightedReplyV2(trackedParams: string): void {
+  getReplyElem(trackedParams, "V2").then((replyElem) => {
+    reWriteReplyElemV2(replyElem);
+  });
+}
+
+/**
+ * teaser!! リプライの要素をtrackingParamsから取得
+ */
+async function getReplyElem(
   trackedParams: string,
-  isContainer: boolean,
-  userId: string
-): void {
-  const elem = findElementByTrackingParams<ShadyElement>(
-    trackedParams,
-    "ytd-comment-renderer"
-  );
+  version: "V1" | "V2",
+): Promise<ShadyElement> {
+  return await new Promise((resolve) => {
+    const selector =
+      "ytd-comment-replies-renderer > #teaser-replies > " +
+      (version === "V1" ? "ytd-comment-renderer" : "ytd-comment-view-model");
 
-  const rewriteHighlightedReplyElem = (elem: ShadyElement): void => {
-    nameRewriteOfCommentRenderer(elem, isContainer, userId);
-    replyInputRewrite(elem);
-  };
+    const commentRenderer = findElementByTrackingParams<ShadyElement>(
+      trackedParams,
+      selector,
+    );
 
-  if (elem === null) {
-    void reSearchElement(trackedParams, "ytd-comment-renderer").then((elem) => {
-      rewriteHighlightedReplyElem(elem);
-    });
-  } else {
-    rewriteHighlightedReplyElem(elem);
-  }
+    if (commentRenderer !== null) {
+      resolve(commentRenderer);
+    } else {
+      void reSearchElement(trackedParams, selector).then((commentRenderer) => {
+        resolve(commentRenderer);
+      });
+    }
+  });
 }

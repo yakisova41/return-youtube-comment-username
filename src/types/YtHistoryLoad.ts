@@ -5,7 +5,7 @@ export interface YtHistoryLoad {
   endpoint?: ArgEndpoint;
   forward?: boolean;
   historyEntry?: HistoryEntry;
-  savedComponentState?: any;
+  savedComponentState?: never;
   legacyBorder?: boolean;
 }
 
@@ -202,7 +202,7 @@ export interface PlayerResponseFrameworkUpdates {
 }
 
 export interface EntityBatchUpdate {
-  mutations: any[];
+  mutations: never[];
   timestamp: Timestamp;
 }
 
