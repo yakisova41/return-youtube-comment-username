@@ -18,10 +18,14 @@ export default function main(): void {
   debugLog(
     `Return Youtube comment Username v${pkg.version}`,
     [
+      "",
+      `PAGE_BUILD_LABEL: ${window.yt.config_.PAGE_BUILD_LABEL}`,
       `INNERTUBE_CLIENT_VERSION: ${window.yt.config_.INNERTUBE_CLIENT_VERSION}`,
       `INNERTUBE_CONTEXT_CLIENT_VERSION: ${window.yt.config_.INNERTUBE_CONTEXT_CLIENT_VERSION}`,
+      `INNERTUBE_CONTEXT_GL: ${window.yt.config_.INNERTUBE_CONTEXT_GL}`,
       `Browser: ${window.yt.config_.INNERTUBE_CONTEXT.client.browserName} v${window.yt.config_.INNERTUBE_CONTEXT.client.browserVersion}`,
       `Login: ${window.yt.config_.LOGGED_IN}`,
+      `Href: ${location.href}`,
     ].join("\n"),
   );
 
@@ -79,6 +83,7 @@ declare global {
         PAGE_BUILD_LABEL: string;
         INNERTUBE_CONTEXT_CLIENT_VERSION: string;
         INNERTUBE_CLIENT_VERSION: string;
+        INNERTUBE_CONTEXT_GL: string;
         INNERTUBE_CONTEXT: {
           client: {
             browserName: string;
