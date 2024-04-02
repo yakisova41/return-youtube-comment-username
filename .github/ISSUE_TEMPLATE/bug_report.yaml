@@ -56,8 +56,8 @@ body:
       value: |
         Please attach a screenshot of the console logs with debugging information in the picture.
         ### How to open the console
-        | - Press F12 in any problem page.
-        | - Select Console tab.
+         - Press F12 in any problem page.
+         - Select Console tab.
       
   - type: textarea
     attributes:
