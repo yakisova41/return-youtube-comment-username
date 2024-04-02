@@ -1,0 +1,20 @@
+{
+  "Name": {
+    "message": "YouTubeコメント欄の名前を元に戻す"
+  },
+  "Description": {
+    "message": "YouTubeのコメント欄の名前をハンドル(@...)からユーザー名に書き換えます。"
+  },
+  "Installed": {
+    "message": "がインストールされました"
+  },
+  "Support": {
+    "message": "開発を支援"
+  },
+  "BugReport": {
+    "message": "バグ報告"
+  },
+  "OfficialSite": {
+    "message": "公式サイト"
+  }
+}

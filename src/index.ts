@@ -63,6 +63,8 @@ export default function main(): void {
   });
 }
 
+main();
+
 declare global {
   interface DocumentEventMap {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

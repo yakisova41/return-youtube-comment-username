@@ -2,6 +2,9 @@
   "name": "return-youtube-comment-username",
   "version": "0.4.2",
   "devDependencies": {
+    "@types/chrome": "^0.0.263",
+    "@types/encoding-japanese": "^2.0.5",
+    "@types/markdown-it": "^13.0.7",
     "eslint": "^8.31.0",
     "prettier": "^3.0.3",
     "ts-extension-builder": "^0.2.6"
@@ -9,16 +12,19 @@
   "license": "MIT",
   "scripts": {
     "esbuild-register": "node --require esbuild-register",
-    "build:userscript": "npx ts-extension-builder build type=userscript",
-    "build:extension": "npx ts-extension-builder build type=extension",
-    "dev": "npx ts-extension-builder dev type=userscript",
+    "build": "npx crx-monkey build",
+    "dev": "npx crx-monkey dev",
     "lint": "npx eslint --fix src/**/*.ts"
   },
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
+    "@mdit-vue/plugin-title": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
+    "crx-monkey": "^0.4.2",
+    "encoding-japanese": "^2.1.0",
     "eslint-config-prettier": "^9.0.0",
+    "markdown-it": "^14.1.0",
     "typescript": "^5.2.2"
   }
 }
