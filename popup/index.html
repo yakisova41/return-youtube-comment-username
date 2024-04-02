@@ -13,9 +13,10 @@
 
       <div class="contents">
         <div class="btns">
-          <button class="btn btn-primary donate-btn">支援</button>
+          <button class="btn btn-primary donate-btn"></button>
           <button class="btn github-btn">GitHub</button>
-          <button class="btn bugreport-btn">バグ報告</button>
+          <button class="btn bugreport-btn"></button>
+          <button class="btn ofsite-btn"></button>
         </div>
       </div>
     </div>
@@ -30,8 +31,8 @@
     }
 
     body {
-      background-color: rgb(43, 43, 43);
-      color: #e0e0e0;
+      background-color: #201a1a;
+      color: #ece0df;
       padding: 10px;
     }
 
@@ -60,21 +61,24 @@
 
     .btns {
       display: flex;
-      gap: 0 5px;
+      gap: 6px 6px;
+      padding-top: 15px;
+      flex-wrap: wrap;
     }
 
     .btn {
-      height: 35px;
+      height: 40px;
       padding: 0 20px;
-      background-color: rgb(130, 102, 201);
-      color: #ffffff;
+      background-color: #7e2a30;
+      color: #ffdad9;
       border: none;
-      border-radius: 5px;
+      border-radius: 20px;
       cursor: pointer;
     }
 
     .btn-primary {
-      background-color: rgb(97, 122, 233);
+      background-color: #ffb3b3;
+      color: #5f131b;
     }
   </style>
 </html>

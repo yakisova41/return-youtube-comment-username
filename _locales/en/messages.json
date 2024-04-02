@@ -4,5 +4,17 @@
   },
   "Description": {
     "message": "This script replaces the \"handle\" in the YouTube comments section to user name"
+  },
+  "Installed": {
+    "message": "Installed"
+  },
+  "Support": {
+    "message": "Support for development"
+  },
+  "BugReport": {
+    "message": "Bug report"
+  },
+  "OfficialSite": {
+    "message": "Official Site"
   }
 }

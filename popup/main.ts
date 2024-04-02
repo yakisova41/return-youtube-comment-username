@@ -4,36 +4,26 @@ document.querySelector(".github-btn")!.addEventListener("click", () => {
   });
 });
 
-document.querySelector(".donate-btn")!.addEventListener("click", () => {
+const donateBtn = document.querySelector(".donate-btn")!;
+donateBtn.innerHTML = chrome.i18n.getMessage("Support");
+donateBtn.addEventListener("click", () => {
   chrome.tabs.create({
-    url: "https://github.com/yakisova41/return-youtube-comment-username",
+    url: "https://www.patreon.com/yakisova41",
   });
 });
 
-document.querySelector(".bugreport-btn")!.addEventListener("click", () => {
+const bugReportBtn = document.querySelector(".bugreport-btn")!;
+bugReportBtn.innerHTML = chrome.i18n.getMessage("BugReport");
+bugReportBtn.addEventListener("click", () => {
   chrome.tabs.create({
     url: "https://github.com/yakisova41/return-youtube-comment-username/issues/new?assignees=&labels=bug&projects=&template=bug_report.yaml&title=%5BBug%5D%3A+",
   });
 });
-/*
-(async () => {
-  const isEnableRewriteToggle = document.querySelector<HTMLInputElement>(
-    "#toggle-enable-rewrite",
-  )!;
 
-  const { isRewriteEnable } = await chrome.storage.local.get([
-    "isRewriteEnable",
-  ]);
-
-  isEnableRewriteToggle.checked = isRewriteEnable;
-
-  isEnableRewriteToggle.addEventListener("change", (e) => {
-    const target = e.target as HTMLInputElement;
-    if (target !== null) {
-      chrome.storage.local.set({
-        isRewriteEnable: target.checked,
-      });
-    }
+const ofSiteBtn = document.querySelector(".ofsite-btn")!;
+ofSiteBtn.innerHTML = chrome.i18n.getMessage("OfficialSite");
+ofSiteBtn.addEventListener("click", () => {
+  chrome.tabs.create({
+    url: "https://rycu.yakisova.com/",
   });
-})();
-*/
+});
