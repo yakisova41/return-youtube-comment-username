@@ -51,10 +51,16 @@ body:
       label: What scripts or extensions do you use with it?
       description: Please write all scripts and extensions (including AdBlock, etc.) that run on youtube.com that you use
 
+  - type: textarea
+    attributes:
+      label: Screenshot
+      description: Please attach a screenshot of the console logs with debugging information in the picture.
+    validations:
+      required: true
+      
   - type: markdown
     attributes:
       value: |
-        Please attach a screenshot of the console logs with debugging information in the picture.
         ### How to open the console
          - Press F12 in any problem page.
          - Select Console tab.
