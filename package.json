@@ -2,6 +2,7 @@
   "name": "return-youtube-comment-username",
   "version": "0.4.2",
   "devDependencies": {
+    "@types/chrome": "^0.0.263",
     "eslint": "^8.31.0",
     "prettier": "^3.0.3",
     "ts-extension-builder": "^0.2.6"
@@ -9,15 +10,15 @@
   "license": "MIT",
   "scripts": {
     "esbuild-register": "node --require esbuild-register",
-    "build:userscript": "npx ts-extension-builder build type=userscript",
-    "build:extension": "npx ts-extension-builder build type=extension",
-    "dev": "npx ts-extension-builder dev type=userscript",
+    "build": "npx crx-monkey build",
+    "dev": "npx crx-monkey dev",
     "lint": "npx eslint --fix src/**/*.ts"
   },
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
+    "crx-monkey": "^0.3.0",
     "eslint-config-prettier": "^9.0.0",
     "typescript": "^5.2.2"
   }

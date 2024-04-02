@@ -1,0 +1,8 @@
+{
+  "Name": {
+    "message": "Return YouTube Comment Username"
+  },
+  "Description": {
+    "message": "This script replaces the \"handle\" in the YouTube comments section to user name"
+  }
+}

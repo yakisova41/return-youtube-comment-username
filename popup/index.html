@@ -1,0 +1,80 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="../assets/icon48.png" />
+        <span class="title">Return YouTube Comment Username</span>
+      </div>
+
+      <div class="contents">
+        <div class="btns">
+          <button class="btn btn-primary donate-btn">支援</button>
+          <button class="btn github-btn">GitHub</button>
+          <button class="btn bugreport-btn">バグ報告</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="main.ts"></script>
+  </body>
+
+  <style>
+    :root {
+      width: 350px;
+      height: 120px;
+    }
+
+    body {
+      background-color: rgb(43, 43, 43);
+      color: #e0e0e0;
+      padding: 10px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0 10px;
+    }
+
+    .title {
+      font-size: 16px;
+    }
+
+    .header > img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .contents {
+      margin: 10px;
+    }
+
+    .contents > div {
+      margin-top: 10px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 0 5px;
+    }
+
+    .btn {
+      height: 35px;
+      padding: 0 20px;
+      background-color: rgb(130, 102, 201);
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: rgb(97, 122, 233);
+    }
+  </style>
+</html>

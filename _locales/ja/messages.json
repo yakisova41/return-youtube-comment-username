@@ -1,0 +1,8 @@
+{
+  "Name": {
+    "message": "YouTubeコメント欄の名前を元に戻す"
+  },
+  "Description": {
+    "message": "YouTubeのコメント欄の名前をハンドル(@...)からユーザー名に書き換えます。"
+  }
+}

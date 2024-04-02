@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["chrome"]
   },
-  "include": ["src"]
+  "include": ["src", "sw", "crx-monkey.config.js", "popup"]
 }
