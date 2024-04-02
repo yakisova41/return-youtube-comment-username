@@ -1,7 +1,6 @@
 import { type ShadyElement } from "../../utils/findElementByTrackingParams";
 import { getUserName } from "../../utils/getUserName";
 import { debugErr } from "src/utils/debugLog";
-import { getShadyChildren } from "src/utils/getShadyChildren";
 
 /**
  * comment内のaタクを全取得して
@@ -10,7 +9,8 @@ import { getShadyChildren } from "src/utils/getShadyChildren";
 export function mentionRewriteOfCommentRendererV2(
   commentRenderer: ShadyElement,
 ): void {
-  const commentRendererBody = getShadyChildren(commentRenderer, 2, "body");
+  const commentRendererBody =
+    commentRenderer.__shady_native_children.namedItem("body");
   const main = commentRendererBody?.querySelector<ShadyElement>("#main");
   if (main !== undefined && main !== null) {
     const aTags = main.querySelectorAll(

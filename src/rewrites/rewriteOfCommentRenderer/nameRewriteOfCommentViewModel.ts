@@ -1,15 +1,11 @@
 import { debugErr } from "src/utils/debugLog";
 import { escapeString } from "src/utils/escapeString";
 import { ShadyElement } from "src/utils/findElementByTrackingParams";
-import { getShadyChildren } from "src/utils/getShadyChildren";
 import { getUserName } from "src/utils/getUserName";
 
 export function nameRewriteOfCommentViewModel(commentRenderer: ShadyElement) {
-  const commentRendererBody: ShadyElement | null = getShadyChildren(
-    commentRenderer,
-    2,
-    "body",
-  );
+  const commentRendererBody: ShadyElement | null =
+    commentRenderer.__shady_native_children.namedItem("body");
 
   if (commentRendererBody === null) {
     throw new Error("[rycu] comment renderer body is null");
@@ -37,7 +33,8 @@ export function nameRewriteOfCommentViewModel(commentRenderer: ShadyElement) {
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
   if (isNameContainerRender) {
-    const containerMain = getShadyChildren(commentRendererBody, 1, "main");
+    const containerMain =
+      commentRendererBody.__shady_native_children.namedItem("main");
 
     if (containerMain !== null) {
       nameElem = containerMain.querySelector<ShadyElement>(
