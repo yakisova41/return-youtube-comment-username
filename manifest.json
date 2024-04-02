@@ -14,10 +14,11 @@
     {
       "matches": ["https://www.youtube.com/*"],
       "js": ["src/index.ts"],
-      "world": "MAIN"
+      "world": "MAIN",
+      "run_at": "document_end"
     }
   ],
-  "run_at": "document_end",
+
   "action": {
     "default_popup": "popup/index.html"
   },
