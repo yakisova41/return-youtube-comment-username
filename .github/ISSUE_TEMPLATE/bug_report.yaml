@@ -19,22 +19,6 @@ body:
       description: Enter the browser that caused the problem (e.g., Chrome 114.0.5735.134)
     validations:
       required: true
-
-  - type: input
-    id: version
-    attributes:
-      label: Version
-      description: Version of release (e.g., 0.3.7)
-    validations:
-      required: true
-
-  - type: input
-    id: yt-version
-    attributes:
-      label: YouTube Client Version
-      description: Right-click on the video and click on `Copy Debug Log` and paste the `release_version` from the json file that will be copied. (e.g., youtube.player.web_20230718_01_RC00)
-    validations:
-      required: true
       
   - type: dropdown
     id: releaseType
@@ -67,9 +51,19 @@ body:
       label: What scripts or extensions do you use with it?
       description: Please write all scripts and extensions (including AdBlock, etc.) that run on youtube.com that you use
 
+  - type: markdown
+    attributes:
+      value: |
+      Please attach a screenshot of the console logs with debugging information in the picture.
+
+      ## How to open the console
+      - Press F12 in any problem page.
+      - Select Console tab.
+
+      
   - type: textarea
     attributes:
       label: What is the problem?
-      description: Please let me know what the problem is. Also, if possible, please attach a drag-and-drop screenshot of your DevTools console and network.
+      description: Please write the issue in detail
     validations:
       required: true
