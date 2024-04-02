@@ -14,6 +14,7 @@ const config = {
     websocket: 3001,
   },
   publicDir: "./assets",
+  userscriptInjectPage: ["src/index.ts"],
   userScriptHeader: [
     ["@name:zh-CN", "恢復 YouTube 评论用户名"],
     ["@name:zh-TW", "恢復 YouTube 評論名稱"],

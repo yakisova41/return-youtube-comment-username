@@ -11,7 +11,6 @@ import { handleYtReloadContinuationItemsCommand } from "./handlers/handleYtReloa
 import { type YtAction } from "./types/YtAction";
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 import { debugLog } from "./utils/debugLog";
-import { getRuntime } from "crx-monkey/dist/client/main";
 
 import pkg from "package.json";
 
@@ -27,7 +26,6 @@ export default function main(): void {
       `Browser: ${window.yt.config_.INNERTUBE_CONTEXT.client.browserName} v${window.yt.config_.INNERTUBE_CONTEXT.client.browserVersion}`,
       `Login: ${window.yt.config_.LOGGED_IN}`,
       `Href: ${location.href}`,
-      `Run by: ${getRuntime()}`,
     ].join("\n"),
   );
 

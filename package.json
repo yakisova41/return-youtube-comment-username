@@ -18,7 +18,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "crx-monkey": "^0.3.0",
+    "crx-monkey": "^0.4.2",
     "eslint-config-prettier": "^9.0.0",
     "typescript": "^5.2.2"
   }
