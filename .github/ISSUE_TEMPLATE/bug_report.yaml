@@ -54,16 +54,21 @@ body:
   - type: textarea
     attributes:
       label: Screenshot
-      description: Please attach a screenshot of the console logs with debugging information in the picture.
+      description: Please paste a screenshot of the console logs with debugging information in the picture.
     validations:
       required: true
       
   - type: markdown
     attributes:
       value: |
-        ### How to open the console
+        ### How to open the console ?
          - Press F12 in any problem page.
          - Select Console tab.
+         
+        ### Which is the debugging information?
+        this
+        ![スクリーンショット 2024-04-03 032523](https://github.com/yakisova41/return-youtube-comment-username/assets/75610521/9d2110a3-7c10-4b70-bbd4-6a449f2b432c)
+
       
   - type: textarea
     attributes:
