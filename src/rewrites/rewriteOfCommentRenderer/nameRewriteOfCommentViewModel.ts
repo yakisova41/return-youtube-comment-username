@@ -31,7 +31,7 @@ export function nameRewriteOfCommentViewModel(commentRenderer: ShadyElement) {
 
   const userId =
     commentRendererBody.__dataHost.$["author-text"].__dataHost.__data
-      .authorEndpoint.browseEndpoint.browseId;
+      .authorNameEndpoint.browseEndpoint.browseId;
 
   /**
    * チャンネル所有者のコメントは別の要素に名前がかかれる
@@ -82,7 +82,7 @@ type CommentRendererBodyElement = ShadyDataHostElem<{
     "author-text": ShadyDataHostElem<{
       __data: {
         authorCommentBadge: null | { iconTooltip: string };
-        authorEndpoint: {
+        authorNameEndpoint: {
           browseEndpoint: {
             browseId: string;
           };
