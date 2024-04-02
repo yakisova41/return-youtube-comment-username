@@ -13,7 +13,6 @@ import {
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
-import { getShadyChildren } from "src/utils/getShadyChildren";
 import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
 
 /**
@@ -53,7 +52,8 @@ function reWriteCommentElem(
   commentElem: ShadyElement,
   commentThreadRenderer: ConfinuationItem | ConfinuationItemV2,
 ): void {
-  const commentRenderer = getShadyChildren(commentElem, 0, "comment");
+  const commentRenderer =
+    commentElem.__shady_native_children.namedItem("comment");
 
   if (commentRenderer !== null && commentRenderer !== undefined) {
     if (isConfinuationItemV1(commentThreadRenderer)) {
