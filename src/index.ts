@@ -15,27 +15,54 @@ import { debugLog } from "./utils/debugLog";
 import pkg from "package.json";
 
 function debugInfo() {
-  const logs = [`Return Youtube comment Username v${pkg.version}`, ""]
+  const logs = [""];
 
   const ytConf = window.yt.config_;
 
-  if(ytConf !== undefined) {
-    logs.push( "PAGE_BUILD_LABEL: " + ytConf.PAGE_BUILD_LABEL !== undefined  ? ytConf.PAGE_BUILD_LABEL : " undefined")
-    logs.push( "INNERTUBE_CLIENT_VERSION: " + ytConf.INNERTUBE_CLIENT_VERSION!== undefined  ?ytConf.INNERTUBE_CLIENT_VERSION : " undefined")
-    logs.push( "INNERTUBE_CONTEXT_CLIENT_VERSION: " + ytConf.INNERTUBE_CONTEXT_CLIENT_VERSION  !== undefined  ? ytConf.INNERTUBE_CONTEXT_CLIENT_VERSION: " undefined")
-    logs.push( "INNERTUBE_CONTEXT_GL: " + ytConf.INNERTUBE_CONTEXT_GL  !== undefined  ? ytConf.INNERTUBE_CONTEXT_GL: " undefined")
-    logs.push( "Browser: " + ytConf.INNERTUBE_CONTEXT.client.browserName  !== undefined  ? ytConf.INNERTUBE_CONTEXT.client.browserName : " undefined")
-    logs.push( "INNERTUBE_CLIENT_VERSION: " + ytConf.LOGGED_IN !== undefined  ? `${ytConf.LOGGED_IN}` : " undefined")
+  if (ytConf !== undefined) {
+    logs.push(
+      "PAGE_BUILD_LABEL: " +
+        (ytConf.PAGE_BUILD_LABEL !== undefined
+          ? ytConf.PAGE_BUILD_LABEL
+          : " undefined"),
+    );
+    logs.push(
+      "INNERTUBE_CLIENT_VERSION: " +
+        (ytConf.INNERTUBE_CLIENT_VERSION !== undefined
+          ? ytConf.INNERTUBE_CLIENT_VERSION
+          : " undefined"),
+    );
+    logs.push(
+      "INNERTUBE_CONTEXT_CLIENT_VERSION: " +
+        (ytConf.INNERTUBE_CONTEXT_CLIENT_VERSION !== undefined
+          ? ytConf.INNERTUBE_CONTEXT_CLIENT_VERSION
+          : " undefined"),
+    );
+    logs.push(
+      "INNERTUBE_CONTEXT_GL: " +
+        (ytConf.INNERTUBE_CONTEXT_GL !== undefined
+          ? ytConf.INNERTUBE_CONTEXT_GL
+          : " undefined"),
+    );
+    logs.push(
+      "Browser: " +
+        (ytConf.INNERTUBE_CONTEXT.client.browserName !== undefined
+          ? ytConf.INNERTUBE_CONTEXT.client.browserName
+          : " undefined"),
+    );
+    logs.push(
+      "INNERTUBE_CLIENT_VERSION: " +
+        (ytConf.LOGGED_IN !== undefined ? `${ytConf.LOGGED_IN}` : " undefined"),
+    );
   }
 
-  logs.push(`Href: ${location.href}`)
+  logs.push(`Href: ${location.href}`);
 
-  debugLog(logs.join("\n"))
+  debugLog(`Return Youtube comment Username v${pkg.version}`, logs.join("\n"));
 }
 
 export default function main(): void {
   debugInfo();
-
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
@@ -70,8 +97,6 @@ export default function main(): void {
     document.dispatchEvent(new Event("rycu-pagechange"));
   });
 }
-
-
 
 main();
 
