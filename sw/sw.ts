@@ -75,6 +75,7 @@ function createChangeLog(releaseNote: ReleaseNote) {
           background-color: #201a1a;
           color: #ece0df;
           padding: 10px;
+          font-family: sans-serif;
         }
 
         a {
