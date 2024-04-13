@@ -4,13 +4,25 @@ import markdownit from "markdown-it";
 import { titlePlugin } from "@mdit-vue/plugin-title";
 
 chrome.runtime.onInstalled.addListener((e) => {
-  if (e.reason === "install" || e.reason === "update") {
+  if (e.reason === "install") {
     getReleaseNotes(`v${manifest.version}`).then((releaseNote) => {
       const changeLogHtmlDataUri = createChangeLog(releaseNote);
       chrome.tabs.create({
         url: changeLogHtmlDataUri,
       });
     });
+  }
+
+  if (e.reason === "update") {
+    // Release note is not need displayed in patch update.
+    if (manifest.version.split(".")[2] === "0") {
+      getReleaseNotes(`v${manifest.version}`).then((releaseNote) => {
+        const changeLogHtmlDataUri = createChangeLog(releaseNote);
+        chrome.tabs.create({
+          url: changeLogHtmlDataUri,
+        });
+      });
+    }
   }
 });
 
