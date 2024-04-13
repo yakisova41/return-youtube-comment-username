@@ -32,14 +32,14 @@ function createChangeLog(releaseNote: ReleaseNote) {
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Return YouTube Comment Username</title>
+      <title>${chrome.i18n.getMessage("Name")}</title>
     </head>
     <body>
       <div class="container">
           <div class="primary">     
             <div class="primary-contents">
               <img src="${icon}"/>
-              <h1>Return YouTube Comment Username v${
+              <h1>${chrome.i18n.getMessage("Name")} v${
                 manifest.version
               } ${chrome.i18n.getMessage("Installed")}</h1>          
               
