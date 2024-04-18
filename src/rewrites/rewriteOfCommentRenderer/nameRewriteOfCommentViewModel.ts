@@ -3,38 +3,37 @@ import { escapeString } from "src/utils/escapeString";
 import { ShadyElement } from "src/utils/findElementByTrackingParams";
 import { getUserName } from "src/utils/getUserName";
 
-export function nameRewriteOfCommentViewModel(commentRenderer: ShadyElement) {
-  const commentRendererBody: ShadyElement | null =
-    commentRenderer.__shady_native_children.namedItem("body");
+export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
+  const commentViewModelBody: ShadyElement | null =
+    commentViewModel.__shady_native_children.namedItem("body");
 
-  if (commentRendererBody === null) {
-    throw new Error("[rycu] comment renderer body is null");
+  if (commentViewModelBody === null) {
+    throw new Error("[rycu] comment view model body is null");
   }
 
-  if (!commentRendererBodyGuard(commentRendererBody)) {
+  if (!commentViewModelBodyGuard(commentViewModelBody)) {
     throw new Error(
       "[rycu] The object format of comment renderer body is invalid.",
     );
   }
 
   const isNameContainerRender =
-    commentRendererBody.__dataHost.$["author-text"].__dataHost.__data
-      .authorCommentBadge !== null;
+    commentViewModelBody.__shady.ea.__shady.ea.host.authorCommentBadge !== null;
 
-  let nameElem = commentRendererBody.querySelector<ShadyElement>(
+  let nameElem = commentViewModelBody.querySelector<ShadyElement>(
     "#main > #header > #header-author > h3 > a > span",
   );
 
   const userId =
-    commentRendererBody.__dataHost.$["author-text"].__dataHost.__data
-      .authorNameEndpoint.browseEndpoint.browseId;
+    commentViewModelBody.__shady.ea.__shady.ea.host.authorNameEndpoint
+      .browseEndpoint.browseId;
 
   /**
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
   if (isNameContainerRender) {
     const containerMain =
-      commentRendererBody.__shady_native_children.namedItem("main");
+      commentViewModelBody.__shady_native_children.namedItem("main");
 
     if (containerMain !== null) {
       nameElem = containerMain.querySelector<ShadyElement>(
@@ -68,27 +67,30 @@ export function nameRewriteOfCommentViewModel(commentRenderer: ShadyElement) {
     });
 }
 
-function commentRendererBodyGuard(
-  elem: ShadyElement | CommentRendererBodyElement,
-): elem is CommentRendererBodyElement {
-  return Object.hasOwn(elem, "__dataHost");
+function commentViewModelBodyGuard(
+  elem: ShadyElement | CommentViewModelBodyElement,
+): elem is CommentViewModelBodyElement {
+  return Object.hasOwn(elem, "__shady");
 }
 
-type CommentRendererBodyElement = ShadyDataHostElem<{
-  $: {
-    "author-text": ShadyDataHostElem<{
-      __data: {
-        authorCommentBadge: null | { iconTooltip: string };
-        authorNameEndpoint: {
-          browseEndpoint: {
-            browseId: string;
+type CommentViewModelBodyElement = ShadyCommentViewModelElem<{
+  ea: {
+    __shady: {
+      ea: {
+        host: {
+          authorChannelName: string;
+          authorCommentBadge: null | object;
+          authorNameEndpoint: {
+            browseEndpoint: {
+              browseId: string;
+            };
           };
         };
       };
-    }>;
+    };
   };
 }>;
 
-interface ShadyDataHostElem<T> extends ShadyElement {
-  __dataHost: T;
+interface ShadyCommentViewModelElem<T> extends ShadyElement {
+  __shady: T;
 }
