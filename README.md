@@ -11,3 +11,7 @@ This UserScript, Chrome extension is change handle name to username in YouTube.
 [Chrome web store](https://chrome.google.com/webstore/detail/return-youtube-comment-us/kamibelompadnaekbellinmgbphoidmj)
 
 [Greasyfork](https://greasyfork.org/ja/scripts/460361-return-youtube-comment-username)
+
+
+## Donate
+[Patreon](https://www.patreon.com/user/membership?u=124261077)
