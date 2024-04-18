@@ -8,12 +8,12 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
     commentViewModel.__shady_native_children.namedItem("body");
 
   if (commentViewModelBody === null) {
-    throw new Error("[rycu] comment view model body is null");
+    throw debugErr(new Error("Comment view model body is null."));
   }
 
   if (!commentViewModelBodyGuard(commentViewModelBody)) {
-    throw new Error(
-      "[rycu] The object format of comment renderer body is invalid.",
+    throw debugErr(
+      new Error("The object format of comment view model is invalid."),
     );
   }
 
@@ -59,7 +59,7 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
           nameElem.textContent = name;
         }
       } else {
-        debugErr("Name element is null");
+        debugErr(new Error("Name element is null"));
       }
     })
     .catch((e) => {

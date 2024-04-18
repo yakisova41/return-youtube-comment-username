@@ -14,7 +14,7 @@ import {
 } from "src/types/AppendContinuationItemsAction";
 import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
-import { debugLog } from "src/utils/debugLog";
+import { debugErr, debugLog } from "src/utils/debugLog";
 import { getUserName } from "src/utils/getUserName";
 import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
 import { mentionRewriteOfCommentRendererV2 } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRendererV2";
@@ -27,10 +27,10 @@ import { mentionRewriteOfCommentRendererV2 } from "./rewriteOfCommentRenderer/me
 export function rewriteReplytNameFromContinuationItems(
   continuationItems: ReplyContinuationItems | ReplyContinuationItemsV2,
 ): void {
-  debugLog("Reply Rewrite");
+  debugLog("Rewrite Reply.");
 
   if (isReplyContinuationItemsV1(continuationItems)) {
-    debugLog("Reply continuationItems V1");
+    debugLog("Rewrite reply of continuationItems.");
 
     for (let i = 0; i < continuationItems.length; i++) {
       const { commentRenderer } = continuationItems[i];
@@ -46,7 +46,7 @@ export function rewriteReplytNameFromContinuationItems(
   }
 
   if (isReplyContinuationItemsV2(continuationItems)) {
-    debugLog("Reply continuationItems V2");
+    debugLog("Rewrite reply of comment view model.");
 
     for (let i = 0; i < continuationItems.length; i++) {
       const { commentViewModel } = continuationItems[i];
@@ -126,11 +126,11 @@ async function getReplyElem(
 export function rewriteTeaserReplytNameFromContinuationItems(
   continuationItems: ReplyContinuationItems | ReplyContinuationItemsV2,
 ): void {
-  debugLog("Teaser Reply Rewrite");
+  debugLog("Rewrite teaser Reply.");
 
   for (let i = 0; i < continuationItems.length; i++) {
     if (isReplyContinuationItemsV1(continuationItems)) {
-      debugLog("Teaser Reply V1");
+      debugLog("Teaser reply of continuationItems.");
 
       const { commentRenderer } = continuationItems[i];
 
@@ -156,7 +156,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
     }
 
     if (isReplyContinuationItemsV2(continuationItems)) {
-      debugLog("Teaser Reply V2");
+      debugLog("Teaser reply of comment view model.");
 
       const { commentViewModel } = continuationItems[i];
 
@@ -168,7 +168,7 @@ export function rewriteTeaserReplytNameFromContinuationItems(
         );
 
         if (elem === null) {
-          throw new Error("Can not found Teaser Reply V2 Elem");
+          throw debugErr(new Error("Can not found Teaser Reply in V2 Elem."));
         }
 
         reWriteReplyElemV2(elem);

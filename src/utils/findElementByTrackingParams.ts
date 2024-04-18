@@ -17,7 +17,7 @@ export function findElementByTrackingParams<T = Element>(
       elems[i]?.trackedParams === undefined &&
       elems[i]?.polymerController?.trackedParams === undefined
     ) {
-      debugErr("TrackedParams property is not found");
+      debugErr(new Error("TrackedParams not found in element property."));
     }
 
     if (elems[i].trackedParams === trackingParams) {
@@ -80,7 +80,7 @@ export function findElementAllByCommentId<T = Element>(
         elems[i]?.__data?.data?.commentId === undefined &&
         elems[i]?.polymerController?.__data?.data?.commentId === undefined
       ) {
-        debugErr("Reply CommentId is not found");
+        debugErr(new Error("Reply CommentId not found."));
       } else if (
         elems[i]?.__data?.data?.commentId !== undefined &&
         elems[i].__data.data.commentId === commnetId
@@ -141,7 +141,9 @@ export async function searchTrackedParamsByObject(
         search(obj[k], [...history, k]);
       } else if (obj[k] === param) {
         history.push(k);
-        debugErr(`Unknown Object format!\n"${history.join(">")}"`);
+        throw debugErr(
+          new Error(`Unknown Object format!\n"${history.join(" > ")}"`),
+        );
       }
     });
   };
