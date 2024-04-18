@@ -32,7 +32,7 @@ export function mentionRewriteOfCommentRenderer(
               debugErr(e);
             });
         } else {
-          debugErr("Mention Atag is have not Href attr");
+          debugErr(new Error("Mention Atag has not Href attr."));
         }
       }
     }

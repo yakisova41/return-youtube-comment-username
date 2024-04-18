@@ -21,7 +21,7 @@ import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRe
 export function rewriteCommentNameFromContinuationItems(
   continuationItems: ContinuationItems,
 ): void {
-  debugLog("Comment Rewrite");
+  debugLog("Rewrite Comment.");
 
   for (let i = 0; i < continuationItems.length; i++) {
     if (continuationItems[i].commentThreadRenderer !== undefined) {
@@ -57,7 +57,7 @@ function reWriteCommentElem(
 
   if (commentRenderer !== null && commentRenderer !== undefined) {
     if (isConfinuationItemV1(commentThreadRenderer)) {
-      debugLog("Comment continuationItems V1");
+      debugLog("Rewrite of Comment Renderer.");
 
       let isContainer =
         commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
@@ -78,7 +78,7 @@ function reWriteCommentElem(
     }
 
     if (isConfinuationItemV2(commentThreadRenderer)) {
-      debugLog("Comment continuationItems V2");
+      debugLog("Rewrite of Comment view model.");
 
       // let isContainer = commentThreadRenderer.commentViewModel.commentViewModel;
       nameRewriteOfCommentViewModel(commentRenderer);

@@ -16,7 +16,9 @@ export async function getUserName(id: string): Promise<string> {
         .catch(() => {
           isUseFeed = false;
 
-          debugErr("Catch Feed API Error\nChange to Browse mode");
+          debugErr(
+            new Error("Catch Feed API Error, so change to Browse mode."),
+          );
 
           fetchBrowse(id).then((name) => {
             resolve(name);
@@ -45,7 +47,7 @@ async function fetchFeed(id: string) {
   )
     .then(async (res) => {
       if (res.status !== 200)
-        throw new Error(`Feed API Error\nstatus: ${res.status}`);
+        throw debugErr(new Error(`Feed API Error\nstatus: ${res.status}`));
       return await res.text();
     })
     .then((text) => {
@@ -100,7 +102,7 @@ async function fetchBrowse(id: string) {
   )
     .then(async (res) => {
       if (res.status !== 200)
-        throw new Error(`Browse API Error\nstatus: ${res.status}`);
+        throw debugErr(new Error(`Browse API Error\nstatus: ${res.status}`));
       return await res.json();
     })
     .then((text) => {

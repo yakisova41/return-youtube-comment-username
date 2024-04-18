@@ -18,7 +18,7 @@ export function nameRewriteOfCommentRenderer(
     commentRenderer.__shady_native_children.namedItem("body");
 
   if (commentRendererBody === null) {
-    throw new Error("[rycu] comment renderer body is null");
+    throw debugErr(new Error("Comment renderer body is null."));
   }
 
   let nameElem = commentRendererBody.querySelector<ShadyElement>(
@@ -55,7 +55,7 @@ export function nameRewriteOfCommentRenderer(
           nameElem.textContent = name;
         }
       } else {
-        debugErr("Name element is null");
+        debugErr(new Error("Name element is null"));
       }
     })
     .catch((e) => {
