@@ -21,7 +21,7 @@
     "@mdit-vue/plugin-title": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "crx-monkey": "^0.4.2",
+    "crx-monkey": "^0.7.0",
     "encoding-japanese": "^2.1.0",
     "eslint-config-prettier": "^9.0.0",
     "markdown-it": "^14.1.0",

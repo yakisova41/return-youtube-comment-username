@@ -1,4 +1,4 @@
-import manifest from "../manifest.json";
+import manifest from "../manifest.js";
 import Encoding from "encoding-japanese";
 import markdownit from "markdown-it";
 import { titlePlugin } from "@mdit-vue/plugin-title";
