@@ -1,0 +1,33 @@
+name: ABTEST comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check for command
+        id: check_command
+        run: |
+          if [[ "${{ github.event.comment.body }}" == "/abtest" ]]; then
+            echo "::set-output name=should_comment::true"
+          else
+            echo "::set-output name=should_comment::false"
+          fi
+
+      - name: Post comment
+        if: steps.check_command.outputs.should_comment == 'true'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          body: |
+            ## This is a bug caused by A/B testing
+            [What is A/B testing?(Wikipedia)](https://en.wikipedia.org/wiki/A/B_testing)
+
+            - YouTube is currently making breaking changes that affect RYCU.
+            - This issue will be fixed as soon as the change is released to all users and the change is applied to developer accounts.✅
+
+          issue-number: ${{ github.event.issue.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}

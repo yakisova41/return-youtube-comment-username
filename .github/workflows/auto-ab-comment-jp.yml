@@ -1,0 +1,33 @@
+name: ABTEST comment JP
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check for command
+        id: check_command
+        run: |
+          if [[ "${{ github.event.comment.body }}" == "/abtestjp" ]]; then
+            echo "::set-output name=should_comment::true"
+          else
+            echo "::set-output name=should_comment::false"
+          fi
+
+      - name: Post comment
+        if: steps.check_command.outputs.should_comment == 'true'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          body: |
+            ## これはA/Bテストによるバグです。
+            [A/Bテストとは(Wikipedia)](https://ja.wikipedia.org/wiki/A/B%E3%83%86%E3%82%B9%E3%83%88)
+
+            - YouTubeは現在拡張機能に影響する破壊的変更を行っています。
+            - この問題は変更がすべてのユーザーにリリースされ、開発者のアカウントに適用され次第修正予定です。✅
+
+          issue-number: ${{ github.event.issue.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
