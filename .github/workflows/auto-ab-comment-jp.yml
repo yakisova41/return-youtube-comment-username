@@ -30,4 +30,4 @@ jobs:
             - この問題は変更がすべてのユーザーにリリースされ、開発者のアカウントに適用され次第修正予定です。✅
 
           issue-number: ${{ github.event.issue.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.AUTO_ISSUE_TOKEN }}
