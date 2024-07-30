@@ -19,7 +19,7 @@ body:
       description: Enter the browser that caused the problem (e.g., Chrome 114.0.5735.134)
     validations:
       required: true
-      
+
   - type: dropdown
     id: releaseType
     attributes:
@@ -57,20 +57,20 @@ body:
       description: Please paste a screenshot of the console logs with debugging information in the picture.
     validations:
       required: true
-      
+
   - type: markdown
     attributes:
       value: |
-        ### How to open the console ?
+        ### Steps
          - Press F12 in any problem page.
          - Select Console tab.
-
-         
+         - Click Console.
+         - Type `this.__rycu.enableDebugLog()` (It can be enable to debug mode for rycu)
+         - > Displayed warning? No problem. It is not malware but function.
         ### Which is the debugging information?
         this
         ![スクリーンショット 2024-04-03 032523](https://github.com/yakisova41/return-youtube-comment-username/assets/75610521/9d2110a3-7c10-4b70-bbd4-6a449f2b432c)
 
-      
   - type: textarea
     attributes:
       label: What is the problem?
