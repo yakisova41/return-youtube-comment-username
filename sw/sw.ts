@@ -1,6 +1,6 @@
 import manifest from "../manifest.js";
 import Encoding from "encoding-japanese";
-import markdownit from "markdown-it";
+import markdownit, { PluginSimple } from "markdown-it";
 import { titlePlugin } from "@mdit-vue/plugin-title";
 
 chrome.runtime.onInstalled.addListener((e) => {
@@ -35,7 +35,7 @@ function createChangeLog(releaseNote: ReleaseNote) {
     linkify: true,
     typographer: true,
     breaks: true,
-  }).use(titlePlugin);
+  }).use(titlePlugin as unknown as PluginSimple);
 
   const releaseNoteBodyParsed = md.render(releaseNote.body);
 
