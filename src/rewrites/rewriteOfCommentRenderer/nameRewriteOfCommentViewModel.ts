@@ -54,7 +54,7 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
         }
 
         if (isNameContainerRender) {
-          nameElem.__shady_native_innerHTML = escapeString(name);
+          nameElem.textContent = escapeString(name);
         } else {
           nameElem.textContent = name;
         }
