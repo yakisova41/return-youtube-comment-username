@@ -62,11 +62,9 @@ body:
     attributes:
       value: |
         ### Steps
-         - Press F12 in any problem page.
-         - Select Console tab.
-         - Click Console.
-         - Type `this.__rycu.enableDebugLog()` (It can be enable to debug mode for rycu)
-         - > Displayed warning? No problem. It is not malware but function.
+         - Open the Extensions page `chrome://extensions/`
+         - Activate Developer mode in the upper right corner
+         - Click on "Inspect views service worker" to display the verification tab.
         ### Which is the debugging information?
         this
         ![スクリーンショット 2024-04-03 032523](https://github.com/yakisova41/return-youtube-comment-username/assets/75610521/9d2110a3-7c10-4b70-bbd4-6a449f2b432c)

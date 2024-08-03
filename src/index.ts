@@ -10,11 +10,9 @@ import { handleYtReloadContinuationItemsCommand } from "./handlers/handleYtReloa
 
 import { type YtAction } from "./types/YtAction";
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
-import { debugLog, outputDebugInfo, setupLog } from "./utils/debugLog";
+import { outputDebugInfo } from "./utils/debugLog";
 
 export default function main(): void {
-  setupLog();
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
     switch (e.detail.actionName) {
@@ -46,6 +44,7 @@ export default function main(): void {
    */
   document.addEventListener("yt-navigate-finish", () => {
     document.dispatchEvent(new Event("rycu-pagechange"));
+    outputDebugInfo();
   });
 }
 
