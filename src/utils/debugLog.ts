@@ -1,36 +1,20 @@
 import pkg from "package.json";
+import { bypassSendMessage } from "crx-monkey";
+import { RycuMessageRequest } from "sw/sw";
 
-let isEnableLog = false;
-
-/**
- * Attach a toggle function of debug mode.
- */
-export function setupLog() {
-  window.__rycu = {
-    enableDebugLog: () => {
-      isEnableLog = true;
-      outputDebugInfo();
-    },
-  };
-}
-
-/**
- * If debug mode should enable, the log would output to conslole in MAIN world.
- * @param message
- * @param value
- */
 export function debugLog(message: string | Error, value: string = ""): void {
-  if (isEnableLog) {
-    console.log(`[rycu] ${message} %c${value}`, "color:cyan;");
-  }
+  bypassSendMessage<RycuMessageRequest>({
+    type: "log",
+    value: [`[rycu] ${message} %c${value}`, "color:cyan;"],
+  });
 }
 
-/**
- * Output error log to console in MAIN world even if debug mode is disabled.
- * @param message
- */
 export function debugErr(message: string | Error): void {
   console.error(`[rycu] ${message}`);
+  bypassSendMessage<RycuMessageRequest>({
+    type: "err",
+    value: [`[rycu] ${message}`],
+  });
 }
 
 export function outputDebugInfo() {
