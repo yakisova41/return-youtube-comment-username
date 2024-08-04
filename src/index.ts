@@ -1,6 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 
 // yt-action handlers
+import { bypassSendMessage, getRunningRuntime } from "crx-monkey";
 import { handleYtAppendContinuationItemsAction } from "./handlers/handleYtAppendContinuationItemsAction";
 import { handleYtCreateCommentAction } from "./handlers/handleYtCreateCommentAction";
 import { handleYtCreateCommentReplyAction } from "./handlers/handleYtCreateCommentReplyAction";
@@ -11,8 +12,48 @@ import { handleYtReloadContinuationItemsCommand } from "./handlers/handleYtReloa
 import { type YtAction } from "./types/YtAction";
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 import { outputDebugInfo } from "./utils/debugLog";
+import { RycuMessageRequest, RycuMessageResponseValue } from "sw/sw";
 
 export default function main(): void {
+  const settings: RycuSettings = {
+    isShowHandleToName: false,
+    isShowNameToHandle: false,
+  };
+
+  window.__rycu = {
+    settings,
+  };
+
+  if (getRunningRuntime() === "Extension") {
+    bypassSendMessage<
+      RycuMessageRequest,
+      RycuMessageResponseValue<"getShowHandleToName">
+    >(
+      {
+        type: "getShowHandleToName",
+        value: null,
+      },
+      {},
+      (isShowHandleToName) => {
+        window.__rycu.settings.isShowHandleToName = isShowHandleToName;
+      },
+    );
+
+    bypassSendMessage<
+      RycuMessageRequest,
+      RycuMessageResponseValue<"getShowNameToHandle">
+    >(
+      {
+        type: "getShowNameToHandle",
+        value: null,
+      },
+      {},
+      (isShowNameToHandle) => {
+        window.__rycu.settings.isShowNameToHandle = isShowNameToHandle;
+      },
+    );
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleYtAction = (e: CustomEvent<YtAction<any, any>>): void => {
     switch (e.detail.actionName) {
@@ -63,6 +104,9 @@ declare global {
   }
 
   interface Window {
+    __rycu: {
+      settings: RycuSettings;
+    };
     yt: {
       config_?: {
         HL: string;
@@ -81,4 +125,9 @@ declare global {
       };
     };
   }
+}
+
+export interface RycuSettings {
+  isShowHandleToName: boolean;
+  isShowNameToHandle: boolean;
 }

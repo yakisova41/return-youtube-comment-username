@@ -19,6 +19,21 @@
           <button class="btn ofsite-btn"></button>
         </div>
       </div>
+
+      <div class="options-outer">
+        <span class="options-title">Options</span>
+
+        <ul class="options">
+          <li>
+            <span class="name-display-format-text">Name Display Format</span>
+            <select id="name-display-format-select">
+              <option value="1">Name only</option>
+              <option value="2">@handle (Username)</option>
+              <option value="3">Username (@handle)</option>
+            </select>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <script src="main.ts"></script>
@@ -79,6 +94,27 @@
     .btn-primary {
       background-color: #ffb3b3;
       color: #5f131b;
+    }
+
+    .options-outer {
+      border-top: solid 1px #ffdad9;
+      padding: 10px;
+      margin-top: 20px;
+    }
+
+    .options-title {
+      font-size: 24px;
+    }
+
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+
+    .options > li {
+      font-size: 14px;
+      display: flex;
+      gap: 0 10px;
     }
   </style>
 </html>

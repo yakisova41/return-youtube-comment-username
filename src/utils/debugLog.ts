@@ -1,20 +1,27 @@
 import pkg from "package.json";
-import { bypassSendMessage } from "crx-monkey";
+import { bypassSendMessage, getRunningRuntime } from "crx-monkey";
 import { RycuMessageRequest } from "sw/sw";
 
 export function debugLog(message: string | Error, value: string = ""): void {
-  bypassSendMessage<RycuMessageRequest>({
-    type: "log",
-    value: [`[rycu] ${message} %c${value}`, "color:cyan;"],
-  });
+  if (getRunningRuntime() === "Extension") {
+    bypassSendMessage<RycuMessageRequest>({
+      type: "log",
+      value: [`[rycu] ${message} %c${value}`, "color:cyan;"],
+    });
+  } else {
+    console.log(`[rycu] ${message} %c${value}`, "color:cyan;");
+  }
 }
 
 export function debugErr(message: string | Error): void {
   console.error(`[rycu] ${message}`);
-  bypassSendMessage<RycuMessageRequest>({
-    type: "err",
-    value: [`[rycu] ${message}`],
-  });
+
+  if (getRunningRuntime() === "Extension") {
+    bypassSendMessage<RycuMessageRequest>({
+      type: "err",
+      value: [`[rycu] ${message}`],
+    });
+  }
 }
 
 export function outputDebugInfo() {
@@ -62,12 +69,4 @@ export function outputDebugInfo() {
   logs.push(`Href: ${location.href}`);
 
   debugLog(`Return Youtube comment Username v${pkg.version}`, logs.join("\n"));
-}
-
-declare global {
-  interface Window {
-    __rycu: {
-      enableDebugLog: () => void;
-    };
-  }
 }

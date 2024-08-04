@@ -16,5 +16,8 @@
   },
   "OfficialSite": {
     "message": "Official Site"
+  },
+  "NameDisplayFormatText": {
+    "message": "Name display format"
   }
 }
