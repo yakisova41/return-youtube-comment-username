@@ -28,6 +28,11 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
     commentViewModelBody.__shady.ea.__shady.ea.host.authorNameEndpoint
       .browseEndpoint.browseId;
 
+  const userHandle =
+    commentViewModelBody.__shady.ea.__shady.ea.host.authorNameEndpoint.browseEndpoint.canonicalBaseUrl.substring(
+      1,
+    );
+
   /**
    * チャンネル所有者のコメントは別の要素に名前がかかれる
    */
@@ -53,10 +58,18 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
           //console.log("false");
         }
 
+        let innerText = name;
+        if (window.__rycu.settings.isShowNameToHandle) {
+          innerText = decodeURI(userHandle) + `  ( ${name} )`;
+        }
+        if (window.__rycu.settings.isShowHandleToName) {
+          innerText = name + `  ( ${decodeURI(userHandle)} )`;
+        }
+
         if (isNameContainerRender) {
-          nameElem.textContent = escapeString(name);
+          nameElem.textContent = escapeString(innerText);
         } else {
-          nameElem.textContent = name;
+          nameElem.textContent = innerText;
         }
       } else {
         debugErr(new Error("Name element is null"));
@@ -83,6 +96,7 @@ type CommentViewModelBodyElement = ShadyCommentViewModelElem<{
           authorNameEndpoint: {
             browseEndpoint: {
               browseId: string;
+              canonicalBaseUrl: string;
             };
           };
         };

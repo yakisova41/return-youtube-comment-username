@@ -16,5 +16,8 @@
   },
   "OfficialSite": {
     "message": "公式サイト"
+  },
+  "NameDisplayFormatText": {
+    "message": "名前の表示形式"
   }
 }

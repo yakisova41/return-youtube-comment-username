@@ -13,6 +13,7 @@ export default {
     48: "assets/icon48.png",
     128: "assets/icon128.png",
   },
+  permissions: ["storage"],
   content_scripts: [
     {
       matches: ["https://www.youtube.com/*"],

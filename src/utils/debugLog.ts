@@ -63,11 +63,3 @@ export function outputDebugInfo() {
 
   debugLog(`Return Youtube comment Username v${pkg.version}`, logs.join("\n"));
 }
-
-declare global {
-  interface Window {
-    __rycu: {
-      enableDebugLog: () => void;
-    };
-  }
-}
