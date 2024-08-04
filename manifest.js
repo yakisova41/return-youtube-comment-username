@@ -22,6 +22,7 @@ export default {
       run_at: "document_end",
       connection_isolated: true,
       userscript_direct_inject: true,
+      trusted_inject: true,
     },
   ],
 

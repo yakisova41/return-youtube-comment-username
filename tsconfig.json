@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "ES2022",
+    "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -12,10 +11,8 @@
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "allowJs": true,
-    "noEmit": true,
     "baseUrl": ".",
     "types": ["chrome"]
   },
-  "include": ["src", "sw", "crx-monkey.config.js", "popup", "manifest.js"]
+  "include": ["src", "sw", "popup"]
 }
