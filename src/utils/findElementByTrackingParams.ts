@@ -154,8 +154,9 @@ export async function searchTrackedParamsByObject(
 /**
  * polymerの要素？知らんけど
  */
-export interface ShadyElement extends HTMLElement {
-  __shady_native_children: HTMLCollectionOf<ShadyElement>;
+export type ShadyElement<T = HTMLElement> = ShadyElementPrototype & T;
+interface ShadyElementPrototype extends HTMLElement {
+  __shady_native_children: HTMLCollectionOf<ShadyElementPrototype>;
   __shady_native_innerHTML: string;
   __data: {
     data: {

@@ -3,7 +3,41 @@ import { escapeString } from "src/utils/escapeString";
 import { ShadyElement } from "src/utils/findElementByTrackingParams";
 import { getUserName } from "src/utils/getUserName";
 
-export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
+export type CommentViewModelElement = ShadyElement<{
+  authorChannelName: string;
+  authorCommentBadge: null | object;
+  authorNameEndpoint: {
+    browseEndpoint: {
+      browseId: string;
+      canonicalBaseUrl: string;
+    };
+  };
+}>;
+
+export function isCommentViewModelElement(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any,
+): obj is CommentViewModelElement {
+  if (obj === null || typeof obj !== "object") {
+    return false;
+  }
+
+  return (
+    typeof obj.authorChannelName === "string" &&
+    (obj.authorCommentBadge === null ||
+      typeof obj.authorCommentBadge === "object") &&
+    typeof obj.authorNameEndpoint === "object" &&
+    obj.authorNameEndpoint !== null &&
+    typeof obj.authorNameEndpoint.browseEndpoint === "object" &&
+    obj.authorNameEndpoint.browseEndpoint !== null &&
+    typeof obj.authorNameEndpoint.browseEndpoint.browseId === "string" &&
+    typeof obj.authorNameEndpoint.browseEndpoint.canonicalBaseUrl === "string"
+  );
+}
+
+export function nameRewriteOfCommentViewModel(
+  commentViewModel: CommentViewModelElement,
+) {
   const commentViewModelBody: ShadyElement | null =
     commentViewModel.__shady_native_children.namedItem("body");
 
@@ -11,25 +45,16 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
     throw debugErr(new Error("Comment view model body is null."));
   }
 
-  if (!commentViewModelBodyGuard(commentViewModelBody)) {
-    throw debugErr(
-      new Error("The object format of comment view model is invalid."),
-    );
-  }
+  const isNameContainerRender = commentViewModel.authorCommentBadge !== null;
 
-  const isNameContainerRender =
-    commentViewModelBody.__shady.ea.__shady.ea.host.authorCommentBadge !== null;
-
-  let nameElem = commentViewModelBody.querySelector<ShadyElement>(
-    "#main > #header > #header-author > h3 > a > span",
+  let nameElem = commentViewModel.querySelector<ShadyElement>(
+    "#body > #main > #header > #header-author > h3 > a > span",
   );
 
-  const userId =
-    commentViewModelBody.__shady.ea.__shady.ea.host.authorNameEndpoint
-      .browseEndpoint.browseId;
+  const userId = commentViewModel.authorNameEndpoint.browseEndpoint.browseId;
 
   const userHandle =
-    commentViewModelBody.__shady.ea.__shady.ea.host.authorNameEndpoint.browseEndpoint.canonicalBaseUrl.substring(
+    commentViewModel.authorNameEndpoint.browseEndpoint.canonicalBaseUrl.substring(
       1,
     );
 
@@ -78,33 +103,4 @@ export function nameRewriteOfCommentViewModel(commentViewModel: ShadyElement) {
     .catch((e) => {
       debugErr(e);
     });
-}
-
-function commentViewModelBodyGuard(
-  elem: ShadyElement | CommentViewModelBodyElement,
-): elem is CommentViewModelBodyElement {
-  return Object.hasOwn(elem, "__shady");
-}
-
-type CommentViewModelBodyElement = ShadyCommentViewModelElem<{
-  ea: {
-    __shady: {
-      ea: {
-        host: {
-          authorChannelName: string;
-          authorCommentBadge: null | object;
-          authorNameEndpoint: {
-            browseEndpoint: {
-              browseId: string;
-              canonicalBaseUrl: string;
-            };
-          };
-        };
-      };
-    };
-  };
-}>;
-
-interface ShadyCommentViewModelElem<T> extends ShadyElement {
-  __shady: T;
 }
