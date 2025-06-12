@@ -13,7 +13,10 @@ import {
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
-import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import {
+  isCommentViewModelElement,
+  nameRewriteOfCommentViewModel,
+} from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。
@@ -78,10 +81,15 @@ function reWriteCommentElem(
     }
 
     if (isConfinuationItemV2(commentThreadRenderer)) {
-      debugLog("Rewrite of Comment view model.");
+      debugLog("Rewriteing a comment by using comment view model.");
 
       // let isContainer = commentThreadRenderer.commentViewModel.commentViewModel;
-      nameRewriteOfCommentViewModel(commentRenderer);
+
+      if (isCommentViewModelElement(commentRenderer)) {
+        nameRewriteOfCommentViewModel(commentRenderer);
+      } else {
+        debugErr("It type is not comment view model.");
+      }
     }
   }
 }
