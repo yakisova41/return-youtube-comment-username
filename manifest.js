@@ -24,6 +24,16 @@ export default {
       userscript_direct_inject: true,
       trusted_inject: true,
     },
+    {
+      matches: ["https://www.youtube.com/live_chat*"],
+      js: ["src/liveChat.ts"],
+      world: "MAIN",
+      run_at: "document_end",
+      connection_isolated: true,
+      userscript_direct_inject: true,
+      trusted_inject: true,
+      all_frames: true,
+    },
   ],
 
   action: {
