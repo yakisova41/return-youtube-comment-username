@@ -4,7 +4,7 @@
 export default {
   name: "__MSG_Name__",
   short_name: "name",
-  version: "0.6.2",
+  version: "0.7.0",
   manifest_version: 3,
   description: "__MSG_Description__",
   default_locale: "en",
