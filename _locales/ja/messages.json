@@ -19,5 +19,11 @@
   },
   "NameDisplayFormatText": {
     "message": "名前の表示形式"
+  },
+  "ReplaceComments": {
+    "message": "コメントのユーザー名を置換"
+  },
+  "ReplaceLiveChats": {
+    "message": "ライブチャットのユーザー名を置換"
   }
 }

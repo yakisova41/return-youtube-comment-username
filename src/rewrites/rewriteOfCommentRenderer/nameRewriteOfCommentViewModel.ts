@@ -2,6 +2,8 @@ import { debugErr } from "src/utils/debugLog";
 import { escapeString } from "src/utils/escapeString";
 import { ShadyElement } from "src/utils/findElementByTrackingParams";
 import { getUserName } from "src/utils/getUserName";
+import { formatUserName } from "src/utils/formatUserName";
+import { type RycuSettings } from "src/types/RycuSettings";
 
 export type CommentViewModelElement = ShadyElement<{
   authorChannelName: string;
@@ -37,6 +39,7 @@ export function isCommentViewModelElement(
 
 export function nameRewriteOfCommentViewModel(
   commentViewModel: CommentViewModelElement,
+  settings: RycuSettings = window.__rycu.settings,
 ) {
   const commentViewModelBody: ShadyElement | null =
     commentViewModel.__shady_native_children.namedItem("body");
@@ -83,13 +86,7 @@ export function nameRewriteOfCommentViewModel(
           //console.log("false");
         }
 
-        let innerText = name;
-        if (window.__rycu.settings.isShowNameToHandle) {
-          innerText = decodeURI(userHandle) + `  ( ${name} )`;
-        }
-        if (window.__rycu.settings.isShowHandleToName) {
-          innerText = name + `  ( ${decodeURI(userHandle)} )`;
-        }
+        const innerText = formatUserName(name, userHandle, settings);
 
         if (isNameContainerRender) {
           nameElem.textContent = escapeString(innerText);

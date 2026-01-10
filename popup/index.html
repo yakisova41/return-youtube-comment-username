@@ -32,6 +32,18 @@
               <option value="3">Username (@handle)</option>
             </select>
           </li>
+          <li>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-comments-replacement" checked />
+              <span class="comments-toggle-text"></span>
+            </label>
+          </li>
+          <li>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-live-chats-replacement" checked />
+              <span class="live-chats-toggle-text"></span>
+            </label>
+          </li>
         </ul>
       </div>
     </div>
@@ -115,6 +127,16 @@
       font-size: 14px;
       display: flex;
       gap: 0 10px;
+    }
+
+    .options > li:nth-of-type(n+2) {
+      margin-top: 0.5em;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 0 0.5em;
     }
   </style>
 </html>
