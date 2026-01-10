@@ -19,5 +19,11 @@
   },
   "NameDisplayFormatText": {
     "message": "Name display format"
+  },
+  "ReplaceComments": {
+    "message": "Replace handles in comments"
+  },
+  "ReplaceLiveChats": {
+    "message": "Replace handles in live chats"
   }
 }

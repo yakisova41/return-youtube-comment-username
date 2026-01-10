@@ -1,8 +1,9 @@
 import { setupInstallPage } from "./setupInstallPage";
+import { type RycuStorage, getDefaultStorageCache } from "src/types/Storage";
 
 setupInstallPage();
 
-const storageCache = { showHandleToName: false, showNameToHandle: false };
+const storageCache: RycuStorage = getDefaultStorageCache();
 const initStorageCache = chrome.storage.local.get().then((items) => {
   Object.assign(storageCache, items);
 });
@@ -29,6 +30,14 @@ chrome.runtime.onMessage.addListener(
       send(storageCache.showNameToHandle);
     }
 
+    if (req.type === "getReplaceComments") {
+      send(storageCache.replaceComments);
+    }
+
+    if (req.type === "getReplaceLiveChats") {
+      send(storageCache.replaceLiveChats);
+    }
+
     if (req.type === "setShowHandleToName") {
       chrome.storage.local
         .set({ showHandleToName: req.value })
@@ -46,6 +55,24 @@ chrome.runtime.onMessage.addListener(
           Object.assign(storageCache, { showNameToHandle: req.value });
         });
     }
+
+    if (req.type === "setReplaceComments") {
+      chrome.storage.local
+        .set({ replaceComments: req.value })
+        .then(async () => {
+          await initStorageCache;
+          Object.assign(storageCache, { replaceComments: req.value });
+        });
+    }
+
+    if (req.type === "setReplaceLiveChats") {
+      chrome.storage.local
+        .set({ replaceLiveChats: req.value })
+        .then(async () => {
+          await initStorageCache;
+          Object.assign(storageCache, { replaceLiveChats: req.value });
+        });
+    }
   },
 );
 
@@ -61,15 +88,23 @@ interface RycuMessageRequestValues {
   err: string[];
   setShowHandleToName: boolean;
   setShowNameToHandle: boolean;
+  setReplaceComments: boolean;
+  setReplaceLiveChats: boolean;
   getShowHandleToName: null;
   getShowNameToHandle: null;
+  getReplaceComments: null;
+  getReplaceLiveChats: null;
 }
 
 interface RycuMessageResponseValues {
   setShowHandleToName: boolean;
   setShowNameToHandle: boolean;
+  setReplaceComments: boolean;
+  setReplaceLiveChats: boolean;
   getShowHandleToName: boolean;
   getShowNameToHandle: boolean;
+  getReplaceComments: boolean;
+  getReplaceLiveChats: boolean;
 }
 
 export type RycuMessageResponseValue<

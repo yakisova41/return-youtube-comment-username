@@ -37,6 +37,12 @@ nameDisplayFormatText.innerHTML = chrome.i18n.getMessage(
   "NameDisplayFormatText",
 );
 
+const replaceCommentsText = document.querySelector(".comments-toggle-text")!;
+replaceCommentsText.innerHTML = chrome.i18n.getMessage("ReplaceComments");
+
+const replaceLiveChatsText = document.querySelector(".live-chats-toggle-text")!;
+replaceLiveChatsText.innerHTML = chrome.i18n.getMessage("ReplaceLiveChats");
+
 (async () => {
   // @handle (Name)
   const isShowNameToHandle = await chrome.runtime.sendMessage<
@@ -53,6 +59,22 @@ nameDisplayFormatText.innerHTML = chrome.i18n.getMessage(
     RycuMessageResponseValue<"getShowHandleToName">
   >({
     type: "getShowHandleToName",
+    value: null,
+  });
+
+  const isReplaceComments = await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getReplaceComments">
+  >({
+    type: "getReplaceComments",
+    value: null,
+  });
+
+  const isReplaceLiveChats = await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getReplaceLiveChats">
+  >({
+    type: "getReplaceLiveChats",
     value: null,
   });
 
@@ -95,6 +117,28 @@ nameDisplayFormatText.innerHTML = chrome.i18n.getMessage(
         break;
     }
   });
+
+  const commentsReplacementToggle = document.querySelector<HTMLInputElement>(
+    "#toggle-comments-replacement",
+  )!;
+  commentsReplacementToggle.checked = isReplaceComments;
+  commentsReplacementToggle.addEventListener("change", (e) => {
+    if (!(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setReplaceComments(e.target.checked);
+  });
+
+  const liveChatReplacementToggle = document.querySelector<HTMLInputElement>(
+    "#toggle-live-chats-replacement",
+  )!;
+  liveChatReplacementToggle.checked = isReplaceLiveChats;
+  liveChatReplacementToggle.addEventListener("change", (e) => {
+    if (!(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setReplaceLiveChats(e.target.checked);
+  });
 })();
 
 // @handle (Name)
@@ -115,6 +159,26 @@ async function setShowHandleToName(is: boolean) {
     RycuMessageResponseValue<"setShowHandleToName">
   >({
     type: "setShowHandleToName",
+    value: is,
+  });
+}
+
+async function setReplaceComments(is: boolean) {
+  await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"setReplaceComments">
+  >({
+    type: "setReplaceComments",
+    value: is,
+  });
+}
+
+async function setReplaceLiveChats(is: boolean) {
+  await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"setReplaceLiveChats">
+  >({
+    type: "setReplaceLiveChats",
     value: is,
   });
 }

@@ -17,13 +17,19 @@ import {
   isCommentViewModelElement,
   nameRewriteOfCommentViewModel,
 } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import { type RycuSettings } from "src/types/RycuSettings";
 
 /**
  * confinuationItemsを元にコメントの名前を書き換える。
  */
 export function rewriteCommentNameFromContinuationItems(
   continuationItems: ContinuationItems,
+  settings: RycuSettings = window.__rycu.settings,
 ): void {
+  if (!settings.isReplaceComments) {
+    return;
+  }
+
   debugLog("Rewrite Comment.");
 
   for (let i = 0; i < continuationItems.length; i++) {

@@ -1,4 +1,19 @@
+import { getRunningRuntime } from "crx-monkey";
 import { getUserName } from "./utils/getUserName";
+import { formatUserName } from "./utils/formatUserName";
+import { syncSettings } from "./types/SyncSettings";
+import { RycuSettings } from "./types/RycuSettings";
+
+if (getRunningRuntime() === "Extension") {
+  syncSettings(parent.window.__rycu.settings);
+}
+
+const asyncSyncSettings =
+  getRunningRuntime() === "Extension"
+    ? async (settings: RycuSettings) => {
+        Promise.resolve().then(() => syncSettings(settings));
+      }
+    : async (settings: RycuSettings) => {};
 
 const chat = document.querySelector("#chat");
 const cache: Record<string, string> = {};
@@ -46,22 +61,43 @@ function startRewriting() {
   }
 }
 
-function rewrite(nodes: NodeListOf<Element>) {
+function rewrite(nodes: NodeListOf<Element>, async: boolean = true) {
+  if (async) {
+    asyncSyncSettings(parent.window.__rycu.settings).then(() => {
+      handleRewrite(nodes);
+    });
+  } else {
+    if (getRunningRuntime() === "Extension") {
+      syncSettings(parent.window.__rycu.settings);
+    }
+
+    handleRewrite(nodes);
+  }
+}
+
+function handleRewrite(nodes: NodeListOf<Element>) {
+  const settings = parent.window.__rycu.settings;
+
+  if (!settings.isReplaceLiveChats) {
+    return;
+  }
+
   nodes.forEach((node) => {
     const nameElem = node.querySelector("#author-name");
     if (nameElem !== null) {
-      const authorExternalChannelId =
-        nameElem.__shady.parentNode.host.__dataHost.__data.data
-          .authorExternalChannelId;
+      const msgData = nameElem.__shady.parentNode.host.__dataHost.__data.data;
+      const { authorExternalChannelId } = msgData;
+      const userHandle = msgData.authorName.simpleText;
+      const cachedUserName = cache[authorExternalChannelId];
+      const pullUserName =
+        cachedUserName !== undefined
+          ? Promise.resolve(cachedUserName)
+          : getUserName(authorExternalChannelId);
 
-      if (cache[authorExternalChannelId] !== undefined) {
-        nameElem.textContent = cache[authorExternalChannelId];
-      } else {
-        getUserName(authorExternalChannelId).then((name) => {
-          cache[authorExternalChannelId] = name;
-          nameElem.textContent = name;
-        });
-      }
+      pullUserName.then((name) => {
+        cache[authorExternalChannelId] = name;
+        nameElem.textContent = formatUserName(name, userHandle, settings);
+      });
     }
   });
 }

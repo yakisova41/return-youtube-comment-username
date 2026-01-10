@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 
 // yt-action handlers
-import { bypassSendMessage, getRunningRuntime } from "crx-monkey";
+import { getRunningRuntime } from "crx-monkey";
 import { handleYtAppendContinuationItemsAction } from "./handlers/handleYtAppendContinuationItemsAction";
 import { handleYtCreateCommentAction } from "./handlers/handleYtCreateCommentAction";
 import { handleYtCreateCommentReplyAction } from "./handlers/handleYtCreateCommentReplyAction";
@@ -9,49 +9,27 @@ import { handleYtGetMultiPageMenuAction } from "./handlers/handleYtGetMultiPageM
 import { handleYtHistory } from "./handlers/handleYtHistory";
 import { handleYtReloadContinuationItemsCommand } from "./handlers/handleYtReloadContinuationItemsCommand";
 
+import { type RycuSettings, getDefaultSettings } from "./types/RycuSettings";
+import { syncSettings } from "./types/SyncSettings";
 import { type YtAction } from "./types/YtAction";
 import { type YtNavigateFinishEvent } from "./types/YtNavigateFinishEvent";
 import { outputDebugInfo } from "./utils/debugLog";
-import { RycuMessageRequest, RycuMessageResponseValue } from "sw/sw";
 
 export default function main(): void {
-  const settings: RycuSettings = {
-    isShowHandleToName: false,
-    isShowNameToHandle: false,
-  };
-
   window.__rycu = {
-    settings,
+    settings: getDefaultSettings(),
   };
 
   if (getRunningRuntime() === "Extension") {
-    bypassSendMessage<
-      RycuMessageRequest,
-      RycuMessageResponseValue<"getShowHandleToName">
-    >(
-      {
-        type: "getShowHandleToName",
-        value: null,
-      },
-      {},
-      (isShowHandleToName) => {
-        window.__rycu.settings.isShowHandleToName = isShowHandleToName;
-      },
-    );
-
-    bypassSendMessage<
-      RycuMessageRequest,
-      RycuMessageResponseValue<"getShowNameToHandle">
-    >(
-      {
-        type: "getShowNameToHandle",
-        value: null,
-      },
-      {},
-      (isShowNameToHandle) => {
-        window.__rycu.settings.isShowNameToHandle = isShowNameToHandle;
-      },
-    );
+    ((settings) => {
+      syncSettings(settings);
+      document.addEventListener("yt-action", () => {
+        syncSettings(settings);
+      });
+      document.addEventListener("yt-navigate-finish", () => {
+        syncSettings(settings);
+      });
+    })(window.__rycu.settings);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,9 +103,4 @@ declare global {
       };
     };
   }
-}
-
-export interface RycuSettings {
-  isShowHandleToName: boolean;
-  isShowNameToHandle: boolean;
 }
