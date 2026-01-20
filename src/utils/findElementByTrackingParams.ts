@@ -163,6 +163,14 @@ interface ShadyElementPrototype extends HTMLElement {
       commentId: string;
     };
   };
+  __dataHost: {
+    __data: {
+      data: {
+        authorExternalChannelId: string;
+        authorName: { simpleText: string };
+      };
+    };
+  };
   polymerController: {
     __data: {
       data: {
@@ -170,5 +178,8 @@ interface ShadyElementPrototype extends HTMLElement {
         commentId: string;
       };
     };
+  };
+  __shady: {
+    parentNode: { host: ShadyElement };
   };
 }
