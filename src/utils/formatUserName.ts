@@ -1,4 +1,4 @@
-import type { RycuSettings } from "src/index";
+import type { RycuSettings } from "src/types/RycuSettings";
 
 export function formatUserName(
   userName: string,
