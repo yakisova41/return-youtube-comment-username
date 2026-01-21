@@ -44,8 +44,9 @@ if (app !== null) {
   app.addEventListener("yt-action", (e) => {
     switch (e.detail.actionName) {
       case "yt-live-chat-reload-success":
+      case "yt-live-chat-resume-replay":
         setTimeout(() => {
-          rewriteAll();
+          //rewriteAll();
 
           showMoreObserver.disconnect();
           const showMore = document.querySelector("#show-more");
@@ -61,31 +62,95 @@ if (app !== null) {
           chatActions(e.detail);
         }
         break;
+
       default:
+        // console.log(e.detail.actionName, e.detail.args);
         break;
     }
   });
 }
 
 function chatActions(action: YtAddChatItemAction) {
-  const { id } =
-    action.args[0][0].addChatItemAction.item.liveChatTextMessageRenderer;
+  const rewiteAllArgs = (addActions: AddChatItemAction[]) => {
+    let id: string = "";
+    let messageElement: null | PolymerLivechatElement = null;
 
-  const messageElement = document.querySelector(
-    `yt-live-chat-text-message-renderer[id="${id}"]`,
-  );
+    addActions.forEach((addAction) => {
+      const renderer = addAction.addChatItemAction.item;
 
-  if (messageElement !== null) {
-    rewrite(messageElement);
-  }
+      if (isTextMessage(renderer)) {
+        id = renderer.liveChatTextMessageRenderer.id;
+
+        messageElement = document.querySelector<PolymerLivechatElement>(
+          `yt-live-chat-text-message-renderer[id="${id}"]`,
+        );
+      } else if (isPaidMessage(renderer)) {
+        id = renderer.liveChatPaidMessageRenderer.id;
+
+        messageElement = document.querySelector<PolymerLivechatElement>(
+          `yt-live-chat-paid-message-renderer[id="${id}"]`,
+        );
+      } else if (isMembershipMessage(renderer)) {
+        id = renderer.liveChatMembershipItemRenderer.id;
+
+        messageElement = document.querySelector<PolymerLivechatElement>(
+          `yt-live-chat-membership-item-renderer[id="${id}"]`,
+        );
+      } else if (isGiftRedemptionAnnouncement(renderer)) {
+        id =
+          renderer
+            .liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer.id;
+
+        messageElement = document.querySelector<PolymerLivechatElement>(
+          `ytd-sponsorships-live-chat-gift-redemption-announcement-renderer[id="${id}"]`,
+        );
+      } else if (isGiftPurchaseAnnouncement(renderer)) {
+        id =
+          renderer.liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer
+            .id;
+
+        messageElement = document.querySelector<PolymerLivechatElement>(
+          `ytd-sponsorships-live-chat-gift-purchase-announcement-renderer",[id="${id}"]`,
+        );
+      }
+
+      if (messageElement !== null) {
+        rewrite(messageElement);
+      }
+    });
+  };
+
+  rewiteAllArgs(action.args[0]);
 }
 
 function rewriteAll() {
-  const renderers = document.querySelectorAll(
+  const renderers = document.querySelectorAll<PolymerLivechatElement>(
     "#items > yt-live-chat-text-message-renderer",
   );
 
-  renderers.forEach((renderer) => {
+  const paidRenderers = document.querySelectorAll<PolymerLivechatElement>(
+    "#items > yt-live-chat-paid-message-renderer",
+  );
+
+  const memberRenderers = document.querySelectorAll<PolymerLivechatElement>(
+    "#items > yt-live-chat-membership-item-renderer",
+  );
+
+  const sponserPurchases = document.querySelectorAll<PolymerLivechatElement>(
+    "#items > ytd-sponsorships-live-chat-gift-purchase-announcement-renderer",
+  );
+
+  const sponserRedemptions = document.querySelectorAll<PolymerLivechatElement>(
+    "#items > ytd-sponsorships-live-chat-gift-redemption-announcement-renderer",
+  );
+
+  [
+    ...paidRenderers,
+    ...memberRenderers,
+    ...renderers,
+    ...sponserPurchases,
+    ...sponserRedemptions,
+  ].forEach((renderer) => {
     rewrite(renderer);
   });
 }
@@ -101,7 +166,35 @@ function isAddChatItemAction(obj: any): obj is YtAddChatItemAction {
   return false;
 }
 
-function rewrite(node: Element, async: boolean = true) {
+function isTextMessage(
+  item: AnyChatItem,
+): item is OneChatItem<"liveChatTextMessageRenderer"> {
+  return "liveChatTextMessageRenderer" in item;
+}
+function isMembershipMessage(
+  item: AnyChatItem,
+): item is OneChatItem<"liveChatMembershipItemRenderer"> {
+  return "liveChatMembershipItemRenderer" in item;
+}
+function isPaidMessage(
+  item: AnyChatItem,
+): item is OneChatItem<"liveChatPaidMessageRenderer"> {
+  return "liveChatPaidMessageRenderer" in item;
+}
+function isGiftRedemptionAnnouncement(
+  item: AnyChatItem,
+): item is OneChatItem<"liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer"> {
+  return (
+    "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer" in item
+  );
+}
+function isGiftPurchaseAnnouncement(
+  item: AnyChatItem,
+): item is OneChatItem<"liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer"> {
+  return "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer" in item;
+}
+
+function rewrite(node: PolymerLivechatElement, async: boolean = true) {
   if (async) {
     asyncSyncSettings(parent.window.__rycu.settings).then(() => {
       handleRewrite(node);
@@ -115,7 +208,7 @@ function rewrite(node: Element, async: boolean = true) {
   }
 }
 
-function handleRewrite(node: Element) {
+function handleRewrite(node: PolymerLivechatElement) {
   const settings = parent.window.__rycu.settings;
 
   if (!settings.isReplaceLiveChats) {
@@ -123,11 +216,13 @@ function handleRewrite(node: Element) {
   }
 
   const nameElem = node.querySelector<ShadyElement<Element>>("#author-name");
-
   if (nameElem !== null) {
-    const msgData = nameElem.__shady.parentNode.host.__dataHost.__data.data;
+    const msgData = node.polymerController.data;
+
     const { authorExternalChannelId, authorName } = msgData;
+
     const userHandle = authorName.simpleText;
+
     const cachedUserName = cache[authorExternalChannelId];
     const pullUserName =
       cachedUserName !== undefined
@@ -141,19 +236,62 @@ function handleRewrite(node: Element) {
   }
 }
 
-type YtAddChatItemAction = YtAction<
-  [
-    {
-      addChatItemAction: {
-        clientId: string;
-        item: {
-          liveChatTextMessageRenderer: {
-            authorExternalChannelId: string;
-            id: string;
-          };
-        };
-      };
-    },
-  ],
-  unknown
->;
+type OneChatItem<T extends keyof YtChatItem> = {
+  [K in T]: { [P in K]: YtChatItem[P] };
+}[T];
+
+type AnyChatItem = OneChatItem<keyof YtChatItem>;
+
+type AddChatItemAction<
+  T extends keyof YtChatItem =
+    | "liveChatTextMessageRenderer"
+    | "liveChatMembershipItemRenderer"
+    | "liveChatPaidMessageRenderer"
+    | "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer"
+    | "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer",
+> = {
+  addChatItemAction: {
+    clientId: string;
+    item: OneChatItem<T>;
+  };
+};
+type YtAddChatItemAction<
+  T extends keyof YtChatItem =
+    | "liveChatTextMessageRenderer"
+    | "liveChatMembershipItemRenderer"
+    | "liveChatPaidMessageRenderer"
+    | "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer"
+    | "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer",
+> = YtAction<AddChatItemAction<T>[], unknown>;
+
+type YtChatItem = {
+  liveChatTextMessageRenderer: {
+    authorExternalChannelId: string;
+    id: string;
+  };
+  liveChatMembershipItemRenderer: {
+    authorExternalChannelId: string;
+    id: string;
+  };
+  liveChatPaidMessageRenderer: {
+    authorExternalChannelId: string;
+    id: string;
+  };
+  liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer: {
+    authorExternalChannelId: string;
+    id: string;
+  };
+  liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer: {
+    authorExternalChannelId: string;
+    id: string;
+  };
+};
+
+interface PolymerLivechatElement extends Element {
+  polymerController: {
+    data: {
+      authorExternalChannelId: string;
+      authorName: { simpleText: string };
+    };
+  };
+}
