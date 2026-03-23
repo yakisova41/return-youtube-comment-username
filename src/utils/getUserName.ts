@@ -106,7 +106,7 @@ async function fetchBrowse(id: string) {
       return await res.json();
     })
     .then((text) => {
-      const name: string = text.header.c4TabbedHeaderRenderer.title;
+      const name: string = text.header.pageHeaderRenderer.pageTitle;
 
       return decodeString(name);
     });
