@@ -37,28 +37,28 @@ export async function getUserName(id: string): Promise<string> {
  * 20ミリ秒程度で高速
  */
 async function fetchFeed(id: string) {
-  return await fetch(
+  const res = await fetch(
     `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`,
     {
       method: "GET",
       cache: "default",
       keepalive: true,
     },
-  )
-    .then(async (res) => {
-      if (res.status !== 200)
-        throw debugErr(new Error(`Feed API Error\nstatus: ${res.status}`));
-      return await res.text();
-    })
-    .then((text) => {
-      const match = text.match("<title>([^<].*)</title>");
-      if (match !== null) {
-        return decodeString(match[1]);
-      } else {
-        debugErr("XML title not found");
-        return "";
-      }
-    });
+  );
+
+  if (res.status !== 200) {
+    throw new Error(`[rycu] Feed API Error\nstatus: ${res.status}`);
+  }
+
+  const text = await res.text();
+
+  const match = text.match("<title>([^<].*)</title>");
+  if (match !== null) {
+    return decodeString(match[1]);
+  } else {
+    debugErr("XML title not found");
+    return "";
+  }
 }
 
 /**
