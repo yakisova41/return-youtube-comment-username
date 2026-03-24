@@ -38,12 +38,21 @@ chrome.runtime.onMessage.addListener(
       send(storageCache.replaceLiveChats);
     }
 
+    if (req.type === "getApiKeyForWWW") {
+      send(storageCache.apiKeyForWWW);
+    }
+
+    if (req.type === "getApiKeyForStudio") {
+      send(storageCache.apiKeyForStudio);
+    }
+
     if (req.type === "setShowHandleToName") {
       chrome.storage.local
         .set({ showHandleToName: req.value })
         .then(async () => {
           await initStorageCache;
           Object.assign(storageCache, { showHandleToName: req.value });
+          send(true);
         });
     }
 
@@ -53,6 +62,7 @@ chrome.runtime.onMessage.addListener(
         .then(async () => {
           await initStorageCache;
           Object.assign(storageCache, { showNameToHandle: req.value });
+          send(true);
         });
     }
 
@@ -62,6 +72,7 @@ chrome.runtime.onMessage.addListener(
         .then(async () => {
           await initStorageCache;
           Object.assign(storageCache, { replaceComments: req.value });
+          send(true);
         });
     }
 
@@ -71,8 +82,31 @@ chrome.runtime.onMessage.addListener(
         .then(async () => {
           await initStorageCache;
           Object.assign(storageCache, { replaceLiveChats: req.value });
+          send(true);
         });
     }
+
+    if (req.type === "setApiKeyForWWW") {
+      chrome.storage.local
+        .set({ apiKeyForWWW: req.value })
+        .then(async () => {
+          await initStorageCache;
+          Object.assign(storageCache, { apiKeyForWWW: req.value });
+          send(true);
+        });
+    }
+
+    if (req.type === "setApiKeyForStudio") {
+      chrome.storage.local
+        .set({ apiKeyForStudio: req.value })
+        .then(async () => {
+          await initStorageCache;
+          Object.assign(storageCache, { apiKeyForStudio: req.value });
+          send(true);
+        });
+    }
+
+    return true;
   },
 );
 
@@ -90,10 +124,14 @@ interface RycuMessageRequestValues {
   setShowNameToHandle: boolean;
   setReplaceComments: boolean;
   setReplaceLiveChats: boolean;
+  setApiKeyForWWW: string;
+  setApiKeyForStudio: string;
   getShowHandleToName: null;
   getShowNameToHandle: null;
   getReplaceComments: null;
   getReplaceLiveChats: null;
+  getApiKeyForWWW: null;
+  getApiKeyForStudio: null;
 }
 
 interface RycuMessageResponseValues {
@@ -101,10 +139,14 @@ interface RycuMessageResponseValues {
   setShowNameToHandle: boolean;
   setReplaceComments: boolean;
   setReplaceLiveChats: boolean;
+  setApiKeyForWWW: boolean;
+  setApiKeyForStudio: boolean;
   getShowHandleToName: boolean;
   getShowNameToHandle: boolean;
   getReplaceComments: boolean;
   getReplaceLiveChats: boolean;
+  getApiKeyForWWW: string;
+  getApiKeyForStudio: string;
 }
 
 export type RycuMessageResponseValue<

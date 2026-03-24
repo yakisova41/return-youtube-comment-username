@@ -3,6 +3,8 @@ export interface RycuSettings {
   isShowNameToHandle: boolean;
   isReplaceComments: boolean;
   isReplaceLiveChats: boolean;
+  apiKeyForWWW: string;
+  apiKeyForStudio: string;
 }
 
 export const getDefaultSettings = (): RycuSettings => ({
@@ -10,4 +12,7 @@ export const getDefaultSettings = (): RycuSettings => ({
   isShowNameToHandle: false,
   isReplaceComments: true,
   isReplaceLiveChats: true,
+  apiKeyForWWW: "YOUR_API_KEY_WWW",
+  apiKeyForStudio: "YOUR_API_KEY_STUDIO",
+
 });

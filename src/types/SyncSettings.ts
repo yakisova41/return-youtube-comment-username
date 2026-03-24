@@ -58,4 +58,32 @@ export const syncSettings = (settings: RycuSettings) => {
       settings.isReplaceLiveChats = isReplaceLiveChats;
     },
   );
+
+  bypassSendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getApiKeyForWWW">
+  >(
+    {
+      type: "getApiKeyForWWW",
+      value: null,
+    },
+    {},
+    (apiKeyForWWW) => {
+      settings.apiKeyForWWW = apiKeyForWWW;
+    },
+  );
+
+  bypassSendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getApiKeyForStudio">
+  >(
+    {
+      type: "getApiKeyForStudio",
+      value: null,
+    },
+    {},
+    (apiKeyForStudio) => {
+      settings.apiKeyForStudio = apiKeyForStudio;
+    },
+  );
 };

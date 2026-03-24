@@ -78,6 +78,22 @@ replaceLiveChatsText.innerHTML = chrome.i18n.getMessage("ReplaceLiveChats");
     value: null,
   });
 
+  const apiKeyForWWW = await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getApiKeyForWWW">
+  >({
+    type: "getApiKeyForWWW",
+    value: null,
+  });
+
+  const apiKeyForStudio = await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getApiKeyForStudio">
+  >({
+    type: "getApiKeyForStudio",
+    value: null,
+  });
+
   const nameDisplayFormatSelect = document.querySelector<HTMLSelectElement>(
     "#name-display-format-select",
   )!;
@@ -139,6 +155,26 @@ replaceLiveChatsText.innerHTML = chrome.i18n.getMessage("ReplaceLiveChats");
     }
     setReplaceLiveChats(e.target.checked);
   });
+
+  const apiKeyForWWWInput = document.querySelector<HTMLInputElement>("#api-key-www")!;
+  apiKeyForWWWInput.value = apiKeyForWWW;
+  apiKeyForWWWInput.addEventListener("change", (e) => {
+    if (!(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setApiKeyForWWW(e.target.value);
+  });
+
+  const apiKeyForStudioInput = document.querySelector<HTMLInputElement>(
+    "#api-key-studio",
+  )!;
+  apiKeyForStudioInput.value = apiKeyForStudio;
+  apiKeyForStudioInput.addEventListener("change", (e) => {
+    if (!(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setApiKeyForStudio(e.target.value);
+  });
 })();
 
 // @handle (Name)
@@ -149,6 +185,26 @@ async function setShowNameToHandle(is: boolean) {
   >({
     type: "setShowNameToHandle",
     value: is,
+  });
+}
+
+async function setApiKeyForWWW(key: string) {
+  await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"setApiKeyForWWW">
+  >({
+    type: "setApiKeyForWWW",
+    value: key,
+  });
+}
+
+async function setApiKeyForStudio(key: string) {
+  await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"setApiKeyForStudio">
+  >({
+    type: "setApiKeyForStudio",
+    value: key,
   });
 }
 

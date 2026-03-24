@@ -8,6 +8,7 @@ import {
   type YtAction,
   type YtAppendContinuationItemsActionArg0,
 } from "src/types/YtAction";
+import { rewriteStudioComment } from "../studio";
 
 /**
  * yt-append-continuation-items-action
@@ -49,4 +50,10 @@ export function handleYtAppendContinuationItemsAction(
       );
     }, 400);
   }
+
+  // Also handle Studio comments that might be loaded
+  setTimeout(() => {
+    // Import the rewrite function dynamically to avoid circular imports
+    document.querySelectorAll('ytcp-comment').forEach((comment) => rewriteStudioComment(comment as HTMLElement));
+  }, 400);
 }

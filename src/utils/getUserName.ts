@@ -1,113 +1,168 @@
 import { debugErr } from "./debugLog";
 import { decodeString } from "./escapeString";
+import { RycuSettings } from "../types/RycuSettings";
 
-let isUseFeed = true;
-
-export async function getUserName(id: string): Promise<string> {
+export async function getUserName(id: string, settings: RycuSettings = window.__rycu.settings): Promise<string> {
   /**
+   * APIキーが設定されている場合､ APIからの取得を試みる､それ以外の場合､
    * RSSフィードが障害時に、フロントエンドのAPIに切り替え
    */
-  return new Promise((resolve) => {
-    if (isUseFeed) {
-      fetchFeed(id)
-        .then((name) => {
-          resolve(name);
-        })
-        .catch(() => {
-          isUseFeed = false;
-
-          debugErr(
-            new Error("Catch Feed API Error, so change to Browse mode."),
-          );
-
-          fetchBrowse(id).then((name) => {
-            resolve(name);
-          });
-        });
-    } else {
-      fetchBrowse(id).then((name) => {
-        resolve(name);
-      });
+  if (settings.apiKeyForWWW && window.location.hostname === 'www.youtube.com') {
+    try {
+      const apiKey = settings.apiKeyForWWW;
+      return await fetchApiFromChannelId(id, apiKey);
+    } catch (e) {
+      debugErr("API fetch failed, falling back to RSS/Browse\n" + e);
     }
-  });
+  }
+  else if (settings.apiKeyForStudio && window.location.hostname === 'studio.youtube.com') {
+    try {
+      const apiKey = settings.apiKeyForStudio;
+      return await fetchApiFromChannelId(id, apiKey);
+    } catch (e) {
+      debugErr("API fetch failed, falling back to RSS/Browse\n" + e);
+    }
+  }
+
+
+  try {
+    return await fetchFeed(id);
+  } catch (e) {
+    debugErr("RSS fetch failed, falling back to Browse\n" + e);
+  }
+
+  return await fetchBrowse(id);
+}
+
+export async function getUserNameFromHandle(handle: string): Promise<string> {
+  return await fetch(`https://www.youtube.com/@${handle}`, {
+    method: "GET",
+    cache: "default",
+    keepalive: true,
+  })
+    .then(async (res) => {
+      if (res.status !== 200)
+        throw debugErr(new Error(`Handle fetch Error\nstatus: ${res.status}`));
+      return await res.text();
+    })
+    .then((text) => {
+      const match = text.match(/<meta property="og:title" content="([^"]+)"/);
+      if (match) {
+        return decodeString(match[1]);
+      } else {
+        throw debugErr(new Error("og:title not found"));
+      }
+    });
+}
+
+export async function fetchApiFromHandle(handle: string, apiKey: string): Promise<string> {
+  const cacheName:string = 'youtube data api cache';
+  const cache: Cache = await caches.open(cacheName);
+  // YouTube Data API v3 endpoint for fetching channel details by handle
+  const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=${handle}&key=${apiKey}&fields=items(snippet(title))`;
+
+  // Search in cache first
+  const cachedResponse = await cache.match(url);
+  if (cachedResponse) {
+    const data = await cachedResponse.json();
+    if (data.items && data.items.length > 0) {
+      return data.items[0].snippet.title;
+    }
+  }
+
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw debugErr(new Error(`API Error: ${res.status}`));
+  }
+  // Cache the successful response for future use
+  await cache.put(url, res.clone());
+  const data = await res.json();
+  if (data.items && data.items.length > 0) {
+    return data.items[0].snippet.title;
+  } else {
+    throw debugErr(new Error("Channel not found"));
+  }
+}
+
+export async function fetchApiFromChannelId(channelId: string, apiKey: string): Promise<string> {
+  const cacheName:string = 'youtube data api cache';
+  const cache: Cache = await caches.open(cacheName);
+  // YouTube Data API v3 endpoint for fetching channel details by ID
+  const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${apiKey}&fields=items(snippet(title))`;
+
+  // Search in cache first
+  const cachedResponse = await cache.match(url);
+  if (cachedResponse) {
+    const data = await cachedResponse.json();
+    if (data.items && data.items.length > 0) {
+      return data.items[0].snippet.title;
+    }
+  }
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw debugErr(new Error(`API Error: ${res.status}`));
+  }
+  // Cache the successful response for future use
+  await cache.put(url, res.clone());
+  const data = await res.json();
+  if (data.items && data.items.length > 0) {
+    return data.items[0].snippet.title;
+  } else {
+    throw debugErr(new Error("Channel not found"));
+  }
 }
 
 /**
  * RSSフィードから名前を取得
  * 20ミリ秒程度で高速
  */
-async function fetchFeed(id: string) {
-  return await fetch(
+async function fetchFeed(id: string): Promise<string> {
+  const res = await fetch(
     `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`,
-    {
-      method: "GET",
-      cache: "default",
-      keepalive: true,
-    },
-  )
-    .then(async (res) => {
-      if (res.status !== 200)
-        throw debugErr(new Error(`Feed API Error\nstatus: ${res.status}`));
-      return await res.text();
-    })
-    .then((text) => {
-      const match = text.match("<title>([^<].*)</title>");
-      if (match !== null) {
-        return decodeString(match[1]);
-      } else {
-        debugErr("XML title not found");
-        return "";
-      }
-    });
+  );
+  if (res.status !== 200) {
+    throw debugErr(new Error(`Feed fetch Error\nstatus: ${res.status}`));
+  }
+  const text = await res.text();
+  const match = text.match(/<name>([^<]+)<\/name>/);
+  if (match) {
+    return decodeString(match[1]);
+  } else {
+    throw debugErr(new Error("Feed name not found"));
+  }
 }
 
 /**
  * YouTubeのフロントエンドで使用されているAPIから名前を取得
  * 100ミリ秒程度と低速
  */
-async function fetchBrowse(id: string) {
-  return await fetch(
-    `https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false`,
-    {
-      method: "POST",
-      headers: {
-        cache: "default",
-        accept: "*/*",
-        "accept-encoding": "gzip, deflate, br",
-        "accept-language": "en",
-        "content-type": "application/json",
-        dnt: "1",
-        referer: `https://www.youtube.com/channel/${id}`,
-      },
-      body: JSON.stringify({
-        context: {
-          client: {
-            hl: window.yt.config_.HL,
-            gl: window.yt.config_.GL,
-            clientName: "WEB",
-            clientVersion: "2.20230628.01.00",
-            platform: "DESKTOP",
-            acceptHeader:
-              "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-          },
-          user: { lockedSafetyMode: false },
-          request: {
-            useSsl: true,
-          },
-        },
-        browseId: id,
-        params: "EgVhYm91dPIGBAoCEgA%3D",
-      }),
+async function fetchBrowse(id: string): Promise<string> {
+  const res = await fetch("https://www.youtube.com/youtubei/v1/browse", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  )
-    .then(async (res) => {
-      if (res.status !== 200)
-        throw debugErr(new Error(`Browse API Error\nstatus: ${res.status}`));
-      return await res.json();
-    })
-    .then((text) => {
-      const name: string = text.header.c4TabbedHeaderRenderer.title;
-
-      return decodeString(name);
-    });
+    body: JSON.stringify({
+      context: {
+        client: {
+          clientName: "WEB",
+          clientVersion: "2.20210721.00.00",
+        },
+      },
+      browseId: id,
+    }),
+  });
+  if (res.status !== 200) {
+    throw debugErr(new Error(`Browse fetch Error\nstatus: ${res.status}`));
+  }
+  const text = await res.json();
+  const name =
+    text?.header?.pageHeaderRenderer?.pageTitle ||
+    text?.metadata?.channelMetadataRenderer?.title;
+  if (name) {
+    return decodeString(name);
+  } else {
+    throw debugErr(new Error("Browse name not found"));
+  }
 }

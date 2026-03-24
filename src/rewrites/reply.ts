@@ -16,7 +16,10 @@ import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/ment
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { getUserName } from "src/utils/getUserName";
-import { nameRewriteOfCommentViewModel } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import {
+  isCommentViewModelElement,
+  nameRewriteOfCommentViewModel,
+} from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
 import { mentionRewriteOfCommentRendererV2 } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRendererV2";
 
 /**
@@ -87,7 +90,9 @@ function reWriteReplyElem(
 }
 
 export function reWriteReplyElemV2(replyElem: ShadyElement) {
-  nameRewriteOfCommentViewModel(replyElem);
+  if (isCommentViewModelElement(replyElem)) {
+    nameRewriteOfCommentViewModel(replyElem);
+  }
   mentionRewriteOfCommentRendererV2(replyElem);
   replyInputRewrite(replyElem);
 }
@@ -190,7 +195,7 @@ export function replyInputRewrite(replyElem: ShadyElement): void {
     const channelId = href?.split("/")[2];
 
     if (channelId !== undefined && replyLink !== null) {
-      void getUserName(channelId).then((name) => {
+      void getUserName(channelId, window.__rycu.settings).then((name) => {
         replyLink.textContent = ` @${name}`;
       });
     }
