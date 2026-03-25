@@ -2,6 +2,7 @@ import { type RycuSettings } from "src/types/RycuSettings";
 import { type RycuStorage, getDefaultStorageCache } from "src/types/Storage";
 
 export function getSettings(): Promise<RycuSettings> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const defaultStorageCache: RycuStorage = getDefaultStorageCache();
   const defaultSettings: RycuSettings = getDefaultSettings();
 
