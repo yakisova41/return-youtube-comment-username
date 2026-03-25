@@ -5,8 +5,8 @@ import {
 } from "src/utils/findElementByTrackingParams";
 import {
   type ContinuationItems,
-  type ConfinuationItem,
-  isConfinuationItem,
+  type ContinuationItem,
+  isContinuationItem,
 } from "src/types/AppendContinuationItemsAction";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
@@ -56,7 +56,7 @@ export function rewriteCommentNameFromContinuationItems(
  */
 function reWriteCommentElem(
   commentElem: ShadyElement,
-  commentThreadRenderer: ConfinuationItem,
+  commentThreadRenderer: ContinuationItem,
 ): void {
   const commentContainer =
     commentElem.__shady_native_children.namedItem("comment-container");
@@ -94,7 +94,7 @@ function reWriteCommentElem(
         .browseEndpoint.browseId,
     );
   } else*/
-  if (isConfinuationItem(commentThreadRenderer)) {
+  if (isContinuationItem(commentThreadRenderer)) {
     debugLog("Rewriteing a comment by using comment view model.");
 
     // let isContainer = commentThreadRenderer.commentViewModel.commentViewModel;

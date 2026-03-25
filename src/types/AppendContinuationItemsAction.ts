@@ -1,5 +1,5 @@
 export type ContinuationItems = Array<{
-  commentThreadRenderer: ConfinuationItem;
+  commentThreadRenderer: ContinuationItem;
 }>;
 
 export type ReplyContinuationItems = Array<{
@@ -15,7 +15,7 @@ export function isReplyContinuationItems(
 /**
  * The format of the ConfinuationItem has changed since the version of 02/03/2024
  */
-export interface ConfinuationItem {
+export interface ContinuationItem {
   trackingParams: string;
   renderingPriority: string;
   isModeratedElqComment: boolean;
@@ -28,9 +28,9 @@ export interface ConfinuationItem {
   };
 }
 
-export function isConfinuationItem(
-  obj: ConfinuationItem,
-): obj is ConfinuationItem {
+export function isContinuationItem(
+  obj: ContinuationItem,
+): obj is ContinuationItem {
   return Object.hasOwn(obj, "commentViewModel");
 }
 
