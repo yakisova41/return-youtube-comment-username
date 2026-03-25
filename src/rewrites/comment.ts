@@ -6,11 +6,8 @@ import {
 import {
   type ContinuationItems,
   type ConfinuationItem,
-  ConfinuationItemV2,
-  // isConfinuationItemV1,
-  isConfinuationItemV2,
+  isConfinuationItem,
 } from "src/types/AppendContinuationItemsAction";
-//import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";
 import { debugErr, debugLog } from "src/utils/debugLog";
 import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
 import {
@@ -59,7 +56,7 @@ export function rewriteCommentNameFromContinuationItems(
  */
 function reWriteCommentElem(
   commentElem: ShadyElement,
-  commentThreadRenderer: ConfinuationItem | ConfinuationItemV2,
+  commentThreadRenderer: ConfinuationItem,
 ): void {
   const commentContainer =
     commentElem.__shady_native_children.namedItem("comment-container");
@@ -97,7 +94,7 @@ function reWriteCommentElem(
         .browseEndpoint.browseId,
     );
   } else*/
-  if (isConfinuationItemV2(commentThreadRenderer)) {
+  if (isConfinuationItem(commentThreadRenderer)) {
     debugLog("Rewriteing a comment by using comment view model.");
 
     // let isContainer = commentThreadRenderer.commentViewModel.commentViewModel;

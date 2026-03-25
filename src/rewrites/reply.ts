@@ -8,9 +8,6 @@ import {
 import {
   type CommentRenderer,
   type ReplyContinuationItems,
-  ReplyContinuationItemsV2,
-  isReplyContinuationItemsV1,
-  isReplyContinuationItemsV2,
 } from "src/types/AppendContinuationItemsAction";
 import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
 import { nameRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/nameRewriteOfCommentRenderer";

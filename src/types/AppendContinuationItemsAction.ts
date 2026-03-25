@@ -1,35 +1,21 @@
 export type ContinuationItems = Array<{
-  commentThreadRenderer: ConfinuationItem | ConfinuationItemV2;
-}>;
-
-export type ContinuationItemsV2 = Array<{
-  commentThreadRenderer: ConfinuationItemV2;
+  commentThreadRenderer: ConfinuationItem;
 }>;
 
 export type ReplyContinuationItems = Array<{
-  commentRenderer: CommentRenderer;
-}>;
-
-export type ReplyContinuationItemsV2 = Array<{
   commentViewModel: CommentViewModelCommentViewModel;
 }>;
 
-export function isReplyContinuationItemsV1(
-  obj: ReplyContinuationItems | ReplyContinuationItemsV2,
+export function isReplyContinuationItems(
+  obj: ReplyContinuationItems,
 ): obj is ReplyContinuationItems {
-  return Object.hasOwn(obj[0], "commentRenderer");
-}
-
-export function isReplyContinuationItemsV2(
-  obj: ReplyContinuationItems | ReplyContinuationItemsV2,
-): obj is ReplyContinuationItemsV2 {
   return Object.hasOwn(obj[0], "commentViewModel");
 }
 
 /**
  * The format of the ConfinuationItem has changed since the version of 02/03/2024
  */
-export interface ConfinuationItemV2 {
+export interface ConfinuationItem {
   trackingParams: string;
   renderingPriority: string;
   isModeratedElqComment: boolean;
@@ -37,14 +23,14 @@ export interface ConfinuationItemV2 {
   loggingDirectives: LoggingDirectives;
   replies?: {
     commentRepliesRenderer: {
-      teaserContents: ReplyContinuationItems | ReplyContinuationItemsV2;
+      teaserContents: ReplyContinuationItems;
     };
   };
 }
 
-export function isConfinuationItemV2(
-  obj: ConfinuationItem | ConfinuationItemV2,
-): obj is ConfinuationItemV2 {
+export function isConfinuationItem(
+  obj: ConfinuationItem,
+): obj is ConfinuationItem {
   return Object.hasOwn(obj, "commentViewModel");
 }
 
@@ -78,28 +64,6 @@ export interface LoggingDirectives {
 
 export interface Visibility {
   types: string;
-}
-/**========================== */
-
-export interface ConfinuationItem {
-  comment: Comment;
-  trackingParams: string;
-  renderingPriority: string;
-  isModeratedElqComment: boolean;
-  loggingDirectives: LoggingDirectives;
-  replies?: {
-    commentRepliesRenderer: {
-      teaserContents: Array<{
-        commentRenderer: CommentRenderer;
-      }>;
-    };
-  };
-}
-
-export function isConfinuationItemV1(
-  obj: ConfinuationItem | ConfinuationItemV2,
-): obj is ConfinuationItem {
-  return Object.hasOwn(obj, "comment");
 }
 
 export interface Comment {

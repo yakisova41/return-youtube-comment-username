@@ -1,7 +1,4 @@
-import {
-  isCommentRenderer,
-  isCommentRendererV2,
-} from "src/utils/isCommentRenderer";
+import { isCommentRenderer } from "src/utils/isCommentRenderer";
 import { rewriteCommentNameFromContinuationItems } from "src/rewrites/comment";
 import { rewriteReplytNameFromContinuationItems } from "src/rewrites/reply";
 import {
@@ -21,10 +18,7 @@ export function handleYtAppendContinuationItemsAction(
   const continuationItems =
     detail.args[0].appendContinuationItemsAction.continuationItems;
 
-  if (
-    isCommentRenderer(continuationItems) ||
-    isCommentRendererV2(continuationItems)
-  ) {
+  if (isCommentRenderer(continuationItems)) {
     // Reply
     const replyDetail: YtAction<
       YtAppendContinuationItemsActionArg0<"reply">,
