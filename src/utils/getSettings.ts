@@ -11,6 +11,8 @@ export function getSettings(): Promise<RycuSettings> {
       showNameToHandle: defaultSettings.isShowNameToHandle,
       replaceComments: defaultSettings.isReplaceComments,
       replaceLiveChats: defaultSettings.isReplaceLiveChats,
+      apiKeyForWWW: defaultSettings.apiKeyForWWW,
+      apiKeyForStudio: defaultSettings.apiKeyForStudio,
     })
     .then((items) => {
       return {
@@ -18,6 +20,8 @@ export function getSettings(): Promise<RycuSettings> {
         isShowNameToHandle: items.showNameToHandle,
         isReplaceComments: items.replaceComments,
         isReplaceLiveChats: items.replaceLiveChats,
+        apiKeyForWWW: items.apiKeyForWWW,
+        apiKeyForStudio: items.apiKeyForStudio,
       };
     });
 }

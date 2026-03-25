@@ -3,6 +3,8 @@ export interface RycuStorage {
   showNameToHandle: boolean;
   replaceComments: boolean;
   replaceLiveChats: boolean;
+  apiKeyForWWW: string;
+  apiKeyForStudio: string;
 }
 
 export const getDefaultStorageCache = (): RycuStorage => ({
@@ -10,4 +12,6 @@ export const getDefaultStorageCache = (): RycuStorage => ({
   showNameToHandle: false,
   replaceComments: true,
   replaceLiveChats: true,
+  apiKeyForWWW: "YOUR_API_KEY_WWW",
+  apiKeyForStudio: "YOUR_API_KEY_STUDIO",
 });

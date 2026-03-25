@@ -43,6 +43,20 @@ replaceCommentsText.innerHTML = chrome.i18n.getMessage("ReplaceComments");
 const replaceLiveChatsText = document.querySelector(".live-chats-toggle-text")!;
 replaceLiveChatsText.innerHTML = chrome.i18n.getMessage("ReplaceLiveChats");
 
+const nameYoutubeWWWApiKey = document.querySelector(
+  ".name-youtube-www-api-key",
+)!;
+nameYoutubeWWWApiKey.innerHTML = chrome.i18n.getMessage(
+  "NameYoutubeWWWApiKey",
+);
+
+const nameYoutubeStudioApiKey = document.querySelector(
+  ".name-youtube-studio-api-key",
+)!;
+nameYoutubeStudioApiKey.innerHTML = chrome.i18n.getMessage(
+  "NameYoutubeStudioApiKey",
+);
+
 (async () => {
   // @handle (Name)
   const isShowNameToHandle = await chrome.runtime.sendMessage<
@@ -75,6 +89,22 @@ replaceLiveChatsText.innerHTML = chrome.i18n.getMessage("ReplaceLiveChats");
     RycuMessageResponseValue<"getReplaceLiveChats">
   >({
     type: "getReplaceLiveChats",
+    value: null,
+  });
+
+  const apiKeyForWWW = await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getApiKeyForWWW">
+  >({
+    type: "getApiKeyForWWW",
+    value: null,
+  });
+
+  const apiKeyForStudio = await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"getApiKeyForStudio">
+  >({
+    type: "getApiKeyForStudio",
     value: null,
   });
 
@@ -139,6 +169,26 @@ replaceLiveChatsText.innerHTML = chrome.i18n.getMessage("ReplaceLiveChats");
     }
     setReplaceLiveChats(e.target.checked);
   });
+
+  const apiKeyForWWWInput = document.querySelector<HTMLInputElement>("#api-key-www")!;
+  apiKeyForWWWInput.value = apiKeyForWWW;
+  apiKeyForWWWInput.addEventListener("change", (e) => {
+    if (!(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setApiKeyForWWW(e.target.value);
+  });
+
+  const apiKeyForStudioInput = document.querySelector<HTMLInputElement>(
+    "#api-key-studio",
+  )!;
+  apiKeyForStudioInput.value = apiKeyForStudio;
+  apiKeyForStudioInput.addEventListener("change", (e) => {
+    if (!(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setApiKeyForStudio(e.target.value);
+  });
 })();
 
 // @handle (Name)
@@ -149,6 +199,26 @@ async function setShowNameToHandle(is: boolean) {
   >({
     type: "setShowNameToHandle",
     value: is,
+  });
+}
+
+async function setApiKeyForWWW(key: string) {
+  await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"setApiKeyForWWW">
+  >({
+    type: "setApiKeyForWWW",
+    value: key,
+  });
+}
+
+async function setApiKeyForStudio(key: string) {
+  await chrome.runtime.sendMessage<
+    RycuMessageRequest,
+    RycuMessageResponseValue<"setApiKeyForStudio">
+  >({
+    type: "setApiKeyForStudio",
+    value: key,
   });
 }
 

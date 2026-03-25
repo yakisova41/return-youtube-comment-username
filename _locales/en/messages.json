@@ -25,5 +25,11 @@
   },
   "ReplaceLiveChats": {
     "message": "Replace handles in live chats"
+  },
+  "NameYoutubeWWWApiKey": {
+    "message": "YouTube Data API key for www.youtube.com"
+  },
+  "NameYoutubeStudioApiKey": {
+    "message": "YouTube Data API key for studio.youtube.com"
   }
 }

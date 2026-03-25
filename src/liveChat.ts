@@ -1,5 +1,5 @@
 import { getRunningRuntime } from "crx-monkey";
-import { getUserName } from "./utils/getUserName";
+import { fetchApiFromHandle, getUserName } from "./utils/getUserName";
 import { formatUserName } from "./utils/formatUserName";
 import { syncSettings } from "./types/SyncSettings";
 import { RycuSettings } from "./types/RycuSettings";
@@ -57,6 +57,7 @@ if (app !== null) {
 
         break;
       case "yt-live-chat-actions":
+      case "ytls-broadcast-status":  // Studio Only
         // On auto scroll
         if (isAddChatItemAction(e.detail)) {
           chatActions(e.detail);
@@ -227,13 +228,42 @@ function handleRewrite(node: PolymerLivechatElement) {
     const pullUserName =
       cachedUserName !== undefined
         ? Promise.resolve(cachedUserName)
-        : getUserName(authorExternalChannelId);
+        : getUserName(authorExternalChannelId, settings);
 
     pullUserName.then((name) => {
       cache[authorExternalChannelId] = name;
       nameElem.textContent = formatUserName(name, userHandle, settings);
     });
   }
+
+  // Rewrite @handles in message
+  const messageElem = node.querySelector("#message");
+  if (messageElem) {
+    rewriteLiveChatMessage(messageElem, settings);
+  }
+}
+
+function rewriteLiveChatMessage(messageElem: Element, settings: RycuSettings): void {
+  const textContent = messageElem.textContent || '';
+  const atIndex = textContent.indexOf('@');
+  if (atIndex === -1) return;
+
+  // Find @handle pattern
+  const handleMatch = textContent.match(/@([a-zA-Z0-9_.-]+)/);
+  if (!handleMatch) return;
+
+  const handle = handleMatch[1];
+  const fullHandle = `@${handle}`;
+  const apiKey: string = window.location.hostname === 'www.youtube.com' ? settings.apiKeyForWWW : settings.apiKeyForStudio;
+  void fetchApiFromHandle(handle, apiKey)
+    .then((name) => {
+      const formattedName = formatUserName(name, fullHandle, settings);
+      // Replace @handle with formatted name
+      messageElem.textContent = textContent.replace(fullHandle, formattedName);
+    })
+    .catch((e) => {
+      console.error('Failed to get user name from handle in live chat:', e);
+    });
 }
 
 type OneChatItem<T extends keyof YtChatItem> = {

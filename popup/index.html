@@ -46,6 +46,25 @@
           </li>
         </ul>
       </div>
+
+      <div class="options-outer">
+        <span class="options-title">API Keys</span>
+
+        <ul class="options">
+          <li>
+            <div class="input-container">
+              <span class="input-label name-youtube-www-api-key">For YouTube (WWW)</span>
+              <input type="text" id="api-key-www" placeholder="YOUR_API_KEY_WWW" />
+            </div>
+          </li>
+          <li>
+            <div class="input-container">
+              <span class="input-label name-youtube-studio-api-key">For YouTube Studio</span>
+              <input type="text" id="api-key-studio" placeholder="YOUR_API_KEY_STUDIO" />
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <script src="main.ts"></script>
@@ -54,7 +73,7 @@
   <style>
     :root {
       width: 350px;
-      height: 120px;
+      height: 550px;
     }
 
     body {
@@ -137,6 +156,21 @@
       display: flex;
       align-items: center;
       gap: 0 0.5em;
+    }
+
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 5px;
+    }
+
+    input[type="text"] {
+      background-color: #3b2d2d;
+      border: 1px solid #7e2a30;
+      color: #ece0df;
+      padding: 5px;
+      border-radius: 4px;
     }
   </style>
 </html>

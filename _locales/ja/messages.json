@@ -25,5 +25,11 @@
   },
   "ReplaceLiveChats": {
     "message": "ライブチャットのユーザー名を置換"
+  },
+  "NameYoutubeWWWApiKey": {
+    "message": "www.youtube.com用のYouTube Data APIキー"
+  },
+  "NameYoutubeStudioApiKey": {
+    "message": "studio.youtube.com用のYouTube Data APIキー"
   }
 }

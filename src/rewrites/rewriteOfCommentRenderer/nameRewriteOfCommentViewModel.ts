@@ -78,7 +78,7 @@ export function nameRewriteOfCommentViewModel(
   /**
    * 名前要素の書き換え
    */
-  void getUserName(userId)
+  void getUserName(userId, settings)
     .then((name) => {
       if (nameElem !== null) {
         if (nameElem.getAttribute("is-empty") !== null) {
