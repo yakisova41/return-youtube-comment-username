@@ -1,13 +1,12 @@
 {
   "name": "return-youtube-comment-username",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "devDependencies": {
     "@types/chrome": "^0.0.263",
     "@types/encoding-japanese": "^2.0.5",
     "@types/markdown-it": "^13.0.8",
     "eslint": "^8.57.0",
-    "prettier": "^3.3.1",
-    "ts-extension-builder": "^0.2.8"
+    "prettier": "^3.3.1"
   },
   "license": "MIT",
   "scripts": {
