@@ -2,8 +2,8 @@ import {
   findElementByTrackingParams,
   reSearchElement,
 } from "src/utils/findElementByTrackingParams";
-import { reWriteReplyElem } from "./reply";
 import { CommentViewModelElement } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import { reWriteReplyElem } from "./reply";
 
 /**
  * highLightedReplyの要素を書き換え

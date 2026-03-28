@@ -14,7 +14,7 @@ import {
   CommentViewModelElement,
   nameRewriteOfCommentViewModel,
 } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
-import { mentionRewriteOfCommentRendererV2 } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRendererV2";
+import { mentionRewriteOfCommentRenderer } from "./rewriteOfCommentRenderer/mentionRewriteOfCommentRenderer";
 
 /**
  * confinuationItems(コメントをレンダリングする際の元データ？)のリストを元に
@@ -50,7 +50,7 @@ export function rewriteReplytNameFromContinuationItems(
 
 export function reWriteReplyElem(replyElem: CommentViewModelElement) {
   nameRewriteOfCommentViewModel(replyElem);
-  mentionRewriteOfCommentRendererV2(replyElem);
+  mentionRewriteOfCommentRenderer(replyElem);
   replyInputRewrite(replyElem);
 }
 

@@ -9,46 +9,72 @@ import {
   isContinuationItem,
 } from "src/types/AppendContinuationItemsAction";
 import { debugErr, debugLog } from "src/utils/debugLog";
-import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
 import {
   isCommentViewModelElement,
+  mentionRewriteOfCommentRenderer,
   nameRewriteOfCommentViewModel,
 } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
 import { type RycuSettings } from "src/types/RycuSettings";
+import { rewriteTeaserReplytNameFromContinuationItems } from "./reply";
 
 /**
- * confinuationItemsを元にコメントの名前を書き換える。
+ * Rewrite comments by using continuation Items
+ * @param continuationItems
+ * @param settings
+ * @returns
  */
 export function rewriteCommentNameFromContinuationItems(
   continuationItems: ContinuationItems,
   settings: RycuSettings = window.__rycu.settings,
-): void {
+) {
   if (!settings.isReplaceComments) {
     return;
   }
 
-  debugLog("Rewrite Comment.");
+  debugLog("rewriteCommentNameFromContinuationItems");
 
-  for (let i = 0; i < continuationItems.length; i++) {
-    if (continuationItems[i].commentThreadRenderer !== undefined) {
-      void getCommentElem(
-        continuationItems[i].commentThreadRenderer.trackingParams,
-      ).then((commentElem) => {
-        reWriteCommentElem(
-          commentElem,
-          continuationItems[i].commentThreadRenderer,
-        );
-      });
+  const rewrite = (continuationItems: ContinuationItems) => {
+    continuationItems.map(async (continuationItem) => {
+      const { commentThreadRenderer } = continuationItem;
+      const key =
+        continuationItem.commentThreadRenderer.commentViewModel.commentViewModel
+          .commentKey;
 
-      const teaserContents =
-        continuationItems[i].commentThreadRenderer.replies
-          ?.commentRepliesRenderer.teaserContents;
-      if (teaserContents !== undefined) {
-        // teaser repliy exist
-        rewriteTeaserReplytNameFromContinuationItems(teaserContents);
+      const commentElem = await getCommentElem(
+        commentThreadRenderer.trackingParams,
+      );
+
+      if (key.endsWith("AQ%3D%3D")) {
+        // reply
+        mentionRewriteOfCommentRenderer(commentElem);
+      } else {
+        // comment
       }
-    }
-  }
+
+      reWriteCommentElem(commentElem, commentThreadRenderer);
+
+      // replies
+      const replies = commentThreadRenderer.replies;
+
+      if (replies !== undefined) {
+        // Have replies?
+        if (replies.commentRepliesRenderer.hideReplies === undefined) {
+          // Not hidden, so rewrite reply
+          rewrite(replies?.commentRepliesRenderer.subThreads);
+          //mentionRewriteOfCommentRenderer(commentElem);
+        }
+
+        // Teaser reply
+        if (replies.commentRepliesRenderer?.teaserContents !== undefined) {
+          // teaser repliy exist
+          rewriteTeaserReplytNameFromContinuationItems(
+            replies.commentRepliesRenderer.teaserContents,
+          );
+        }
+      }
+    });
+  };
+  rewrite(continuationItems);
 }
 
 /**
@@ -73,31 +99,9 @@ function reWriteCommentElem(
   if (commentRenderer === null || commentRenderer === undefined) {
     throw debugErr("Failed to found a named item 'comment'.");
   }
-  /*
-  if (isConfinuationItemV1(commentThreadRenderer)) {
-    debugLog("Rewrite of Comment Renderer.");
 
-    let isContainer =
-      commentThreadRenderer.comment.commentRenderer.authorIsChannelOwner;
-
-    if (
-      commentThreadRenderer.comment.commentRenderer.authorCommentBadge !==
-      undefined
-    ) {
-      isContainer = true;
-    }
-
-    nameRewriteOfCommentRenderer(
-      commentRenderer,
-      isContainer,
-      commentThreadRenderer.comment.commentRenderer.authorEndpoint
-        .browseEndpoint.browseId,
-    );
-  } else*/
   if (isContinuationItem(commentThreadRenderer)) {
     debugLog("Rewriteing a comment by using comment view model.");
-
-    // let isContainer = commentThreadRenderer.commentViewModel.commentViewModel;
 
     const commentViewModel = commentRenderer;
 

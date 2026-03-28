@@ -24,6 +24,8 @@ export interface ContinuationItem {
   replies?: {
     commentRepliesRenderer: {
       teaserContents: ReplyContinuationItems;
+      hideReplies: object;
+      subThreads: ContinuationItems;
     };
   };
 }
