@@ -75,6 +75,8 @@ export function nameRewriteOfCommentViewModel(
     }
   }
 
+  mentionRewriteOfCommentRenderer(commentViewModel);
+
   /**
    * 名前要素の書き換え
    */
@@ -100,4 +102,39 @@ export function nameRewriteOfCommentViewModel(
     .catch((e) => {
       debugErr(e);
     });
+}
+
+/**
+ * comment内のaタクを全取得して
+ * 返信先リンクのもののみ書き換え
+ */
+export function mentionRewriteOfCommentRenderer(
+  commentRenderer: ShadyElement,
+): void {
+  const commentRendererBody =
+    commentRenderer.__shady_native_children.namedItem("body");
+  const main = commentRendererBody?.querySelector<ShadyElement>("#main");
+  if (main !== undefined && main !== null) {
+    const aTags = main.querySelectorAll(
+      "#expander > #content > #content-text > span > span > a",
+    );
+
+    for (let i = 0; i < aTags.length; i++) {
+      if (aTags[i].getAttribute("href")?.match("/channel/.*") !== null) {
+        const href = aTags[i].getAttribute("href");
+
+        if (href !== null) {
+          void getUserName(href.split("/")[2])
+            .then((name) => {
+              aTags[i].textContent = `@${name} `;
+            })
+            .catch((e) => {
+              debugErr(e);
+            });
+        } else {
+          debugErr(new Error("Mention Atag has not Href attr."));
+        }
+      }
+    }
+  }
 }

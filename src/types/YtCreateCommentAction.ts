@@ -1,7 +1,4 @@
-import {
-  type ConfinuationItem,
-  type CommentRenderer as AppendCommentRenderer,
-} from "./AppendContinuationItemsAction";
+import { ContinuationItem } from "./AppendContinuationItemsAction";
 
 export interface YtCreateCommentAction {
   clickTrackingParams: string;
@@ -19,11 +16,11 @@ export interface CreateCommentAction {
 }
 
 export interface Contents {
-  commentThreadRenderer: ConfinuationItem;
+  commentThreadRenderer: ContinuationItem;
 }
 
 export interface ReplyContents {
-  commentRenderer: AppendCommentRenderer;
+  commentThreadRenderer: ContinuationItem;
 }
 
 export interface CommentThreadRenderer {

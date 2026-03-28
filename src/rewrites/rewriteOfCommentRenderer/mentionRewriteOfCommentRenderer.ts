@@ -11,12 +11,10 @@ export function mentionRewriteOfCommentRenderer(
 ): void {
   const commentRendererBody =
     commentRenderer.__shady_native_children.namedItem("body");
-
   const main = commentRendererBody?.querySelector<ShadyElement>("#main");
-
   if (main !== undefined && main !== null) {
     const aTags = main.querySelectorAll(
-      "#comment-content > ytd-expander > #content > #content-text > a",
+      "#expander > #content > #content-text > span > span > a",
     );
 
     for (let i = 0; i < aTags.length; i++) {

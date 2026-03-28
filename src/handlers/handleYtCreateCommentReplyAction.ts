@@ -1,5 +1,5 @@
-import { rewriteTeaserReplytNameFromContinuationItems } from "src/rewrites/reply";
-import { type ReplyContinuationItems } from "src/types/AppendContinuationItemsAction";
+import { rewriteCommentNameFromContinuationItems } from "src/rewrites/comment";
+import { ContinuationItems } from "src/types/AppendContinuationItemsAction";
 import { type YtAction } from "src/types/YtAction";
 import { type YtCreateCommentReplyAction } from "src/types/YtCreateCommentAction";
 
@@ -13,15 +13,15 @@ export function handleYtCreateCommentReplyAction(
   const createReplyDetail: YtAction<YtCreateCommentReplyAction, Element> =
     detail;
 
-  const continuationItems: ReplyContinuationItems = [
+  const continuationItems: ContinuationItems = [
     {
-      commentRenderer:
+      commentThreadRenderer:
         createReplyDetail.args[0].createCommentReplyAction.contents
-          .commentRenderer,
+          .commentThreadRenderer,
     },
   ];
 
   setTimeout(() => {
-    rewriteTeaserReplytNameFromContinuationItems(continuationItems);
+    rewriteCommentNameFromContinuationItems(continuationItems);
   }, 100);
 }

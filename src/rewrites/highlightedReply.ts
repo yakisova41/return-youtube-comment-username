@@ -1,25 +1,16 @@
 import {
   findElementByTrackingParams,
   reSearchElement,
-  type ShadyElement,
 } from "src/utils/findElementByTrackingParams";
-import { reWriteReplyElemV2 } from "./reply";
+import { CommentViewModelElement } from "./rewriteOfCommentRenderer/nameRewriteOfCommentViewModel";
+import { reWriteReplyElem } from "./reply";
 
 /**
  * highLightedReplyの要素を書き換え
  */
 export function rewriteHighlightedReply(trackedParams: string): void {
-  getReplyElem(trackedParams, "V1").then((replyElem) => {
-    reWriteReplyElemV2(replyElem);
-  });
-}
-
-/**
- * highLightedReplyの要素を書き換え
- */
-export function rewriteHighlightedReplyV2(trackedParams: string): void {
-  getReplyElem(trackedParams, "V2").then((replyElem) => {
-    reWriteReplyElemV2(replyElem);
+  getReplyElem(trackedParams).then((replyElem) => {
+    reWriteReplyElem(replyElem);
   });
 }
 
@@ -28,22 +19,24 @@ export function rewriteHighlightedReplyV2(trackedParams: string): void {
  */
 async function getReplyElem(
   trackedParams: string,
-  version: "V1" | "V2",
-): Promise<ShadyElement> {
+): Promise<CommentViewModelElement> {
   return await new Promise((resolve) => {
     const selector =
-      "ytd-comment-replies-renderer > #teaser-replies > " +
-      (version === "V1" ? "ytd-comment-renderer" : "ytd-comment-view-model");
+      "ytd-comment-replies-renderer > #teaser-replies > ytd-comment-view-model";
 
-    const commentRenderer = findElementByTrackingParams<ShadyElement>(
-      trackedParams,
-      selector,
-    );
+    const commentRenderer =
+      findElementByTrackingParams<CommentViewModelElement>(
+        trackedParams,
+        selector,
+      );
 
     if (commentRenderer !== null) {
       resolve(commentRenderer);
     } else {
-      void reSearchElement(trackedParams, selector).then((commentRenderer) => {
+      void reSearchElement<CommentViewModelElement>(
+        trackedParams,
+        selector,
+      ).then((commentRenderer) => {
         resolve(commentRenderer);
       });
     }
