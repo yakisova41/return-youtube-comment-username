@@ -33,8 +33,9 @@ export function rewriteCommentNameFromContinuationItems(
 
   debugLog("rewriteCommentNameFromContinuationItems");
 
-  const rewrite = (continuationItems: ContinuationItems) => {
-    continuationItems.map(async (continuationItem) => {
+  const rewrite = async (continuationItems: ContinuationItems) => {
+    for (let i = 0; i < continuationItems.length; i++) {
+      const continuationItem = continuationItems[i];
       const { commentThreadRenderer } = continuationItem;
       const key =
         continuationItem.commentThreadRenderer.commentViewModel.commentViewModel
@@ -72,7 +73,7 @@ export function rewriteCommentNameFromContinuationItems(
           );
         }
       }
-    });
+    }
   };
   rewrite(continuationItems);
 }
