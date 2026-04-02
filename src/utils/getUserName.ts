@@ -2,13 +2,14 @@ import { debugErr } from "./debugLog";
 import { decodeString } from "./escapeString";
 
 let isUseFeed = true;
+const isStudio:boolean = window.location.hostname === "studio.youtube.com";
 
 export async function getUserName(id: string): Promise<string> {
   /**
    * RSSフィードが障害時に、フロントエンドのAPIに切り替え
    */
   return new Promise((resolve) => {
-    if (isUseFeed) {
+    if (isUseFeed && !isStudio) {
       fetchFeed(id)
         .then((name) => {
           resolve(name);
