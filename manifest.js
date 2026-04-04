@@ -1,5 +1,4 @@
 // @ts-check
-
 /** @type {import('crx-monkey').CrxMonkeyManifest} */
 export default {
   name: "__MSG_Name__",
@@ -14,6 +13,7 @@ export default {
     128: "assets/icon128.png",
   },
   permissions: ["storage"],
+  host_permissions: ["https://www.youtube.com/*", "https://studio.youtube.com/*", "https://www.youtube.com/feeds/videos.xml*"],
   content_scripts: [
     {
       matches: ["https://www.youtube.com/*"],
@@ -23,6 +23,31 @@ export default {
       connection_isolated: true,
       userscript_direct_inject: true,
       trusted_inject: true,
+    },
+    {
+      matches: ["https://studio.youtube.com/*"],
+      js: ["src/studio.ts"],
+      world: "MAIN",
+      run_at: "document_end",
+      connection_isolated: true,
+      userscript_direct_inject: true,
+      trusted_inject: true,
+    },
+    {
+      matches: ["https://studio.youtube.com/live_chat*"],
+      js: ["src/liveChat.ts"],
+      world: "MAIN",
+      run_at: "document_end",
+      userscript_direct_inject: true,
+      trusted_inject: true,
+      all_frames: true,
+    },
+    {
+      matches: ["https://studio.youtube.com/channel/*", "https://studio.youtube.com/live_chat*"],
+      js: ["src/utils/studioBridge.ts"],
+      world: "ISOLATED",
+      run_at: "document_start",
+      all_frames: true,
     },
     {
       matches: ["https://www.youtube.com/live_chat*"],
