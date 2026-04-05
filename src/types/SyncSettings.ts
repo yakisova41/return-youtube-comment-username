@@ -1,4 +1,4 @@
-import { bypassSendMessage, getRunningRuntime } from "crx-monkey";
+import { bypassSendMessage } from "crx-monkey";
 import { RycuMessageRequest, RycuMessageResponseValue } from "sw/sw";
 import { type RycuSettings } from "src/types/RycuSettings";
 
