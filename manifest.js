@@ -43,13 +43,6 @@ export default {
       all_frames: true,
     },
     {
-      matches: ["https://studio.youtube.com/channel/*", "https://studio.youtube.com/live_chat*"],
-      js: ["src/utils/studioBridge.ts"],
-      world: "ISOLATED",
-      run_at: "document_start",
-      all_frames: true,
-    },
-    {
       matches: ["https://www.youtube.com/live_chat*"],
       js: ["src/liveChat.ts"],
       world: "MAIN",
