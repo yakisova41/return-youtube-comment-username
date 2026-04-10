@@ -1,5 +1,5 @@
 import { type RycuSettings } from "src/types/RycuSettings";
-import { type RycuStorage } from "src/types/Storage";
+//import { type RycuStorage, getDefaultStorageCache } from "src/types/Storage";
 
 export function getSettings(): Promise<RycuSettings> {
   //const defaultStorageCache: RycuStorage = getDefaultStorageCache();
