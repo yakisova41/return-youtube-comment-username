@@ -57,7 +57,6 @@ if (app !== null) {
 
         break;
       case "yt-live-chat-actions":
-      case "ytls-broadcast-status":  // Studio Only
         // On auto scroll
         if (isAddChatItemAction(e.detail)) {
           chatActions(e.detail);
