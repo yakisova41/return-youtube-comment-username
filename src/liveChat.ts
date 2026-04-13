@@ -74,9 +74,18 @@ function chatActions(action: YtAddChatItemAction) {
   const rewiteAllArgs = (addActions: AddChatItemAction[]) => {
     let id: string = "";
     let messageElement: null | PolymerLivechatElement = null;
-
+    let renderer: OneChatItem<keyof YtChatItem>;
     addActions.forEach((addAction) => {
-      const renderer = addAction.addChatItemAction.item;
+      // for debug, check if addAction has addChatItemAction
+      if (typeof addAction.addChatItemAction === "undefined" && typeof addAction.addLiveChatTickerItemAction !== "undefined") {
+        renderer = addAction.addLiveChatTickerItemAction.item;
+      } else if (typeof addAction.addChatItemAction === "undefined" && typeof addAction.removeBannerForLiveChatCommand !== "undefined") {
+        renderer = addAction.removeBannerForLiveChatCommand.item;
+      } else if (typeof addAction.addChatItemAction === "undefined") {
+        return;
+      } else {
+        renderer = addAction.addChatItemAction.item;
+      }
 
       if (isTextMessage(renderer)) {
         id = renderer.liveChatTextMessageRenderer.id;
@@ -99,18 +108,18 @@ function chatActions(action: YtAddChatItemAction) {
       } else if (isGiftRedemptionAnnouncement(renderer)) {
         id =
           renderer
-            .liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer.id;
+            .liveChatSponsorshipsGiftRedemptionAnnouncementRenderer.id;
 
         messageElement = document.querySelector<PolymerLivechatElement>(
           `ytd-sponsorships-live-chat-gift-redemption-announcement-renderer[id="${id}"]`,
         );
       } else if (isGiftPurchaseAnnouncement(renderer)) {
         id =
-          renderer.liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer
+          renderer.liveChatSponsorshipsGiftPurchaseAnnouncementRenderer
             .id;
 
         messageElement = document.querySelector<PolymerLivechatElement>(
-          `ytd-sponsorships-live-chat-gift-purchase-announcement-renderer",[id="${id}"]`,
+          `ytd-sponsorships-live-chat-gift-purchase-announcement-renderer[id="${id}"]`,
         );
       }
 
@@ -183,15 +192,15 @@ function isPaidMessage(
 }
 function isGiftRedemptionAnnouncement(
   item: AnyChatItem,
-): item is OneChatItem<"liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer"> {
+): item is OneChatItem<"liveChatSponsorshipsGiftRedemptionAnnouncementRenderer"> {
   return (
-    "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer" in item
+    "liveChatSponsorshipsGiftRedemptionAnnouncementRenderer" in item
   );
 }
 function isGiftPurchaseAnnouncement(
   item: AnyChatItem,
-): item is OneChatItem<"liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer"> {
-  return "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer" in item;
+): item is OneChatItem<"liveChatSponsorshipsGiftPurchaseAnnouncementRenderer"> {
+  return "liveChatSponsorshipsGiftPurchaseAnnouncementRenderer" in item;
 }
 
 function rewrite(node: PolymerLivechatElement, async: boolean = true) {
@@ -219,9 +228,14 @@ function handleRewrite(node: PolymerLivechatElement) {
   if (nameElem !== null) {
     const msgData = node.polymerController.data;
 
-    const { authorExternalChannelId, authorName } = msgData;
-
-    const userHandle = authorName.simpleText;
+    const { authorExternalChannelId, authorName, header } = msgData;
+    let userHandle: string;
+    // check if authorName exists.
+    if (typeof authorName === "undefined" && typeof header.liveChatSponsorshipsHeaderRenderer !== "undefined") {
+      userHandle = header.liveChatSponsorshipsHeaderRenderer.simpleText;
+    } else {
+      userHandle = authorName.simpleText;
+    }
 
     const cachedUserName = cache[authorExternalChannelId];
     const pullUserName =
@@ -247,10 +261,18 @@ type AddChatItemAction<
     | "liveChatTextMessageRenderer"
     | "liveChatMembershipItemRenderer"
     | "liveChatPaidMessageRenderer"
-    | "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer"
-    | "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer",
+    | "liveChatSponsorshipsGiftRedemptionAnnouncementRenderer"
+    | "liveChatSponsorshipsGiftPurchaseAnnouncementRenderer",
 > = {
   addChatItemAction: {
+    clientId: string;
+    item: OneChatItem<T>;
+  };
+  addLiveChatTickerItemAction: {
+    clientId: string;
+    item: OneChatItem<T>;
+  };
+  removeBannerForLiveChatCommand: {
     clientId: string;
     item: OneChatItem<T>;
   };
@@ -260,8 +282,8 @@ type YtAddChatItemAction<
     | "liveChatTextMessageRenderer"
     | "liveChatMembershipItemRenderer"
     | "liveChatPaidMessageRenderer"
-    | "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer"
-    | "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer",
+    | "liveChatSponsorshipsGiftRedemptionAnnouncementRenderer"
+    | "liveChatSponsorshipsGiftPurchaseAnnouncementRenderer",
 > = YtAction<AddChatItemAction<T>[], unknown>;
 
 type YtChatItem = {
@@ -277,11 +299,11 @@ type YtChatItem = {
     authorExternalChannelId: string;
     id: string;
   };
-  liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer: {
+  liveChatSponsorshipsGiftRedemptionAnnouncementRenderer: {
     authorExternalChannelId: string;
     id: string;
   };
-  liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer: {
+  liveChatSponsorshipsGiftPurchaseAnnouncementRenderer: {
     authorExternalChannelId: string;
     id: string;
   };
@@ -292,6 +314,7 @@ interface PolymerLivechatElement extends Element {
     data: {
       authorExternalChannelId: string;
       authorName: { simpleText: string };
+      header: {liveChatSponsorshipsHeaderRenderer:{ simpleText: string }};
     };
   };
 }
