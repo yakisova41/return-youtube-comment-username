@@ -1,9 +1,9 @@
-import { type RycuSettings } from "src/types/RycuSettings";
-//import { type RycuStorage, getDefaultStorageCache } from "src/types/Storage";
+import { type RycuSettings, getDefaultSettings } from "src/types/RycuSettings";
+import { type RycuStorage, getDefaultStorageCache } from "src/types/Storage";
 
 export function getSettings(): Promise<RycuSettings> {
-  //const defaultStorageCache: RycuStorage = getDefaultStorageCache();
-  //const defaultSettings: RycuSettings = getDefaultSettings();
+  const defaultStorageCache: RycuStorage = getDefaultStorageCache();
+  const defaultSettings: RycuSettings = getDefaultSettings();
 
   return chrome.storage.local
     .get({
