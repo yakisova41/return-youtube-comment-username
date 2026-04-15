@@ -2,13 +2,14 @@ import { debugErr } from "./debugLog";
 import { decodeString } from "./escapeString";
 
 let isUseFeed = true;
+const isStudio:boolean = window.location.hostname === "studio.youtube.com";
 
 export async function getUserName(id: string): Promise<string> {
   /**
    * RSSフィードが障害時に、フロントエンドのAPIに切り替え
    */
   return new Promise((resolve) => {
-    if (isUseFeed) {
+    if (isUseFeed && !isStudio) {
       fetchFeed(id)
         .then((name) => {
           resolve(name);
@@ -71,24 +72,15 @@ async function fetchBrowse(id: string) {
     {
       method: "POST",
       headers: {
-        cache: "default",
         accept: "*/*",
-        "accept-encoding": "gzip, deflate, br",
         "accept-language": "en",
         "content-type": "application/json",
-        dnt: "1",
-        referer: `https://www.youtube.com/channel/${id}`,
       },
       body: JSON.stringify({
         context: {
           client: {
-            hl: window.yt.config_.HL,
-            gl: window.yt.config_.GL,
             clientName: "WEB",
-            clientVersion: "2.20230628.01.00",
-            platform: "DESKTOP",
-            acceptHeader:
-              "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            clientVersion: "2.20240411.01.00",
           },
           user: { lockedSafetyMode: false },
           request: {
@@ -96,7 +88,6 @@ async function fetchBrowse(id: string) {
           },
         },
         browseId: id,
-        params: "EgVhYm91dPIGBAoCEgA%3D",
       }),
     },
   )
