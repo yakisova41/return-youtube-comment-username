@@ -3,7 +3,7 @@
 export default {
   name: "__MSG_Name__",
   short_name: "name",
-  version: "0.7.3",
+  version: "0.7.4",
   manifest_version: 3,
   description: "__MSG_Description__",
   default_locale: "en",
@@ -13,7 +13,11 @@ export default {
     128: "assets/icon128.png",
   },
   permissions: ["storage"],
-  host_permissions: ["https://www.youtube.com/*", "https://studio.youtube.com/*", "https://www.youtube.com/feeds/videos.xml*"],
+  host_permissions: [
+    "https://www.youtube.com/*",
+    "https://studio.youtube.com/*",
+    "https://www.youtube.com/feeds/videos.xml*",
+  ],
   content_scripts: [
     {
       matches: ["https://www.youtube.com/*"],
