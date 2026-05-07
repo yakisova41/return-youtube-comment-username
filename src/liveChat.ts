@@ -245,7 +245,15 @@ function handleRewrite(node: PolymerLivechatElement) {
 
     pullUserName.then((name) => {
       cache[authorExternalChannelId] = name;
-      nameElem.textContent = formatUserName(name, userHandle, settings);
+      const newName = formatUserName(name, userHandle, settings);
+      // To prevent moving text beginning position.
+      const originalWidth = nameElem.getBoundingClientRect().width;
+      // Add min-width to prevent width from shrinking when the new name is shorter than the original name
+      if (cachedUserName === undefined) {
+        (nameElem as HTMLElement).style.minWidth = `${originalWidth}px`;
+      }
+      // Replace from handle to name.
+      nameElem.textContent = newName;
     });
   }
 }
