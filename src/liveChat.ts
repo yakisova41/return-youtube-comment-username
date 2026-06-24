@@ -152,6 +152,9 @@ function rewriteAll() {
   const sponserRedemptions = document.querySelectorAll<PolymerLivechatElement>(
     "#items > ytd-sponsorships-live-chat-gift-redemption-announcement-renderer",
   );
+  const pinnedTexts = document.querySelectorAll<PolymerLivechatElement>(
+    "#banner-container > #contents > yt-live-chat-text-message-renderer",
+  );
 
   [
     ...paidRenderers,
@@ -159,6 +162,7 @@ function rewriteAll() {
     ...renderers,
     ...sponserPurchases,
     ...sponserRedemptions,
+    ...pinnedTexts,
   ].forEach((renderer) => {
     rewrite(renderer);
   });
