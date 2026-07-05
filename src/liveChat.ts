@@ -486,7 +486,7 @@ interface PolymerLivechatElement extends Element {
     data: {
       authorExternalChannelId: string;
       authorName: { simpleText: string };
-      header: { liveChatSponsorshipsHeaderRenderer: { simpleText: string } };
+      header: {liveChatSponsorshipsHeaderRenderer: { simpleText: string }};
     };
   };
 }
